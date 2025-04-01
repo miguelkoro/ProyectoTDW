@@ -24,7 +24,9 @@ const NavBar = () => {
         alt="Logo"
         className="navbar-logo"
       />
-      <h1 className="navbar-title">ANALES DE LA CIENCIA</h1>
+      <div className="typewriter">
+        <p className="navbar-title">ANALES DE LA CIENCIA</p>
+      </div>
     </div>
     <div className="navbar-right">
       {!isLoggedIn ? (

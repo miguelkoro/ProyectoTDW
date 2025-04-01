@@ -1,0 +1,40 @@
+.section-container {
+    display: flex;
+    height: 40vh; /* Ocupa toda la altura de la ventana */
+    width: 90%; /* Ocupa todo el ancho de la ventana */
+   /* overflow: hidden; /* Oculta cualquier contenido que se desborde */
+    margin: 0 auto; /* Centra el contenedor en la página */
+    border: 1px solid #BFA181; /* Borde del contenedor */
+    border-radius: 20px; /* Bordes redondeados */
+    overflow: hidden; /* Oculta cualquier contenido que se desborde */
+    box-sizing: border-box; /* Asegura que el padding no cause desbordamiento */
+}
+
+.section-left {
+    flex: 1; /* Ocupa 2/3 del ancho */
+    background-color: #0A1828; /* Color de fondo claro */
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Sombra para separar */
+}
+
+.section-right {
+    flex: 2; /* Ocupa 2/3 del ancho */
+    display: flex; /* Cambia a flexbox para scroll horizontal */
+    overflow-x: auto; /* Habilita el scroll horizontal solo dentro de esta sección */
+    scroll-snap-type: x mandatory; /* Activa el snap para deslizar de una en una */
+    background-color: #ffffff; /* Fondo blanco */
+    padding: 10px;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1); /* Sombra para separar */
+    scrollbar-width: none; /* Oculta la barra de scroll en navegadores compatibles */
+    align-items: center; /* Centra las secciones verticalmente */
+    box-sizing: border-box; /* Asegura que el padding no cause desbordamiento */
+}
+
+.section-right::-webkit-scrollbar {
+    display: none; /* Oculta la barra de scroll en navegadores basados en WebKit */
+}
+
