@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+.navbar {
+    position: fixed; /* Fija la barra en la parte superior */
+    top: 0;
+    left: 0;
+    width: 100%; /* Ocupa todo el ancho */
+    height: 60px; /* Altura fija de la barra de navegación */
+    background-color: rgba(40, 44, 52, 0.4); /* Color semitransparente */
+    color: white;
+    display: flex;
+    justify-content: space-between; /* Distribuye los elementos a los extremos */
+    align-items: center;
+    padding: 15px 25px;
+    z-index: 1000; /* Asegura que esté por encima de otros elementos */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra para destacar */
+    box-sizing: border-box; /* Asegura que el padding no desborde */
+}
+
+.navbar-left {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Alinea el contenido completamente a la izquierda */
+    flex: 0; /* No ocupa espacio adicional */
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Alinea el contenido completamente a la derecha */
+    flex: 0; /* No ocupa espacio adicional */
+}
+
+.navbar-title {
+    margin: 0;
+    font-size: 1.9rem;
+    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+    font-family: "Pixelify Sans", sans-serif;
+}
+
+.navbar-button,
+.navbar-logout-button {
+    width: 100px; /* Establece un ancho fijo */
+    padding: 8px 12px;
+    background-color: #178582; /* Color del botón de Login */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center; /* Asegura que el texto esté centrado */
+    color: white; /* Color del texto */
+    font-size: 1rem bold; /* Tamaño del texto */
+}
+
+.navbar-logout-button {
+    background-color: #cc3b3b; /* Color del botón de Logout */
+}
+
+.navbar-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.navbar-profile-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+
+
+.navbar-logo {
+    width: 40px; /* Ajusta el tamaño del logo */
+    height: 40px;
+    margin-right: 10px; /* Espacio entre el logo y el título */
+    object-fit: contain; /* Asegura que la imagen se ajuste correctamente */
+}
+
+/*Colores utilizados: azul oscuro clásico (#0A1828), turquesa (#178582), dorado (#BFA181)*/ 
