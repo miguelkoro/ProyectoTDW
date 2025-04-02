@@ -1,40 +1,50 @@
 .section-container {
-    display: flex;
-    height: 40vh; /* Ocupa toda la altura de la ventana */
-    width: 90%; /* Ocupa todo el ancho de la ventana */
-   /* overflow: hidden; /* Oculta cualquier contenido que se desborde */
+    width: 80%; /* Ocupa todo el ancho disponible */
+    max-width:  90vw; /* Ancho máximo de 90vw */;
+    overflow-x: auto; /* Habilita el scroll horizontal */
+    padding: 20px; /* Espaciado interno */
+    box-sizing: border-box; /* Incluye el padding en el tamaño total */
     margin: 0 auto; /* Centra el contenedor en la página */
-    border: 1px solid #BFA181; /* Borde del contenedor */
-    border-radius: 20px; /* Bordes redondeados */
-    overflow: hidden; /* Oculta cualquier contenido que se desborde */
-    box-sizing: border-box; /* Asegura que el padding no cause desbordamiento */
 }
 
-.section-left {
-    flex: 1; /* Ocupa 2/3 del ancho */
-    background-color: #0A1828; /* Color de fondo claro */
-    padding: 0px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Sombra para separar */
+.card-wrapper {
+    display: flex; /* Usa flexbox para alinear las Cards horizontalmente */
+    gap: 20px; /* Espacio entre las Cards */
+    overflow-x: auto; /* Habilita el scroll horizontal */
+    scrollbar-width: thin; /* Estilo del scroll en navegadores compatibles */
+    padding-bottom: 10px; /* Espaciado para evitar que el scroll tape las Cards */
+
+    width: 100%; /* Asegura que el contenedor ocupe todo el ancho */
+    white-space: nowrap;
 }
 
-.section-right {
-    flex: 2; /* Ocupa 2/3 del ancho */
-    display: flex; /* Cambia a flexbox para scroll horizontal */
-    overflow-x: auto; /* Habilita el scroll horizontal solo dentro de esta sección */
-    scroll-snap-type: x mandatory; /* Activa el snap para deslizar de una en una */
-    background-color: #ffffff; /* Fondo blanco */
-    padding: 10px;
-    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1); /* Sombra para separar */
-    scrollbar-width: none; /* Oculta la barra de scroll en navegadores compatibles */
-    align-items: center; /* Centra las secciones verticalmente */
-    box-sizing: border-box; /* Asegura que el padding no cause desbordamiento */
+  
+.card-wrapper a {
+    display: inline-block;
+    /*color: white;*/
+    text-align: center;
+    padding: 14px;
+    text-decoration: none;
+  }
+  
+.card-wrapper a:hover {
+    background-color: #77777727;
+  }
+
+.section-title {
+    font-family: Montserrat, sans-serif;
+    font-size: clamp(1.5rem, 2.5vw, 2rem); /* Tamaño dinámico de la fuente */
+    color: white;
+    margin: 0; /* Elimina el margen predeterminado */
+    padding: 10px 0; /* Espaciado superior e inferior */
+    text-align: center; /* Centra el texto */
+    width: 100%; /* Asegura que el título ocupe todo el ancho del contenedor */
 }
 
-.section-right::-webkit-scrollbar {
-    display: none; /* Oculta la barra de scroll en navegadores basados en WebKit */
+.section-hr{
+    width: 80%; /* Asegura que la línea ocupe todo el ancho del contenedor */
+    border: 1px; /* Elimina el borde predeterminado */
+    height: 1px; /* Altura de la línea */
+    background-color: #BFA181; /* Color de la línea */
+    margin: 30px auto; /* Espaciado superior e inferior y centra la línea */
 }
-

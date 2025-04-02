@@ -5,7 +5,7 @@
     left: 0;
     width: 100%; /* Ocupa todo el ancho */
     height: 60px; /* Altura fija de la barra de navegación */
-    background-color: rgba(40, 44, 52, 0.4); /* Color semitransparente */
+    background-color: rgba(40, 44, 52, 0.8); /* Color semitransparente */
     color: white;
     display: flex;
     justify-content: space-between; /* Distribuye los elementos a los extremos */
