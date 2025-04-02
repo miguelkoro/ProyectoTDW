@@ -41,7 +41,6 @@
 .navbar-logout-button {
     width: 100px; /* Establece un ancho fijo */
     padding: 8px 12px;
-    background-color: #178582; /* Color del botón de Login */
     border: none;
     border-radius: 4px;
     cursor: pointer;

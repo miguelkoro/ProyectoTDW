@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './NavBar.css'; // Importa el archivo CSS
 
-const NavBar = () => {
+const NavBar = ({ setShowLogin }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState({
     name: 'Miguekoro', // Nombre de usuario de ejemplo
@@ -9,11 +9,13 @@ const NavBar = () => {
   });
 
   const handleLogin = () => {
-    setIsLoggedIn(true); // Simula el inicio de sesión
+    /*setIsLoggedIn(true); // Simula el inicio de sesión*/
+    setShowLogin(true); // Cambia el estado para mostrar el formulario de Login
   };
 
   const handleLogout = () => {
-    setIsLoggedIn(false); // Simula el cierre de sesión
+    setIsLoggedIn(false); // Simula el cierre de sesión*/
+    setShowLogin(false); // Cambia el estado para volver a las secciones
   };
 
   return (
