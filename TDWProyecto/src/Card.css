@@ -23,6 +23,7 @@
     flex-direction: column; /* Asegura que el contenido esté en columna */
     justify-content: flex-start; /* Alinea el contenido al inicio */
     flex: 0 0 auto; /* Asegura que las Cards no se reduzcan ni se expandan automáticamente */
+    cursor: pointer /* Cambia el cursor al pasar sobre la barra */
 }
 
 .card .card-image{
@@ -53,4 +54,34 @@
 .card:hover{
     transform: scale(1.05); /* Aumenta el tamaño al pasar el ratón */
     transition: transform 0.3s ease; /* Transición suave */
+}
+
+
+.card-buttons {
+    position: absolute; /* Posiciona los botones dentro de la tarjeta */
+    top: 10px; /* Espaciado desde la parte superior */
+    right: 10px; /* Espaciado desde la parte derecha */
+    display: flex;
+    flex-direction: column; /* Coloca los botones en columna */
+    gap: 5px; /* Espaciado entre los botones */
+}
+
+.edit-button,
+.delete-button {
+    background-color: rgba(0, 0, 0, 0.7); /* Fondo semitransparente */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.edit-button:hover {
+    background-color: #3171c5; /* Verde para el botón de editar */
+}
+
+.delete-button:hover {
+    background-color: #f44336; /* Rojo para el botón de eliminar */
 }

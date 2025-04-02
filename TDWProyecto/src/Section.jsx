@@ -7,7 +7,12 @@ import Card from './Card'; // Importa el componente de sección pequeña
 const Section = ({title, objects = []}) => {
   return (
     <div className="section-container">
-      <h1 className="section-title">{title}</h1>
+      <div className="section-header">
+        <h1 className="section-title">{title}</h1>
+        <button className="new-button" >
+          Nuevo
+        </button>
+      </div>
       <div className="card-wrapper">
         {objects.map((object) => (
           <Card key={object.id} object={object} />

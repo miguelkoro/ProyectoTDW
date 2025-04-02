@@ -48,3 +48,25 @@
     background-color: #BFA181; /* Color de la línea */
     margin: 30px auto; /* Espaciado superior e inferior y centra la línea */
 }
+
+.new-button {
+    background-color: #4caf50; /* Color verde */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 15px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    transform: translateX(-50px); 
+}
+
+.new-button:hover {
+    background-color: #2d6e30; /* Color verde más oscuro al pasar el cursor */
+}
+.section-header {
+    display: flex; /* Alinea el título y el botón en una fila */
+    justify-content: space-between; /* Coloca el título a la izquierda y el botón a la derecha */
+    align-items: center; /* Alinea verticalmente el título y el botón */
+    margin-bottom: 20px; /* Espaciado inferior para separar del contenido */
+}

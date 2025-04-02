@@ -21,6 +21,12 @@
     align-items: center;
     justify-content: flex-start; /* Alinea el contenido completamente a la izquierda */
     flex: 0; /* No ocupa espacio adicional */
+    cursor: pointer; /* Cambia el cursor al pasar sobre la barra */
+    transition: transform 0.3s ease; /* Transición suave para el efecto de escala */
+}
+
+.navbar-left:hover {
+    transform: scale(1.05); /* Aumenta ligeramente el tamaño al pasar el ratón */
 }
 
 .navbar-right {

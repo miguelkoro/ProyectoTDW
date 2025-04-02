@@ -18,9 +18,13 @@ const NavBar = ({ setShowLogin }) => {
     setShowLogin(false); // Cambia el estado para volver a las secciones
   };
 
+  const handleGoHome = () => {
+    window.location.href = '/';// Redirige a la pantalla principal
+  };
+
   return (
     <nav className="navbar">
-    <div className="navbar-left">
+    <div className="navbar-left" onClick={handleGoHome}>
       <img
         src="/assets/images/code.png"
         alt="Logo"
