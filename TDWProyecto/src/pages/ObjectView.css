@@ -6,20 +6,17 @@
   align-items: center;
   justify-content: center;
   position: absolute; /* Posiciona el contenedor en relación a la página */
-  top: 50%; /* Centra verticalmente */
+  top: 80px; /* Margen desde la parte superior (ajusta según la altura del navbar) */
   left: 50%; /* Centra horizontalmente */
-  transform: translate(-50%, -50%); /* Ajusta el contenedor al centro exacto */
-  padding: 30px;
-  background-color: rgba(209, 209, 209, 0.171); /* Fondo blanco translúcido */
+  transform: translateX(-50%); /* Ajusta el contenedor al centro exacto horizontalmente */
+  padding: 30px 30px, 50px;
+  background-color: rgba(240, 240, 240, 0.253); /* Fondo blanco translúcido */
   border-radius: 10px; /* Bordes redondeados */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra para darle profundidad */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.425); /* Sombra para darle profundidad */
   width: 90%; /* Ancho responsivo */
-  max-width: 300px; /* Ancho máximo */
-  margin-top: 30px; /* Espaciado desde el navbar */
-  margin-left: auto;
-  margin-right: auto;
- /* padding: 30px;*/
-  text-align: center;
+  max-width: 60%; /* Ancho máximo */
+  text-align: center; /* Centra el texto */
+  overflow-y: auto; /* Agrega scroll si el contenido es demasiado alto */
 }
 
 /* Imagen dentro del panel */
