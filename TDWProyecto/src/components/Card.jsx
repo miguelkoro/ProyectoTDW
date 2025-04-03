@@ -8,9 +8,9 @@ const Card = ({object}) => {
       <button className="edit-button" onClick={() => onDelete(object.id)} title='Editar'>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            stroke-linecap="round" 
-            stroke-width="2"
-            stroke-linejoin="round"
+            strokeLinecap="round" 
+            strokeWidth="2"
+            strokeLinejoin="round"
             stroke="currentColor"
             viewBox="0 0 24 24"
             fill="none" 

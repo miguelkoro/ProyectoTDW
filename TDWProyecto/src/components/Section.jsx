@@ -1,6 +1,6 @@
 import React from 'react';
 import './Section.css'; // Archivo CSS para estilos
-import Card from './Card'; // Importa el componente de sección pequeña
+import Card from './Card.jsx'; // Importa el componente de sección pequeña
 
 
 

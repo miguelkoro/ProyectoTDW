@@ -23,36 +23,43 @@
     flex: 0; /* No ocupa espacio adicional */
     cursor: pointer; /* Cambia el cursor al pasar sobre la barra */
     transition: transform 0.3s ease; /* Transición suave para el efecto de escala */
+    text-decoration: none; /* Elimina el subrayado del enlace */
+    color: inherit; /* Mantiene el color del texto original */
 }
 
 .navbar-left:hover {
     transform: scale(1.05); /* Aumenta ligeramente el tamaño al pasar el ratón */
 }
 
-.navbar-right {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end; /* Alinea el contenido completamente a la derecha */
-    flex: 0; /* No ocupa espacio adicional */
-}
 
 .navbar-title {
     margin: 0;
     font-size: 1.9rem;
     white-space: nowrap; /* Evita que el texto se divida en varias líneas */
     font-family: "Pixelify Sans", sans-serif;
+    text-decoration: none; /* Asegura que el texto no tenga subrayado */
+    color: inherit; /* Usa el color predeterminado del texto */
 }
 
-.navbar-button,
-.navbar-logout-button {
-    width: 100px; /* Establece un ancho fijo */
-    padding: 8px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    text-align: center; /* Asegura que el texto esté centrado */
+.navbar-button {
+    display: inline-block; /* Asegura que el enlace se comporte como un botón */
+    background-color: #4caf50; /* Color de fondo verde */
     color: white; /* Color del texto */
-    font-size: 1rem bold; /* Tamaño del texto */
+    padding: 10px 15px; /* Espaciado interno */
+    border: none; /* Sin bordes */
+    border-radius: 5px; /* Bordes redondeados */
+    text-decoration: none; /* Elimina el subrayado del enlace */
+    font-size: 0.8rem; /* Tamaño de la fuente */
+    text-align: center; /* Centra el texto */
+    cursor: pointer; /* Cambia el cursor a una mano */
+    transition: background-color 0.3s ease; /* Transición suave para el hover */
+    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+    width: auto; /* Asegura que el ancho se ajuste al contenido */
+    overflow: hidden; /* Evita desbordamientos */
+}
+
+.navbar-button:hover {
+    background-color: #2d7431; /* Color verde más oscuro al pasar el cursor */
 }
 
 .navbar-logout-button {
@@ -63,6 +70,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
 }
 
 .navbar-profile-image {
@@ -114,6 +122,11 @@ animation: typing 3s steps(22) forwards, blink 1s step-end infinite;
         border-color: transparent;
     }
 }
-  
+
+.navbar-profile span {
+    overflow: hidden; /* Evita desbordamientos */
+    text-overflow: ellipsis; /* Agrega "..." si el texto es demasiado largo */
+    white-space: nowrap; /* Asegura que el texto esté en una sola línea */
+}
 
 /*Colores utilizados: azul oscuro clásico (#0A1828), turquesa (#178582), dorado (#BFA181)*/ 
