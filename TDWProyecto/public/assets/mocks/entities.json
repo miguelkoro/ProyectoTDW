@@ -1,5 +1,4 @@
-{
-    "entities": [
+[
       {
         "id": "0",
         "name": "IBM",
@@ -7,7 +6,7 @@
         "death": "2002",
         "image": "https://www.grupocarreras.com/wp-content/uploads/2024/11/ibm-logo.png",
         "wiki": "https://es.wikipedia.org/wiki/IBM",
-        "persons":["43","23"]
+        "persons":["0","1"]
       },
       {
         "id": "1",
@@ -16,7 +15,7 @@
         "death": "2006",
         "image": "https://1000logos.net/wp-content/uploads/2017/08/CERN-Logo.png",
         "wiki": "www.loquea.com",
-        "persons":["4"]
+        "persons":["1"]
       },
       {
         "id": "2",
@@ -25,7 +24,6 @@
         "death": "2002",
         "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/W3C%C2%AE_Icon.svg/1200px-W3C%C2%AE_Icon.svg.png",
         "wiki": "https://es.m.wikipedia.org/wiki/World_Wide_Web_Consortium",
-        "persons":["43","23"]
+        "persons":["0","1"]
       }
     ]
-  }
