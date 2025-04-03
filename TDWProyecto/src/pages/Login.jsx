@@ -1,11 +1,23 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from "../context/AuthContext";
 import './Login.css'; // Archivo CSS para estilos
+import { useNavigate } from "react-router-dom"; // Importa useNavigate para redirección
+
 const Login = () => { // Recibe la función como prop
-    const { login } = useAuth();
+
+
+    const { login, user } = useAuth(); // Obtén la función login y el usuario autenticado
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
   
+    const navigate = useNavigate(); // Hook para redirigir
+    // Redirige al Home si el usuario ya está logueado
+    useEffect(() => {
+      if (user) {
+        navigate("/"); // Redirige al Home
+      }
+    }, [user, navigate]); // Se ejecuta cuando cambia el estado de user o navigate
+
     const handleSubmit = (e) => {
       e.preventDefault();
       login(userName, password); // Llama a la función de inicio de sesión
