@@ -24,6 +24,7 @@ const ObjectView = () => {
     loadRelatedData();
   }, [object]);
 
+
   if (!object) {
     return <p>No se encontró el objeto.</p>;
   }
@@ -31,8 +32,15 @@ const ObjectView = () => {
   return (
       <div className="object-view-panel">
         <h1>{object.name}</h1>
-        <img src={object.image} alt={object.name} />
-        <p>{object.description}</p>
+        <img src={object.imageUrl} alt={object.name} />
+        <p><strong>Nacimiento:</strong> {new Date(object.birthDate).toLocaleDateString()}</p>
+        <p><strong>Moricion:</strong> {new Date(object.deathDate).toLocaleDateString()}</p>
+        <p>
+          <strong>Wiki:</strong>{' '}
+          <a href={object.wikiUrl} target="_blank" rel="noopener noreferrer">
+            {object.wikiUrl}
+          </a>
+        </p>
         {relatedPersons.length > 0 && (
           <div>
             <h2>Personas relacionadas</h2>

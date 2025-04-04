@@ -9,15 +9,35 @@ const Card = ({object}) => {
 
   const handleCardClick = () => {
     navigate(`/object/${object.id}`, { state: { object } }); // Redirige al ObjectView con el objeto como estado
+    console.log("Datos del objeto:", object);
   };
+
+  const handleEditClick = (e)=> {
+    e.stopPropagation(); // Evita que el evento de clic se propague al contenedor del card
+    console.log("editar objeto:", object);
+  }
+
+  const handleDeleteClick = (e) => {
+    e.stopPropagation(); // Evita que el evento de clic se propague al contenedor del card
+    e.stopPropagation(); // Evita que el evento de clic se propague al contenedor del card
+    const confirmDelete = window.confirm(
+      `¿Estás seguro de que deseas eliminar el objeto "${object.name}"?`
+    );
+    if (confirmDelete) {
+      console.log("Eliminando objeto:", object);
+      //onDelete(object.id); // Llama a la función de eliminación pasada como prop
+    } else {
+      console.log("Eliminación cancelada");
+    }
+  }
 
   return (
     <div className="card" onClick={handleCardClick}>
-      {user && ( // Solo muestra los botones si el usuario ha iniciado sesión
+      {user?.role === "writer" && ( // Solo muestra los botones si el usuario ha iniciado sesión
         <div className="card-buttons">
           <button
             className="edit-button"
-            onClick={() => onEdit(object.id)}
+            onClick={(e) => {handleEditClick(e)}}
             title="Editar"
           >
             <svg
@@ -36,7 +56,7 @@ const Card = ({object}) => {
           </button>
           <button
             className="delete-button"
-            onClick={() => onDelete(object.id)}
+            onClick={(e) => handleDeleteClick(e)}
             title="Eliminar">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -49,7 +69,7 @@ const Card = ({object}) => {
           </button>
         </div>
       )}
-      <img className="card-image" src={object.image} alt={object.name}></img>
+      <img className="card-image" src={object.imageUrl} alt={object.name}></img>
       <h2 className='card-title' >{object.name}</h2>
       
     </div>

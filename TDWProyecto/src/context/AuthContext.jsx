@@ -6,9 +6,9 @@ const AuthContext = createContext();
 
 // Usuarios simulados
 const mockUsers = {
-  x: { password: "x", profileImage: "https://unavatar.io/Nintenderos" },
-  y: { password: "y", profileImage: "https://unavatar.io/miguelkoro" },
-  z: { password: "z", profileImage: "https://unavatar.io/realDonaldTrump" },
+  x: { id: 1508, password: "x", profileImage: "https://unavatar.io/Nintenderos",  role: "reader"},
+  y: { id: 2501, password: "y", profileImage: "https://unavatar.io/miguelkoro", role: "reader" },
+  z: { id: 3652, password: "z", profileImage: "https://unavatar.io/realDonaldTrump", role: "writer" },
 };
 
 // Proveedor de autenticación
@@ -31,8 +31,10 @@ export const AuthProvider = ({ children }) => {
       if (mockUsers[userName] && mockUsers[userName].password === password) {
 
         const userData = {
+          id: mockUsers[userName].id,
           userName,
           profileImage: mockUsers[userName].profileImage,
+          role: mockUsers[userName].role,
         }; // Datos del usuario logueado (Lo devuelve del backend)
 
 

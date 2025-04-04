@@ -11,7 +11,7 @@ const Section = ({title, objects = []}) => {
     <div className="section-container">
       <div className="section-header">
         <h1 className="section-title">{title}</h1>
-        {user && ( // Solo muestra el botón si el usuario ha iniciado sesión
+        {user?.role === "writer" && ( // Solo muestra el botón si el usuario ha iniciado sesión y es writer //user? se usa para que si es null, lo ponga como undefined en vez de dar error
           <button className="new-button">
             Nuevo
           </button>
