@@ -3,6 +3,9 @@ import { useLocation } from 'react-router-dom';
 import { fetchPersons, fetchEntities } from '../services/dataService';
 import './ObjectView.css'; // Archivo CSS para estilos
 
+import Persona from '../models/Persona'; // Importa las clases de modelos
+
+
 const ObjectView = () => {
   const location = useLocation(); //accede al estado enviado desde la navegación
   const { object } = location.state || {}; // Obtén el objeto del estado
@@ -29,12 +32,19 @@ const ObjectView = () => {
     return <p>No se encontró el objeto.</p>;
   }
 
+  // Determinar el tipo de objeto usando instanceof
+  const isPerson = object instanceof Persona;
+
+  // Determinar las etiquetas dinámicamente
+  const birthLabel = isPerson ? 'Nacimiento' : 'Creación';
+  const deathLabel = isPerson ? 'Morición' : 'Desuso';
+
   return (
       <div className="object-view-panel">
         <h1>{object.name}</h1>
         <img src={object.imageUrl} alt={object.name} />
-        <p><strong>Nacimiento:</strong> {new Date(object.birthDate).toLocaleDateString()}</p>
-        <p><strong>Moricion:</strong> {new Date(object.deathDate).toLocaleDateString()}</p>
+        <p><strong>{birthLabel}:</strong> {new Date(object.birthDate).toLocaleDateString()}</p>
+        <p><strong>{deathLabel}:</strong> {new Date(object.deathDate).toLocaleDateString()}</p>
         <p>
           <strong>Wiki:</strong>{' '}
           <a href={object.wikiUrl} target="_blank" rel="noopener noreferrer">
