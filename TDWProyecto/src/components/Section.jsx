@@ -7,6 +7,15 @@ import { useAuth } from '../context/AuthContext';
 
 const Section = ({title, objects = []}) => {
   const { user } = useAuth(); // Obtén el usuario autenticado del contexto
+  //console.log("Section", objects); // Verifica los objetos recibidos
+  //console.log("", objects[0]); // Verifica el tipo de objeto
+  //console.log("¿getType está disponible?", typeof objects[0].getType === "function");
+  /*console.log("Objeto recibido en Section:", objects[0]);
+  if (objects[0]) {
+    console.log("¿getType está disponible?", typeof objects[0].getType === "function");
+    console.log("Tipo del objeto:", objects[0].getType ? objects[0].getType() : "No es una instancia válida");
+  }*/
+
   return (
     <div className="section-container">
       <div className="section-header">

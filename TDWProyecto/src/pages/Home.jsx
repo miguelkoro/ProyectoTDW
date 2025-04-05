@@ -34,12 +34,8 @@ const Home =() =>{
     loadData();
   }, []);*/
 
-    const { persons, entities, products, isLoading } = useContext(DataContext); 
+    const { persons, entities, products} = useContext(DataContext); 
     //Aquí, los datos (persons, entities, products) se obtienen directamente del contexto.
-
-    if (isLoading) {
-      return <p>Cargando datos...</p>;
-    }
 
     return (
       <>

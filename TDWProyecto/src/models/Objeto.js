@@ -7,4 +7,9 @@ export default class Objeto {
       this.imageUrl = imageUrl;
       this.wikiUrl = wikiUrl;
     }
+
+      // Método para obtener el tipo del objeto
+    getType() {
+      return this.constructor.name; // Devuelve el nombre de la clase
+    }
   }

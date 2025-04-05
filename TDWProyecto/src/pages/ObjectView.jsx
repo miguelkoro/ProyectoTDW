@@ -1,19 +1,25 @@
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import { fetchPersons, fetchEntities } from '../services/dataService';
 import './ObjectView.css'; // Archivo CSS para estilos
 
-import Persona from '../models/Persona'; // Importa las clases de modelos
+import Objeto from '../models/Objeto'; // Importa las clases de modelos
 
 
 const ObjectView = () => {
   const location = useLocation(); //accede al estado enviado desde la navegación
+  const { type, id } = useParams(); // Obtén el tipo y el id desde la URL
   const { object } = location.state || {}; // Obtén el objeto del estado
   const [relatedPersons, setRelatedPersons] = useState([]);
   const [relatedEntities, setRelatedEntities] = useState([]);
 
+  //console.log("ObjectView", object); // Verifica el objeto recibido
+  //console.log("", object.getType()); // Verifica el tipo de objeto
+  console.log("Objeto recibido en ObjectView:", object);
+
   useEffect(() => {
-    const loadRelatedData = async () => {
+    /*const loadRelatedData = async () => {
       if (object.persons) {
         const personsData = await fetchPersons();
         setRelatedPersons(personsData.filter((person) => object.persons.includes(person.id)));
@@ -24,7 +30,7 @@ const ObjectView = () => {
       }
     };
 
-    loadRelatedData();
+    loadRelatedData();*/
   }, [object]);
 
 
@@ -32,12 +38,12 @@ const ObjectView = () => {
     return <p>No se encontró el objeto.</p>;
   }
 
-  // Determinar el tipo de objeto usando instanceof
-  const isPerson = object instanceof Persona;
+  // Determinar el tipo de objeto usando el método getType
+  /*const objectType = object.getType();*/
 
-  // Determinar las etiquetas dinámicamente
-  const birthLabel = isPerson ? 'Nacimiento' : 'Creación';
-  const deathLabel = isPerson ? 'Morición' : 'Desuso';
+   // Determinar las etiquetas dinámicamente según el tipo de objeto
+    const birthLabel = type === 'Persona' ? 'Nacimiento' : 'Creación';
+    const deathLabel = type === 'Persona' ? 'Morición' : 'Desuso';
 
   return (
       <div className="object-view-panel">

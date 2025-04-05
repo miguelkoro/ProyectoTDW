@@ -1,14 +1,17 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import './Card.css'; // Archivo CSS para estilos
 import { useAuth } from '../context/AuthContext'; // Importa el contexto de autenticación
 import { useNavigate } from 'react-router-dom'; // Importa useNavigate para redirección
+import { DataContext } from '../context/DataContext'; // Importa el DataContext
+
 
 const Card = ({object}) => {
   const { user } = useAuth(); // Obtén el usuario autenticado del contexto
   const navigate = useNavigate(); // Hook para redirigir
+  const { deleteObject } = useContext(DataContext); // Obtén el método deletePerson del DataContext
 
   const handleCardClick = () => {
-    navigate(`/object/${object.id}`, { state: { object } }); // Redirige al ObjectView con el objeto como estado
+    navigate(`/view/${object.getType()}/${object.id}`, { state: { object } }); // Redirige al ObjectView con el objeto como estado
     console.log("Datos del objeto:", object);
   };
 
@@ -19,17 +22,20 @@ const Card = ({object}) => {
 
   const handleDeleteClick = (e) => {
     e.stopPropagation(); // Evita que el evento de clic se propague al contenedor del card
-    e.stopPropagation(); // Evita que el evento de clic se propague al contenedor del card
     const confirmDelete = window.confirm(
       `¿Estás seguro de que deseas eliminar el objeto "${object.name}"?`
     );
     if (confirmDelete) {
       console.log("Eliminando objeto:", object);
       //onDelete(object.id); // Llama a la función de eliminación pasada como prop
+      //Tengo que ver si el objeto es una persona o una entidad y llamar a la función de eliminación correspondiente
+      deleteObject(object)
     } else {
       console.log("Eliminación cancelada");
     }
   }
+  //console.log("", object.getType()); // Verifica el tipo de objeto
+  
 
   return (
     <div className="card" onClick={handleCardClick}>

@@ -20,7 +20,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/object/:id" element={<ObjectView />} />
+            <Route path="/view/:type/:id" element={<ObjectView />} />
             <Route path="*" element={<Home />} />
           </Routes>
         </DataProvider>
