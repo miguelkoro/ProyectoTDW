@@ -39,6 +39,38 @@ export const DataProvider = ({ children }) => {
     loadData();
   }, []);
 
+  //Metodo que pasandole un id, y el tipo de objeto devuelva el objeto correspondiente
+  const getObjectById = async (id, type) => {
+    switch (type) {
+      case 'Persona':
+        return persons.find((person) => person.id === id);
+      case 'Entidad':
+        return entities.find((entity) => entity.id === id);
+      case 'Producto':
+        return products.find((product) => product.id === id);
+      default:
+        console.error('Tipo de objeto no reconocido:', type);
+    }
+   
+  }
+
+  const createNewObject = (object) => {
+    switch (object.getType()) {
+      case 'Persona':
+        setPersons((prevPersons) => [...prevPersons, object]);
+        break;
+      case 'Entidad':
+        setEntities((prevEntities) => [...prevEntities, object]);
+        break;
+      case 'Producto':
+        setProducts((prevProducts) => [...prevProducts, object]);
+        break;
+      default:
+        console.error('Tipo de objeto no reconocido:', object.getType());
+    }
+
+  }
+
   //Modificar mas tarde la llamada a dataService para realizar el borrado contra la API
   const deleteObjectById = async (object) => {
     try {
@@ -85,7 +117,9 @@ export const DataProvider = ({ children }) => {
           products, 
           isLoading, 
           reloadData: loadData,
-          deleteObject: deleteObjectById,}}>
+          deleteObject: deleteObjectById,
+          getObject: getObjectById,
+          createObject: createNewObject,}}>
       {children}
     </DataContext.Provider>
   );

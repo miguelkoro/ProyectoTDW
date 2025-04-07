@@ -9,7 +9,9 @@ const NavBar = () => {
     <nav className="navbar">
       <Link className="navbar-left" to="/">
         <img src="/assets/images/code.png" alt="Logo" className="navbar-logo" />
-        <p className="navbar-title">ANALES DE LA CIENCIA</p>
+        <div className="typewriter">
+          <p className="navbar-title">ANALES DE LA CIENCIA</p>
+        </div>
       </Link>
       <div className="navbar-profile">
         {user ? (

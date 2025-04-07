@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 .section-container {
     width: 80%; /* Ocupa todo el ancho disponible */
     max-width:  90vw; /* Ancho máximo de 90vw */;
@@ -32,7 +33,7 @@
   }
 
 .section-title {
-    font-family: Montserrat, sans-serif;
+    font-family: Montserrat, Rubik, sans-serif; /* Fuente personalizada */
     font-size: clamp(1.5rem, 2.5vw, 2rem); /* Tamaño dinámico de la fuente */
     color: white;
     margin: 0; /* Elimina el margen predeterminado */

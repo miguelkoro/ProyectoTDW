@@ -8,7 +8,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import NavBar from './components/NavBar';
 import ObjectView from './pages/ObjectView';
-//import ObjectEdit from './pages/ObjectEdit';
+import ObjectEdit from './pages/ObjectEdit';
 
 
 function App() {  
@@ -21,6 +21,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/view/:type/:id" element={<ObjectView />} />
+            <Route path="/edit/:type/:id" element={<ObjectEdit/>} />
+            <Route path="/new/:type" element={<ObjectEdit/>} />
             <Route path="*" element={<Home />} />
           </Routes>
         </DataProvider>

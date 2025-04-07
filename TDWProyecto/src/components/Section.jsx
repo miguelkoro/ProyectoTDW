@@ -2,26 +2,26 @@ import React from 'react';
 import './Section.css'; // Archivo CSS para estilos
 import Card from './Card.jsx'; // Importa el componente de sección pequeña
 import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom'; // Importa useNavigate para redirección
 
 
 
 const Section = ({title, objects = []}) => {
   const { user } = useAuth(); // Obtén el usuario autenticado del contexto
-  //console.log("Section", objects); // Verifica los objetos recibidos
-  //console.log("", objects[0]); // Verifica el tipo de objeto
-  //console.log("¿getType está disponible?", typeof objects[0].getType === "function");
-  /*console.log("Objeto recibido en Section:", objects[0]);
-  if (objects[0]) {
-    console.log("¿getType está disponible?", typeof objects[0].getType === "function");
-    console.log("Tipo del objeto:", objects[0].getType ? objects[0].getType() : "No es una instancia válida");
-  }*/
+  const navigate = useNavigate(); // Hook para redirigir
+
+  const handleNewClick = () => {
+    // Aquí puedes implementar la lógica para crear un nuevo objeto
+    navigate(`/new/${title} `); // Redirige a la página de creación de nuevo objeto
+    console.log("Crear nuevo objeto:", title);
+  }
 
   return (
     <div className="section-container">
       <div className="section-header">
         <h1 className="section-title">{title}</h1>
         {user?.role === "writer" && ( // Solo muestra el botón si el usuario ha iniciado sesión y es writer //user? se usa para que si es null, lo ponga como undefined en vez de dar error
-          <button className="new-button">
+          <button className="new-button" onClick={handleNewClick}>
             Nuevo
           </button>
         )}

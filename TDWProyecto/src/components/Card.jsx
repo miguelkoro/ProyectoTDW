@@ -17,6 +17,7 @@ const Card = ({object}) => {
 
   const handleEditClick = (e)=> {
     e.stopPropagation(); // Evita que el evento de clic se propague al contenedor del card
+    navigate(`/edit/${object.getType()}/${object.id}`, { state: { object } }); // Redirige al ObjectView con el objeto como estado
     console.log("editar objeto:", object);
   }
 
