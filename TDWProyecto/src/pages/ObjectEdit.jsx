@@ -22,29 +22,13 @@ const ObjectEdit = () => {
   // Determinar si es un nuevo objeto o uno existente
   const isNew = !object;
 
-    // Función para transformar la fecha al formato yyyy-mm-dd
-    const dateTransform = (date) => {
-        if (!date) return ''; // Si no hay fecha, devuelve una cadena vacía
-      
-        const parts = date.split('/'); // Divide la fecha en partes
-        if (parts.length === 3) {
-          // Si la fecha tiene el formato completo (YYYY/MM/DD)
-          const [year, month, day] = parts;
-          return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-        } else if (parts.length === 1) {
-          // Si solo tiene el año (YYYY)
-          return `${parts[0]}-01-01`; // Asume 1 de enero como fecha predeterminada
-        }
-      
-        return ''; // Si el formato no es válido, devuelve una cadena vacía
-      };
 
   useEffect(() => {
     if (!isNew) {
       // Si es un objeto existente, rellenar los campos con sus datos
       setName(object.name || '');
-      setBirthDate(dateTransform(object.birthDate  || ''));
-      setDeathDate(dateTransform(object.deathDate  || ''));
+      setBirthDate(object.birthDate  || '');
+      setDeathDate(object.deathDate  || '');
       setWikiUrl(object.wikiUrl || '');
       setImageUrl(object.imageUrl || ''); // Inicializar la URL de la imagen
 
@@ -78,7 +62,7 @@ const ObjectEdit = () => {
     <div className="object-view-panel">
       {/* Fila principal: Título centrado y ID a la derecha */}
       <div className="object-header">
-        <h1 className="object-title">{isNew ? 'Nuevo Objeto' : `Editar Objeto: ${name}`}</h1>
+        <h1 className="object-title">{isNew ? `Nuevos ${type || 'Objeto'}` : `Editar ${type || 'Objeto:'}: ${name}`}</h1>
         <span className="object-id">ID: {isNew ? '?' : id}</span>
       </div>
       <hr className="object-divider" />
