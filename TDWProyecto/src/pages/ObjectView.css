@@ -75,8 +75,10 @@
 .object-image-column {
   flex: 1;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column; /* Apila los elementos verticalmente */
+  justify-content: flex-start; /* Alinea los elementos al inicio */
+  align-items: center; /* Centra los elementos horizontalmente */
+  gap: 10px; /* Espaciado entre la imagen y el campo de entrada */
 }
 
 .object-image {
@@ -151,4 +153,57 @@
 /* Si solo hay una columna, ocupa todo el ancho */
 .related-column.single-column {
   flex: 2; /* Ocupa todo el espacio disponible */
+}
+
+/* Botones de acción */
+.object-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.cancel-button,
+.save-button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.cancel-button {
+  background-color: #f44336;
+  color: white;
+}
+
+.save-button {
+  background-color: #4caf50;
+  color: white;
+}
+
+.cancel-button:hover {
+  background-color: #d32f2f;
+}
+
+.save-button:hover {
+  background-color: #388e3c;
+}
+
+/* Campos de entrada */
+.object-detail-row input {
+  flex: 2;
+  padding: 5px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+/* Campo de entrada para la URL de la imagen */
+.image-url-input {
+  margin-top: 10px;
+  width: 100%;
+  padding: 5px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
