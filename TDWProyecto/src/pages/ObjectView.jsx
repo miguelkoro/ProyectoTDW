@@ -12,7 +12,8 @@ const ObjectView = () => {
   const location = useLocation(); //accede al estado enviado desde la navegación
   const { type, id } = useParams(); // Obtén el tipo y el id desde la URL
   const { object } = location.state || {}; // Obtén el objeto del estado
-  const { getObject } = useContext(DataContext); // Accede al método getObjectById del contexto
+  const { getObject, deleteRelation } = useContext(DataContext); // Accede al método getObjectById del contexto
+
   const [relatedPersons, setRelatedPersons] = useState([]);
   const [relatedEntities, setRelatedEntities] = useState([]);
 
@@ -49,6 +50,27 @@ const ObjectView = () => {
     fetchRelatedObjects();
   }, [object, getObject]);
 
+  const handleDeleteRelation = (idRelation, typeRelation) => {
+    // Implementar la lógica para eliminar la relación entre objetos   
+    let changeType ="";
+    switch (type) {
+      case 'Persona':
+        changeType = 'persons';
+        break;
+      case 'Entidad':
+        changeType = 'entities';
+        break;
+      case 'Producto':
+        changeType = 'products';
+        break;
+      default:
+        break;
+    }
+        
+
+    deleteRelation(id, changeType, typeRelation, idRelation); // Llama a la función deleteRelation del contexto
+  }
+
   if (isLoading) {
     //return <p>Cargando datos relacionados...</p>; // Muestra un mensaje de carga
   }
@@ -70,6 +92,7 @@ const ObjectView = () => {
     const deathLabel = type === 'Persona' ? 'Fallecimiento' : 'Descontinuación';
 
   return (
+    <>
     <div className="object-view-panel">
     {/* Fila principal: Título centrado y ID a la derecha */}
     <div className="object-header">
@@ -114,7 +137,7 @@ const ObjectView = () => {
             relatedEntities.length === 0 ? 'single-column' : ''
           }`}
         >
-          <RelatedObject title="Personas relacionadas" objects={relatedPersons} />
+          <RelatedObject title="persons" objects={relatedPersons} deleteRelationAction={handleDeleteRelation}/>
         </div>
       )}
       {relatedEntities.length > 0 && (
@@ -123,11 +146,12 @@ const ObjectView = () => {
             relatedPersons.length === 0 ? 'single-column' : ''
           }`}
         >
-          <RelatedObject title="Entidades relacionadas" objects={relatedEntities} />
+          <RelatedObject title="entities" objects={relatedEntities} deleteRelationAction={handleDeleteRelation} />
         </div>
       )}
     </div>
   </div>
+  </>
   );
 };
 

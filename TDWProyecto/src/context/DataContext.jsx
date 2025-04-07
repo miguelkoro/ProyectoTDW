@@ -50,9 +50,59 @@ export const DataProvider = ({ children }) => {
         return products.find((product) => product.id === id);
       default:
         console.error('Tipo de objeto no reconocido:', type);
-    }
-   
+    }   
   }
+
+  const deleteRelation = async (idObject, type, typeRelation, idRelation) => {
+    try {
+      console.log(
+        `Eliminando relación con ID: ${idObject}, tipo: ${type}, tipo de relación: ${typeRelation}, ID de relación: ${idRelation}`
+      );
+  
+      /*switch (type) {
+        case 'persons':
+          setPersons((prevPersons) => prevPersons.map((person) =>
+              person.id === idObject ? {...person, [typeRelation]: person[typeRelation].filter(
+                      (relationId) => relationId !== idRelation),}: person));
+          break;
+  
+        case 'entities':
+          setEntities((prevEntities) =>
+            prevEntities.map((entity) =>
+              entity.id === idObject
+                ? {
+                    ...entity,
+                    [typeRelation]: entity[typeRelation].filter(
+                      (relationId) => relationId !== idRelation
+                    ),
+                  }
+                : entity
+            )
+          );
+          break;
+  
+        case 'products':
+          setProducts((prevProducts) =>
+            prevProducts.map((product) =>
+              product.id === idObject
+                ? {
+                    ...product,
+                    [typeRelation]: product[typeRelation].filter(
+                      (relationId) => relationId !== idRelation
+                    ),
+                  }
+                : product
+            )
+          );
+          break;
+  
+        default:
+          console.error('Tipo de objeto no reconocido:', type);
+      }*/
+    } catch (error) {
+      console.error('Error al eliminar la relación:', error);
+    }
+  };
 
   const createNewObject = (object) => {
     switch (object.getType()) {
@@ -119,7 +169,8 @@ export const DataProvider = ({ children }) => {
           reloadData: loadData,
           deleteObject: deleteObjectById,
           getObject: getObjectById,
-          createObject: createNewObject,}}>
+          createObject: createNewObject,
+          deleteRelation,}}>
       {children}
     </DataContext.Provider>
   );

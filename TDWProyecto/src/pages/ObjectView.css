@@ -15,6 +15,7 @@
   overflow-y: auto; /* Agrega scroll si el contenido es demasiado alto */
 }
 
+
 /*.object-view-panel {
   display: flex;
   flex-direction: column;
@@ -197,6 +198,8 @@
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 5px;
+  max-width: 250px; /* Asegura que el texto no desborde el contenedor */
+  margin-right: 100px;
 }
 /* Campo de entrada para la URL de la imagen */
 .image-url-input {
