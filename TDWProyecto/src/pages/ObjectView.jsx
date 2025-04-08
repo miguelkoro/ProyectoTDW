@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import { DataContext } from '../context/DataContext'; // Importa el contexto
 import './ObjectView.css'; // Archivo CSS para estilos
-import RelatedObject from '../components/RelatedObject'; // Importa el componente de objetos relacionados
+import RelatedSection from '../components/RelatedSection'; // Importa el componente de objetos relacionados
 
 import Objeto from '../models/Objeto'; // Importa las clases de modelos
 
@@ -21,7 +21,7 @@ const ObjectView = () => {
 
   //console.log("ObjectView", object); // Verifica el objeto recibido
   //console.log("", object.getType()); // Verifica el tipo de objeto
-  //console.log("Objeto recibido en ObjectView:", object);
+  //console.log("Objeto recibido en ObjectView:", type);
   //console.log("getObjectById:", getObject);
 
   useEffect(() => {
@@ -33,6 +33,7 @@ const ObjectView = () => {
             object.persons.map((personId) => getObject(personId, 'Persona'))
           );
           setRelatedPersons(persons);
+          //console.log("personas relacionadas:", persons); // Verifica los objetos relacionados
         }
         if (object?.entities) {
           const entities = await Promise.all(
@@ -50,26 +51,7 @@ const ObjectView = () => {
     fetchRelatedObjects();
   }, [object, getObject]);
 
-  const handleDeleteRelation = (idRelation, typeRelation) => {
-    // Implementar la lógica para eliminar la relación entre objetos   
-    let changeType ="";
-    switch (type) {
-      case 'Persona':
-        changeType = 'persons';
-        break;
-      case 'Entidad':
-        changeType = 'entities';
-        break;
-      case 'Producto':
-        changeType = 'products';
-        break;
-      default:
-        break;
-    }
-        
-
-    deleteRelation(id, changeType, typeRelation, idRelation); // Llama a la función deleteRelation del contexto
-  }
+ 
 
   if (isLoading) {
     //return <p>Cargando datos relacionados...</p>; // Muestra un mensaje de carga
@@ -137,7 +119,7 @@ const ObjectView = () => {
             relatedEntities.length === 0 ? 'single-column' : ''
           }`}
         >
-          <RelatedObject title="persons" objects={relatedPersons} deleteRelationAction={handleDeleteRelation}/>
+          <RelatedSection type="persons" relatedObjects={relatedPersons} father={object} fatherType={type}/>
         </div>
       )}
       {relatedEntities.length > 0 && (
@@ -146,7 +128,7 @@ const ObjectView = () => {
             relatedPersons.length === 0 ? 'single-column' : ''
           }`}
         >
-          <RelatedObject title="entities" objects={relatedEntities} deleteRelationAction={handleDeleteRelation} />
+          <RelatedSection type="entities" relatedObjects={relatedEntities} father={object} fatherType={type}/>
         </div>
       )}
     </div>

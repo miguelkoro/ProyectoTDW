@@ -6,10 +6,10 @@ export default class Objeto {
       this.deathDate = deathDate;
       this.imageUrl = imageUrl;
       this.wikiUrl = wikiUrl;
+      this.type = null; // Inicializa el tipo como null      
+    }
+    setType(type) {
+      this.type = type;
     }
 
-      // Método para obtener el tipo del objeto
-    getType() {
-      return this.constructor.name; // Devuelve el nombre de la clase
-    }
   }

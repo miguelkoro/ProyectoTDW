@@ -1,12 +1,30 @@
-import React from 'react';
-import './RelatedObject.css'; // Archivo CSS para estilos
+import React, { useContext, useState } from 'react';
+import './RelatedSection.css'; // Archivo CSS para estilos
 import { useAuth } from '../context/AuthContext'; // Importa el contexto de autenticación
-import { deletePerson } from '../services/dataService';
+import { DataContext } from '../context/DataContext';
 
-const listRelated = ({ title, object, deleteRelationAction}) => {
+const RowRelated = ({ type, object,father, fatherType}) => {
     //console.log("Objetos relacionados:", objects); // Verifica los objetos relacionados
     const { user } = useAuth(); // Obtén el usuario autenticado del contexto
-    
+    const { deleteRelation } = useContext(DataContext);
+    const [isDeleted, setIsDeleted] = useState(false); // Estado local para controlar la eliminación
+
+    const handleDeleteClick = (e) => {
+      e.stopPropagation();
+      const confirmDelete = window.confirm(
+        `¿Estás seguro de que deseas eliminar la relación con "${object.name}"?`
+      );
+      if (confirmDelete) {
+        console.log('Eliminando relación:', object);
+        setIsDeleted(true); // Marca el RowRelated como eliminado localmente
+        console.log("deleteRelation", father.id, fatherType, type, object.id);
+       deleteRelation(father.id, fatherType, type, object.id); // Llama al método del contexto
+      }
+    };
+
+    if (isDeleted) {
+      return null; // No renderiza nada si el RowRelated está marcado como eliminado
+    }
    
 
   return (
@@ -18,7 +36,7 @@ const listRelated = ({ title, object, deleteRelationAction}) => {
                 <div className="related-column-action">
                 <button
                     className="delete-button"
-                    onClick={(e) => deleteRelationAction(object.id, title)}
+                    onClick={(e) => handleDeleteClick(e)}
                     title="Eliminar">
                     <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -38,4 +56,4 @@ const listRelated = ({ title, object, deleteRelationAction}) => {
   
 };
 
-export default RelatedObject;
+export default RowRelated;

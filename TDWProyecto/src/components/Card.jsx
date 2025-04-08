@@ -11,13 +11,13 @@ const Card = ({object}) => {
   const { deleteObject } = useContext(DataContext); // Obtén el método deletePerson del DataContext
 
   const handleCardClick = () => {
-    navigate(`/view/${object.getType()}/${object.id}`, { state: { object } }); // Redirige al ObjectView con el objeto como estado
+    navigate(`/view/${object.type}/${object.id}`, { state: { object } }); // Redirige al ObjectView con el objeto como estado
     console.log("Datos del objeto:", object);
   };
 
   const handleEditClick = (e)=> {
     e.stopPropagation(); // Evita que el evento de clic se propague al contenedor del card
-    navigate(`/edit/${object.getType()}/${object.id}`, { state: { object } }); // Redirige al ObjectView con el objeto como estado
+    navigate(`/edit/${object.type}/${object.id}`, { state: { object } }); // Redirige al ObjectView con el objeto como estado
     console.log("editar objeto:", object);
   }
 

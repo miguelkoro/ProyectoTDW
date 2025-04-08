@@ -59,20 +59,29 @@ export const DataProvider = ({ children }) => {
         `Eliminando relación con ID: ${idObject}, tipo: ${type}, tipo de relación: ${typeRelation}, ID de relación: ${idRelation}`
       );
   
-      /*switch (type) {
-        case 'persons':
-          setPersons((prevPersons) => prevPersons.map((person) =>
-              person.id === idObject ? {...person, [typeRelation]: person[typeRelation].filter(
-                      (relationId) => relationId !== idRelation),}: person));
+      switch (type) {
+        case 'person':
+          setPersons((prevPersons) =>
+            prevPersons.map((person) =>
+              person.id === idObject
+                ? {
+                    ...person,
+                    [typeRelation]: person[typeRelation]?.filter(
+                      (relationId) => relationId !== idRelation
+                    ),
+                  }
+                : person
+            )
+          );
           break;
   
-        case 'entities':
+        case 'entity':
           setEntities((prevEntities) =>
             prevEntities.map((entity) =>
               entity.id === idObject
                 ? {
                     ...entity,
-                    [typeRelation]: entity[typeRelation].filter(
+                    [typeRelation]: entity[typeRelation]?.filter(
                       (relationId) => relationId !== idRelation
                     ),
                   }
@@ -81,13 +90,13 @@ export const DataProvider = ({ children }) => {
           );
           break;
   
-        case 'products':
+        case 'product':
           setProducts((prevProducts) =>
             prevProducts.map((product) =>
               product.id === idObject
                 ? {
                     ...product,
-                    [typeRelation]: product[typeRelation].filter(
+                    [typeRelation]: product[typeRelation]?.filter(
                       (relationId) => relationId !== idRelation
                     ),
                   }
@@ -98,10 +107,63 @@ export const DataProvider = ({ children }) => {
   
         default:
           console.error('Tipo de objeto no reconocido:', type);
-      }*/
+      }
     } catch (error) {
       console.error('Error al eliminar la relación:', error);
     }
+  };
+
+  const addRelation = (idObject, type, typeRelation, idRelation) => {
+    switch (type) {
+      case 'person':
+        setPersons((prevPersons) =>
+          prevPersons.map((person) =>
+            person.id === idObject
+              ? {
+                  ...person,
+                  [typeRelation]: person[typeRelation]?.includes(idRelation)
+                    ? person[typeRelation] // Si ya existe, no lo añade
+                    : [...(person[typeRelation] || []), idRelation],
+                }
+              : person
+          )
+        );
+        break;
+  
+      case 'entity':
+        setEntities((prevEntities) =>
+          prevEntities.map((entity) =>
+            entity.id === idObject
+              ? {
+                  ...entity,
+                  [typeRelation]: entity[typeRelation]?.includes(idRelation)
+                    ? entity[typeRelation] // Si ya existe, no lo añade
+                    : [...(entity[typeRelation] || []), idRelation],
+                }
+              : entity
+          )
+        );
+        break;
+  
+      case 'product':
+        setProducts((prevProducts) =>
+          prevProducts.map((product) =>
+            product.id === idObject
+              ? {
+                  ...product,
+                  [typeRelation]: product[typeRelation]?.includes(idRelation)
+                    ? product[typeRelation] // Si ya existe, no lo añade
+                    : [...(product[typeRelation] || []), idRelation],
+                }
+              : product
+          )
+        );
+        break;
+  
+      default:
+        console.error('Tipo de objeto no reconocido:', type);
+    }
+    console.log(products);
   };
 
   const createNewObject = (object) => {
@@ -125,8 +187,8 @@ export const DataProvider = ({ children }) => {
   const deleteObjectById = async (object) => {
     try {
       console.log('Estado actual de object:', object);
-      switch (object.getType()) {
-        case 'Persona':
+      switch (object.type) {
+        case 'person':
           //await deletePerson(object.id);
           setPersons((prevPersons) => {
             const updatedPersons = prevPersons.filter((person) => person.id !== object.id);
@@ -135,7 +197,7 @@ export const DataProvider = ({ children }) => {
           });
           console.log(`Persona con id ${object.id} eliminada.`);
           break;
-        case 'Entidad':
+        case 'entity':
           //await deleteEntity(object.id);
           setEntities((prevEntities) => {
             const updatedEntities = prevEntities.filter((entity) => entity.id !== object.id);
@@ -143,7 +205,7 @@ export const DataProvider = ({ children }) => {
             return updatedEntities;
           });
           break;
-        case 'Producto':
+        case 'product':
           //await deleteProduct(object.id);
           setProducts((prevProducts) => {
             const updatedProducts = prevProducts.filter((product) => product.id !== object.id);
@@ -152,7 +214,7 @@ export const DataProvider = ({ children }) => {
           }); 
           break;
         default:
-          console.error('Tipo de objeto no reconocido:', object.getType());
+          console.error('Tipo de objeto no reconocido:', object.type);
       }
       
     } catch (error) {
@@ -170,7 +232,8 @@ export const DataProvider = ({ children }) => {
           deleteObject: deleteObjectById,
           getObject: getObjectById,
           createObject: createNewObject,
-          deleteRelation,}}>
+          deleteRelation,
+          addRelation}}>
       {children}
     </DataContext.Provider>
   );

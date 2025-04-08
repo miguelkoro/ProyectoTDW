@@ -14,6 +14,7 @@ export const fetchPersons = async () => {
     const instance = new Persona(person); // Crea una instancia de Persona
     //console.log('Instancia de Persona creada:', instance); // Depuración
     //console.log(instance.getType()); // Debería imprimir "Persona"
+    instance.setType('person');
     return instance;
   });
 
@@ -22,21 +23,36 @@ export const fetchPersons = async () => {
   
 export const fetchEntities = async () => {
   const response = await fetch('/assets/jsons/entities.json');
-  //console.log(response.json); // Depura el valor de objects
   if (!response.ok) {
     throw new Error('Error al cargar entities.json');
   }
   const data = await response.json();
-  return data.entities.map((entity) => new Entidad(entity)); // Crear instancias de Persona
+
+  // Transforma los datos en instancias de Entidad
+  const entities = data.entities.map((entity) => {
+    const instance = new Entidad(entity); // Crea una instancia de Entidad
+    instance.setType('entity'); // Configura el tipo como 'entity'
+    return instance;
+  });
+
+  return entities;
 };
-  
+
 export const fetchProducts = async () => {
   const response = await fetch('/assets/jsons/products.json');
   if (!response.ok) {
     throw new Error('Error al cargar products.json');
   }
   const data = await response.json();
-  return data.products.map((product) => new Producto(product)); // Crear instancias de Persona
+
+  // Transforma los datos en instancias de Producto
+  const products = data.products.map((product) => {
+    const instance = new Producto(product); // Crea una instancia de Producto
+    instance.setType('product'); // Configura el tipo como 'product'
+    return instance;
+  });
+
+  return products;
 };
 
 export const deletePerson = async (id) => {
