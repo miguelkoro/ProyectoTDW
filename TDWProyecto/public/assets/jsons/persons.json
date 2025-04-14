@@ -1,6 +1,6 @@
  {"persons": [  
       {
-        "id": "0",
+        "id": 0,
         "name": "Vannervar Bush",
         "birthDate": "1953-01-01",
         "deathDate": "2002-12-20",
@@ -8,7 +8,7 @@
         "wikiUrl": "https://es.wikipedia.org/wiki/Vannevar_Bush"
       },
       {
-        "id": "1",
+        "id": 1,
         "name": "Tim Berners-Lee",
         "birthDate": "1990-05-14",
         "deathDate": "2006-11-29",

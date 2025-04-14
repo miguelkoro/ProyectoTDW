@@ -22,7 +22,7 @@ const NavBar = () => {
                 className="navbar-profile-image"
               />
               <span>Bienvenido, {user.userName}</span>
-              <button className="navbar-button" onClick={logout}>
+              <button className="navbar-logout-button" onClick={logout}>
                 Cerrar Sesión
               </button>
             </>

@@ -1,16 +1,19 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import './RelatedSection.css'; // Archivo CSS para estilos
 import { useAuth } from '../context/AuthContext'; // Importa el contexto de autenticación
 import { DataContext } from '../context/DataContext'; // Importa el DataContext
 //import { RowRelated} from './RowRelated';
 import RowRelated from './RowRelated'; // Importa el componente de fila relacionada
+import { useLocation } from 'react-router-dom'; // Importa useLocation para obtener la ubicación actual
 
-const RelatedSection = ({ type, relatedObjects = [], father, fatherType}) => {
+const RelatedSection = ({ type, relatedObjects = [], father, fatherType, onAddRelation}) => {
     //console.log("Objetos relacionados:", objects); // Verifica los objetos relacionados
     const { user } = useAuth(); // Obtén el usuario autenticado del contexto
     const { persons, entities, addRelation } = useContext(DataContext); // Obtén datos y método del contexto
     const [selectedId, setSelectedId] = useState(''); // Estado para el ID seleccionado
-    
+    const [localRelatedObjects, setLocalRelatedObjects] = useState(relatedObjects); // Estado local para los objetos relacionados
+    const location = useLocation(); // Obtén la ubicación actual
+    const isView = location.state?.view || false;
 
     let title = ''; // Asigna el tipo de relación basado en el título
     let options = []; // Opciones para el selector
@@ -28,6 +31,12 @@ const RelatedSection = ({ type, relatedObjects = [], father, fatherType}) => {
         break;
     }
 
+    // Actualiza el estado local cuando cambien las props `relatedObjects`
+  useEffect(() => {
+    setLocalRelatedObjects(relatedObjects);
+    console.log('Objetos relacionados actualizados:', isView); // Depuración
+  }, [relatedObjects]);
+
     const handleAddRelation = () => {
       if (!selectedId) {
         console.log('No se seleccionó un ID'); // Depuración
@@ -37,8 +46,21 @@ const RelatedSection = ({ type, relatedObjects = [], father, fatherType}) => {
       console.log('Añadiendo relación:', selectedId, 'tipo: ', type); // Ahora puedes usar selectedObject
     
       
-        addRelation(father.id, fatherType, type, selectedId); // Llama al método del contexto
-        console.log('Relación añadida:', selectedId); // Depuración
+      const relationAdded = addRelation(father.id, fatherType, type, selectedId); // Llama al método del contexto
+      if (relationAdded) {
+        console.log('Relación añadida correctamente:', selectedId);
+    
+        // Busca el objeto completo en relatedObjects
+        const relatedObject = relatedObjects.find((object) => object.id === parseInt(selectedId));
+        console.log('Obffjeto relacionado añadido:', relatedObject);
+        // Llama a onAddRelation con el objeto completo
+        if (relatedObject && onAddRelation) {
+          onAddRelation(relatedObject);
+          console.log('Objeto relacionado añadido:', relatedObject);
+        }
+      } else {
+        console.log('La relación ya existe, no se añadió.');
+      }
         //setRelatedObjects((prevRelatedObjects) => [...prevRelatedObjects, selectedObject]);
       
     };
@@ -54,7 +76,7 @@ const RelatedSection = ({ type, relatedObjects = [], father, fatherType}) => {
       </div>
 
       {/* Selector para añadir relaciones */}
-      {user?.role === 'writer' && (
+      {(user?.role === 'writer' && !isView) && (
         <div className="related-add">
           <select
             value={selectedId}

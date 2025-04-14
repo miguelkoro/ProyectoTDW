@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import './RelatedSection.css'; // Archivo CSS para estilos
 import { useAuth } from '../context/AuthContext'; // Importa el contexto de autenticación
+import { useLocation } from 'react-router-dom'; // Importa useLocation para obtener la ubicación actual
 import { DataContext } from '../context/DataContext';
 
 const RowRelated = ({ type, object,father, fatherType}) => {
@@ -8,6 +9,8 @@ const RowRelated = ({ type, object,father, fatherType}) => {
     const { user } = useAuth(); // Obtén el usuario autenticado del contexto
     const { deleteRelation } = useContext(DataContext);
     const [isDeleted, setIsDeleted] = useState(false); // Estado local para controlar la eliminación
+    const location = useLocation(); // Obtén la ubicación actual
+    const isView = location.state?.view || false;
 
     const handleDeleteClick = (e) => {
       e.stopPropagation();
@@ -32,7 +35,7 @@ const RowRelated = ({ type, object,father, fatherType}) => {
             <div key={object.id} className="related-row">
                 <div className="related-column-id">{object.id}</div>
                 <div className="related-column-name">{object.name || 'Sin nombre'}</div>
-                {user?.role === "writer" && ( // Solo muestra los botones si el usuario ha iniciado sesión
+                {(user?.role === "writer" && !isView) && ( // Solo muestra los botones si el usuario ha iniciado sesión
                 <div className="related-column-action">
                 <button
                     className="delete-button"

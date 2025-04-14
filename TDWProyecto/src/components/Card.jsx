@@ -3,16 +3,18 @@ import './Card.css'; // Archivo CSS para estilos
 import { useAuth } from '../context/AuthContext'; // Importa el contexto de autenticación
 import { useNavigate } from 'react-router-dom'; // Importa useNavigate para redirección
 import { DataContext } from '../context/DataContext'; // Importa el DataContext
+//import { deletePerson, deleteEntity, deleteProduct } from '../services/dataService';
 
 
 const Card = ({object}) => {
   const { user } = useAuth(); // Obtén el usuario autenticado del contexto
   const navigate = useNavigate(); // Hook para redirigir
-  const { deleteObject } = useContext(DataContext); // Obtén el método deletePerson del DataContext
+  const { deleteEntity, deletePerson, deleteProduct } = useContext(DataContext); // Obtén el método deletePerson del DataContext
 
   const handleCardClick = () => {
-    navigate(`/view/${object.type}/${object.id}`, { state: { object } }); // Redirige al ObjectView con el objeto como estado
-    console.log("Datos del objeto:", object);
+    //console.log("Objeto clickeado:", object); // Verifica el objeto clickeado
+    navigate(`/view/${object.type}/${object.id}`, { state: { view: true } }); // Redirige al ObjectView con el objeto como estado
+    //console.log("Datos del objeto:", object);
   };
 
   const handleEditClick = (e)=> {
@@ -30,7 +32,19 @@ const Card = ({object}) => {
       console.log("Eliminando objeto:", object);
       //onDelete(object.id); // Llama a la función de eliminación pasada como prop
       //Tengo que ver si el objeto es una persona o una entidad y llamar a la función de eliminación correspondiente
-      deleteObject(object)
+      switch (object.type) {
+        case 'person':
+          deletePerson(object.id); // Llama a la función de eliminación para personas
+          break;
+        case 'entity':
+          deleteEntity(object.id); // Llama a la función de eliminación para entidades
+          break;
+        case 'product':
+          deleteProduct(object.id); // Llama a la función de eliminación para productos
+          break;
+        default:
+          console.log("Tipo de objeto no válido:", object.type); // Maneja el caso de tipo no válido
+      }
     } else {
       console.log("Eliminación cancelada");
     }

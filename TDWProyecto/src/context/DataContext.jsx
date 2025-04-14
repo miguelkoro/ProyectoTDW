@@ -1,5 +1,9 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { fetchPersons, fetchEntities, fetchProducts } from '../services/dataService';
+import { fetchJSONPersons, fetchJSONEntities, fetchJSONProducts, 
+  fetchPersonsFromLocalStorage, fetchEntitiesFromLocalStorage, fetchProductsFromLocalStorage, 
+  fetchPersonByIdFromLocal, fetchEntityByIdFromLocal, fetchProductByIdFromLocal, 
+  deletePersonFromLocal, deleteEntityFromLocal, deleteProductFromLocal,
+  createNewPersonToLocal, createNewEntityToLocal, createNewProductToLocal} from '../services/dataService';
 
 export const DataContext = createContext();
 //Aquí, los datos (persons, entities, products) se cargan una vez y se almacenan en el contexto.
@@ -13,45 +17,131 @@ export const DataProvider = ({ children }) => {
 
   const [isLoading, setIsLoading] = useState(true);
 
-    // con la funcion loadData  cargo los datos desde el componente que lo necesite
-  const loadData = async () => {
+  const [error, setError] = useState(null); // Estado para manejar errores
+  const LOCAL_STORAGE = true; // Estado para manejar el local storage
+
+
+  //Que coja los datos del json y los almacene en el local storage
+  const loadDataFromJson = async () => {
     setIsLoading(true); // Indica que los datos están siendo cargados
-    const [personsData, entitiesData, productsData] = await Promise.all([
-      fetchPersons(),
-      fetchEntities(),
-      fetchProducts(),
+    localStorage.removeItem('persons'); // Elimina solo los datos de personas
+    localStorage.removeItem('entities'); // Elimina solo los datos de entidades
+    localStorage.removeItem('products'); // Elimina solo los datos de productos
+    // Cargar los datos desde el JSON
+    const [personsData, entitiesData, productsData] = await Promise.all([ 
+      fetchJSONPersons(),
+      fetchJSONEntities(),
+      fetchJSONProducts(),
     ]);
-    setPersons(personsData);
-    setEntities(entitiesData);
-    setProducts(productsData);
+    // Guardar los datos en el local storage
+    fetchPersonsFromLocal(); // Cargar datos desde local storage
+    fetchEntitiesFromLocal(); // Cargar datos desde local storage
+    fetchProductsFromLocal(); // Cargar datos desde local storage
     setIsLoading(false); // Indica que los datos han terminado de cargarse
+  }
+  
+  // Cargar datos desde local storage
+  const fetchEntitiesFromLocal = () => {
+    setIsLoading(true); // Indica que los datos están siendo cargados
+    let fetchEntities = fetchEntitiesFromLocalStorage()
+    setEntities(fetchEntities); // Cargar datos desde local storage
+    setIsLoading(false); // Indica que los datos han terminado de cargarse
+  }   
+  
+  const fetchPersonsFromLocal = () => {
+    setIsLoading(true); // Indica que los datos están siendo cargados
+    let fetchPersons = fetchPersonsFromLocalStorage()
+    setPersons(fetchPersons); // Cargar datos desde local storage      
+    setIsLoading(false); // Indica que los datos han terminado de cargarse
+  }
 
-     // Verifica si los datos son instancias de las clases
-  /*if (personsData.length > 0) {
-    console.log('Tipo del primer objeto en personsData:', personsData[0].getType());
-  }*/
-
-
-  };
+  const fetchProductsFromLocal = () => {
+    setIsLoading(true); // Indica que los datos están siendo cargados
+    let fetchProducts = fetchProductsFromLocalStorage()
+    setProducts(fetchProducts); // Cargar datos desde local storage      
+    
+    setIsLoading(false); // Indica que los datos han terminado de cargarse
+  }
+      
 
   // Llama a loadData al montar el componente
   useEffect(() => {
-    loadData();
+    //loadData();
+    LOCAL_STORAGE && loadDataFromJson() // Cargar datos desde JSON al montar el componente
   }, []);
 
   //Metodo que pasandole un id, y el tipo de objeto devuelva el objeto correspondiente
-  const getObjectById = async (id, type) => {
-    switch (type) {
-      case 'Persona':
-        return persons.find((person) => person.id === id);
-      case 'Entidad':
-        return entities.find((entity) => entity.id === id);
-      case 'Producto':
-        return products.find((product) => product.id === id);
-      default:
-        console.error('Tipo de objeto no reconocido:', type);
-    }   
+
+  const getPersonById = async (id) => {
+    if (LOCAL_STORAGE) {
+      // Obtén la persona desde localStorage
+      console.log("getPersonById", id); // Verifica el ID recibido
+      const person = await fetchPersonByIdFromLocal(id);  
+      console.log('Persona encontrada:', person);
+      //console.log('Persona encontrada:', person);
+      if (person) {
+        //console.log('Persona encontrada:', person);  
+        // Actualiza el estado de persons con la nueva persona si no existe
+        setPersons((prevPersons) => {
+          const exists = prevPersons.some((p) => p.id === person.id); // Verifica si ya existe
+          if (!exists) {
+            console.log('Añadiendo nueva persona al estado:', person);
+            return [...prevPersons, person]; // Agrega la nueva persona si no existe
+          }
+          return prevPersons; // Devuelve la lista sin cambios si ya existe
+        });  
+        
+        return person; // Devuelve la persona encontrada
+      } else {
+        console.error(`Persona con ID ${id} no encontrada en localStorage.`);
+      }
+    }
+    return null; // Devuelve null si LOCAL_STORAGE es false o no se encuentra la persona
+  };
+  const getEntityById = async (id) => {
+    if (LOCAL_STORAGE) {
+      const entity = await fetchEntityByIdFromLocal(id);
+      //console.log('Entidad encontrada:', entity);
+      if(entity) {
+        setEntities((prevEntities) => {
+          const exists = prevEntities.some((e) => e.id === entity.id); // Verifica si ya existe
+          if (!exists) {
+            console.log('Añadiendo nueva entidad al estado:', entity);
+            return [...prevEntities, entity]; // Agrega la nueva entidad si no existe
+          }
+          return prevEntities; // Devuelve la lista sin cambios si ya existe
+        });
+        return entity; // Devuelve la entidad encontrada
+      }
+      else {
+        console.error(`Entidad con ID ${id} no encontrada en localStorage.`);
+      }
+      return null; // Devuelve null si LOCAL_STORAGE es false o no se encuentra la entidad
+    }
   }
+  const getProductById = async (id) => {
+    if (LOCAL_STORAGE) {
+      const product = fetchProductByIdFromLocal(id);
+      if (product) {
+        //console.log('Producto encontrado:', product);
+  
+        // Actualiza el estado de products con el nuevo producto si no existe
+        setProducts((prevProducts) => {
+          const exists = prevProducts.some((p) => p.id === product.id); // Verifica si ya existe
+          if (!exists) {
+           // console.log('Añadiendo nuevo producto al estado:', product);
+            return [...prevProducts, product]; // Agrega el nuevo producto si no existe
+          }
+          return prevProducts; // Devuelve la lista sin cambios si ya existe
+        });
+  
+        return product; // Devuelve el producto encontrado
+      } else {
+        console.error(`Producto con ID ${id} no encontrado en localStorage.`);
+      }
+    }
+    return null; // Devuelve null si LOCAL_STORAGE es false o no se encuentra el producto
+  };
 
   const deleteRelation = async (idObject, type, typeRelation, idRelation) => {
     try {
@@ -114,56 +204,69 @@ export const DataProvider = ({ children }) => {
   };
 
   const addRelation = (idObject, type, typeRelation, idRelation) => {
+    let relationAdded = false; // Variable para rastrear si se añadió la relación
+  
     switch (type) {
       case 'person':
         setPersons((prevPersons) =>
-          prevPersons.map((person) =>
-            person.id === idObject
-              ? {
+          prevPersons.map((person) => {
+            if (person.id === idObject) {
+              // Verifica si la relación ya existe
+              if (!person[typeRelation]?.includes(idRelation)) {
+                relationAdded = true; // Marca que se añadió la relación
+                return {
                   ...person,
-                  [typeRelation]: person[typeRelation]?.includes(idRelation)
-                    ? person[typeRelation] // Si ya existe, no lo añade
-                    : [...(person[typeRelation] || []), idRelation],
-                }
-              : person
-          )
+                  [typeRelation]: [...(person[typeRelation] || []), idRelation],
+                };
+              }
+            }
+            return person;
+          })
         );
         break;
   
       case 'entity':
         setEntities((prevEntities) =>
-          prevEntities.map((entity) =>
-            entity.id === idObject
-              ? {
+          prevEntities.map((entity) => {
+            if (entity.id === idObject) {
+              // Verifica si la relación ya existe
+              if (!entity[typeRelation]?.includes(idRelation)) {
+                relationAdded = true; // Marca que se añadió la relación
+                return {
                   ...entity,
-                  [typeRelation]: entity[typeRelation]?.includes(idRelation)
-                    ? entity[typeRelation] // Si ya existe, no lo añade
-                    : [...(entity[typeRelation] || []), idRelation],
-                }
-              : entity
-          )
+                  [typeRelation]: [...(entity[typeRelation] || []), idRelation],
+                };
+              }
+            }
+            return entity;
+          })
         );
         break;
   
       case 'product':
         setProducts((prevProducts) =>
-          prevProducts.map((product) =>
-            product.id === idObject
-              ? {
+          prevProducts.map((product) => {
+            if (product.id === idObject) {
+              // Verifica si la relación ya existe
+              if (!product[typeRelation]?.includes(idRelation)) {
+                relationAdded = true; // Marca que se añadió la relación
+                return {
                   ...product,
-                  [typeRelation]: product[typeRelation]?.includes(idRelation)
-                    ? product[typeRelation] // Si ya existe, no lo añade
-                    : [...(product[typeRelation] || []), idRelation],
-                }
-              : product
-          )
+                  [typeRelation]: [...(product[typeRelation] || []), idRelation],
+                };
+              }
+            }
+            return product;
+          })
         );
         break;
   
       default:
         console.error('Tipo de objeto no reconocido:', type);
     }
-    console.log(products);
+  
+    console.log(`Relación añadida: ${relationAdded}`);
+    return relationAdded; // Devuelve true si se añadió la relación, false en caso contrario
   };
 
   const createNewObject = (object) => {
@@ -183,44 +286,40 @@ export const DataProvider = ({ children }) => {
 
   }
 
-  //Modificar mas tarde la llamada a dataService para realizar el borrado contra la API
-  const deleteObjectById = async (object) => {
-    try {
-      console.log('Estado actual de object:', object);
-      switch (object.type) {
-        case 'person':
-          //await deletePerson(object.id);
-          setPersons((prevPersons) => {
-            const updatedPersons = prevPersons.filter((person) => person.id !== object.id);
-            console.log('Estado actualizado de persons:', updatedPersons);
-            return updatedPersons;
-          });
-          console.log(`Persona con id ${object.id} eliminada.`);
-          break;
-        case 'entity':
-          //await deleteEntity(object.id);
-          setEntities((prevEntities) => {
-            const updatedEntities = prevEntities.filter((entity) => entity.id !== object.id);
-            console.log('Estado actualizado de entities:', updatedEntities);
-            return updatedEntities;
-          });
-          break;
-        case 'product':
-          //await deleteProduct(object.id);
-          setProducts((prevProducts) => {
-            const updatedProducts = prevProducts.filter((product) => product.id !== object.id);
-            console.log('Estado actualizado de products:', updatedProducts);
-            return updatedProducts;
-          }); 
-          break;
-        default:
-          console.error('Tipo de objeto no reconocido:', object.type);
-      }
-      
-    } catch (error) {
-      console.error('Error al eliminar el objeto:', error);
+  const deletePerson = (id) => {
+    if(deletePersonFromLocal(id)) {
+      setPersons((prevPersons) => prevPersons.filter((person) => person.id !== id)); //Lo quita de las constantes
     }
+  }
+  const deleteEntity = (id) => {
+    if(deleteEntityFromLocal(id)) { //Lo borra de localstorage
+      setEntities((prevEntities) => prevEntities.filter((entity) => entity.id !== id)); //Lo quita de las constantes
+    }
+  }
+  const deleteProduct = (id) => {
+    if(deleteProductFromLocal(id)) {
+      setProducts((prevProducts) => prevProducts.filter((product) => product.id !== id)); //Lo quita de las constantes
+    }
+  }
+
+  const createNewPerson = (person) => {
+    createNewPersonToLocal(person); //Crea la persona en el local storage 
+    //setPersons((prevPersons) => [...prevPersons, person]);
+    fetchPersonsFromLocal(); // Cargar datos desde local storage
   };
+  const createNewEntity = (entity) => {
+    createNewEntityToLocal(entity); //Llama al servicio para crear la nueva entidad
+    //setEntities((prevEntities) => [...prevEntities, entity]);
+    fetchEntitiesFromLocal(); // Cargar datos desde local storage
+  }
+  const createNewProduct = (product) => {
+    console.log("createNewProdfdfduct", product); // Verifica el nuevo producto creado
+    createNewProductToLocal(product); //Llama al servicio para crear el nuevo producto
+    //setProducts((prevProducts) => [...prevProducts, product]);
+    fetchProductsFromLocal(); // Cargar datos desde local storage
+    console.log("creat", products); // Verifica el nuevo producto creado
+  }
+
 
   return (
     <DataContext.Provider value={{ 
@@ -228,10 +327,16 @@ export const DataProvider = ({ children }) => {
           entities, 
           products, 
           isLoading, 
-          reloadData: loadData,
-          deleteObject: deleteObjectById,
-          getObject: getObjectById,
-          createObject: createNewObject,
+          getPersonById : getPersonById,
+          getEntityById : getEntityById,
+          getProductById : getProductById,
+          deleteEntity,
+          deleteProduct,
+          deletePerson,
+          //createObject: createNewObject,
+          createNewEntity,
+          createNewProduct,
+          createNewPerson,
           deleteRelation,
           addRelation}}>
       {children}

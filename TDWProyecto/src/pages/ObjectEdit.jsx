@@ -3,13 +3,21 @@ import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import './ObjectView.css'; // Reutilizamos los estilos de ObjectView
 import { DataContext } from '../context/DataContext'; // Contexto para guardar datos
 import './ObjectView.css'; // Archivo CSS para estilos
+import  Persona  from '../models/Persona'; // Importa el modelo Persona
+import  Entidad  from '../models/Entidad'; // Importa el modelo Entidad
+import  Producto  from '../models/Producto'; // Importa el modelo Producto
 
 const ObjectEdit = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { type, id } = useParams();
-  const { object } = location.state || {}; // Objeto recibido desde el navigate
-  const { saveObject } = useContext(DataContext); // Método para guardar el objeto
+  const [object, setObject] = useState(null); // Estado para el objeto
+  const { getProductById, getPersonById, getEntityById, createNewEntity, createNewPerson, createNewProduct} = useContext(DataContext); // Accede al método getObjectById del contexto
+
+
+  const isNew= location.state?.new || false;
+
+
 
   // Estados para los campos del formulario
   const [name, setName] = useState('');
@@ -20,49 +28,114 @@ const ObjectEdit = () => {
 
 
   // Determinar si es un nuevo objeto o uno existente
-  const isNew = !object;
+  //const isNew = !object;
 
+
+   useEffect(() => {
+    console.log("type", type); // Verifica si es un nuevo objeto
+    if(isNew) return; // Si es un nuevo objeto, no hacemos nada
+      async function fetchObject() {
+        try {
+          let fetchedObject = null;
+    
+          // Realiza el fetch según el tipo
+          switch (type) {
+            case 'person':fetchedObject = await getPersonById(id); break;
+            case 'entity':fetchedObject = await getEntityById(id);break;
+            case 'product':fetchedObject = await getProductById(id);break;
+            default: console.error(`Tipo no válido: ${type}`); break;
+          }
+    
+          if (fetchedObject) {
+            setObject(fetchedObject); // Guarda el objeto en el estado
+            //console.log('Objeto obtenido:', fetchedObject); // Verifica el objeto obtenido
+          } else {
+            console.error(`No se encontró un objeto con ID ${id} y tipo ${type}`);
+            setObject(null); // Establece el estado como null si no se encuentra el objeto
+          }
+        } catch (error) {
+          console.error('Error al obtener el objeto:', error);
+          setObject(null); // Maneja errores estableciendo el estado como null
+        } finally {
+          //setIsLoading(false); // Finaliza la carga
+          /*if (!isNew) {
+            // Si es un objeto existente, rellenar los campos con sus datos
+            setName(object.name || '');
+            setBirthDate(object.birthDate  || '');
+            setDeathDate(object.deathDate  || '');
+            setWikiUrl(object.wikiUrl || '');
+            setImageUrl(object.imageUrl || ''); // Inicializar la URL de la imagen
+      
+          }*/
+        }
+      }
+    
+      fetchObject(); // Llama a la función para obtener el objeto
+    }, [type, id, getPersonById, getEntityById, getProductById]);
 
   useEffect(() => {
-    if (!isNew) {
+    if (!isNew && object) {
       // Si es un objeto existente, rellenar los campos con sus datos
       setName(object.name || '');
       setBirthDate(object.birthDate  || '');
       setDeathDate(object.deathDate  || '');
-      setWikiUrl(object.wikiUrl || '');
-      setImageUrl(object.imageUrl || ''); // Inicializar la URL de la imagen
+      setWikiUrl(object.wikiUrl || 'null');
+      setImageUrl(object.imageUrl || 'https://static.thenounproject.com/png/559530-200.png'); // Inicializar la URL de la imagen
 
     }
-  }, [isNew, object]);
+  }, [ object]);
 
- 
+
+  const saveNewObject = () => {
+    let newObject;
+    switch (type) {
+      case 'person':
+        newObject = new Persona({name,birthDate,deathDate,wikiUrl,imageUrl,type:'person'}); // Crear un nuevo objeto persona
+        createNewPerson(newObject); // Guardar como persona
+        break;
+      case 'entity':
+        newObject = new Entidad({name,birthDate,deathDate,wikiUrl,imageUrl,type:'entity'}); // Crear un nuevo objeto persona
+        createNewEntity(newObject); // Guardar como entidad
+        break;
+      case 'product':
+        newObject = new Producto({name,birthDate,deathDate,wikiUrl,imageUrl,type:'product'}); // Crear un nuevo objeto persona
+        createNewProduct(newObject); // Guardar como producto
+        break;
+      default: break;
+    }
+    //saveObject(newObject); // Guardar el objeto usando el contexto
+    navigate(-1); // Volver a la página anterior
+  }
+
+  const updateObject = () => {
+  }
+
+  const newTitle = () => {
+    switch (type) {
+      case 'person':
+        return 'Nueva Persona'; 
+      case 'entity':
+        return 'Nueva Entidad'; 
+      case 'product':
+        return 'Nuevo Producto';
+      default:
+        return 'Objeto';
+    }
+  }
 
   const handleSave = () => {
-    const updatedObject = {
-      id: isNew ? '?' : id, // Si es nuevo, el ID será una interrogación
-      name,
-      birthDate,
-      deathDate,
-      wikiUrl,
-      imageUrl, // Guardar la URL de la imagen
-    };
-
-    saveObject(updatedObject); // Guardar el objeto usando el contexto
-    navigate(-1); // Volver a la página anterior
+    isNew ? saveNewObject() : updateObject(); // Guardar o actualizar el objeto según corresponda
   };
 
   const handleCancel = () => {
     navigate(-1); // Volver a la página anterior sin guardar
   };
 
-  const birthLabel = type === 'Persona' ? 'Nacimiento' : 'Creación';
-  const deathLabel = type === 'Persona' ? 'Fallecimiento' : 'Descontinuación';
-
   return (
     <div className="object-view-panel">
       {/* Fila principal: Título centrado y ID a la derecha */}
       <div className="object-header">
-        <h1 className="object-title">{isNew ? `Nuevos ${type || 'Objeto'}` : `Editar ${type || 'Objeto:'}: ${name}`}</h1>
+        <h1 className="object-title">{isNew ? `${newTitle()}` : `Editar ${type || 'Objeto:'}: ${name}`}</h1>
         <span className="object-id">ID: {isNew ? '?' : id}</span>
       </div>
       <hr className="object-divider" />
@@ -97,7 +170,7 @@ const ObjectEdit = () => {
             />
           </div>
           <div className="object-detail-row">
-            <strong>{birthLabel}:</strong>
+            <strong>{type === "person" ? "Nacimiento" : "Creacion"}:</strong>
             <input
               type="date"
               value={birthDate}
@@ -105,7 +178,7 @@ const ObjectEdit = () => {
             />
           </div>
           <div className="object-detail-row">
-            <strong>{deathLabel}:</strong>
+            <strong>{type === "person" ? "Muerte" : "Descontinuacion"}:</strong>
             <input
               type="date"
               value={deathDate}
