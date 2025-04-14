@@ -3,7 +3,8 @@ import { fetchJSONPersons, fetchJSONEntities, fetchJSONProducts,
   fetchPersonsFromLocalStorage, fetchEntitiesFromLocalStorage, fetchProductsFromLocalStorage, 
   fetchPersonByIdFromLocal, fetchEntityByIdFromLocal, fetchProductByIdFromLocal, 
   deletePersonFromLocal, deleteEntityFromLocal, deleteProductFromLocal,
-  createNewPersonToLocal, createNewEntityToLocal, createNewProductToLocal} from '../services/dataService';
+  createNewPersonToLocal, createNewEntityToLocal, createNewProductToLocal,
+  updateProductInLocal} from '../services/dataService';
 
 export const DataContext = createContext();
 //Aquí, los datos (persons, entities, products) se cargan una vez y se almacenan en el contexto.
@@ -83,7 +84,7 @@ export const DataProvider = ({ children }) => {
         //console.log('Persona encontrada:', person);  
         // Actualiza el estado de persons con la nueva persona si no existe
         setPersons((prevPersons) => {
-          const exists = prevPersons.some((p) => p.id === person.id); // Verifica si ya existe
+          const exists = prevPersons.some((p) => p.id === Number(person.id)); // Verifica si ya existe
           if (!exists) {
             console.log('Añadiendo nueva persona al estado:', person);
             return [...prevPersons, person]; // Agrega la nueva persona si no existe
@@ -104,7 +105,7 @@ export const DataProvider = ({ children }) => {
       //console.log('Entidad encontrada:', entity);
       if(entity) {
         setEntities((prevEntities) => {
-          const exists = prevEntities.some((e) => e.id === entity.id); // Verifica si ya existe
+          const exists = prevEntities.some((e) => e.id === Number(entity.id)); // Verifica si ya existe
           if (!exists) {
             console.log('Añadiendo nueva entidad al estado:', entity);
             return [...prevEntities, entity]; // Agrega la nueva entidad si no existe
@@ -127,7 +128,7 @@ export const DataProvider = ({ children }) => {
   
         // Actualiza el estado de products con el nuevo producto si no existe
         setProducts((prevProducts) => {
-          const exists = prevProducts.some((p) => p.id === product.id); // Verifica si ya existe
+          const exists = prevProducts.some((p) => p.id === Number(product.id)); // Verifica si ya existe
           if (!exists) {
            // console.log('Añadiendo nuevo producto al estado:', product);
             return [...prevProducts, product]; // Agrega el nuevo producto si no existe
@@ -203,102 +204,50 @@ export const DataProvider = ({ children }) => {
     }
   };
 
-  const addRelation = (idObject, type, typeRelation, idRelation) => {
-    let relationAdded = false; // Variable para rastrear si se añadió la relación
-  
-    switch (type) {
-      case 'person':
-        setPersons((prevPersons) =>
-          prevPersons.map((person) => {
-            if (person.id === idObject) {
-              // Verifica si la relación ya existe
-              if (!person[typeRelation]?.includes(idRelation)) {
-                relationAdded = true; // Marca que se añadió la relación
-                return {
-                  ...person,
-                  [typeRelation]: [...(person[typeRelation] || []), idRelation],
-                };
-              }
-            }
-            return person;
-          })
-        );
-        break;
-  
-      case 'entity':
-        setEntities((prevEntities) =>
-          prevEntities.map((entity) => {
-            if (entity.id === idObject) {
-              // Verifica si la relación ya existe
-              if (!entity[typeRelation]?.includes(idRelation)) {
-                relationAdded = true; // Marca que se añadió la relación
-                return {
-                  ...entity,
-                  [typeRelation]: [...(entity[typeRelation] || []), idRelation],
-                };
-              }
-            }
-            return entity;
-          })
-        );
-        break;
-  
-      case 'product':
-        setProducts((prevProducts) =>
-          prevProducts.map((product) => {
-            if (product.id === idObject) {
-              // Verifica si la relación ya existe
-              if (!product[typeRelation]?.includes(idRelation)) {
-                relationAdded = true; // Marca que se añadió la relación
-                return {
-                  ...product,
-                  [typeRelation]: [...(product[typeRelation] || []), idRelation],
-                };
-              }
-            }
-            return product;
-          })
-        );
-        break;
-  
-      default:
-        console.error('Tipo de objeto no reconocido:', type);
-    }
-  
-    console.log(`Relación añadida: ${relationAdded}`);
+  const addRelationToProduct = (idObject, typeRelation, idRelation) => {
+    let relationAdded = false; // Variable para rastrear si se añadió la relación  
     return relationAdded; // Devuelve true si se añadió la relación, false en caso contrario
   };
+  const addRelationToEntity = (idObject, typeRelation, idRelation) => {
+    let relationAdded = false; // Variable para rastrear si se añadió la relación
+    return relationAdded; // Devuelve true si se añadió la relación, false en caso contrario
+  }
 
-  const createNewObject = (object) => {
-    switch (object.getType()) {
-      case 'Persona':
-        setPersons((prevPersons) => [...prevPersons, object]);
-        break;
-      case 'Entidad':
-        setEntities((prevEntities) => [...prevEntities, object]);
-        break;
-      case 'Producto':
-        setProducts((prevProducts) => [...prevProducts, object]);
-        break;
-      default:
-        console.error('Tipo de objeto no reconocido:', object.getType());
+  const updateProduct = (id, updatedProduct) => {    
+    if(updateProductInLocal(id, updatedProduct)) { //Lo actualiza en el local storage
+      setProducts((prevProducts) => 
+        prevProducts.map((product) => (product.id === Number(id) ? updatedProduct : product))
+      );
     }
-
+  };
+  const updatePerson = (id, updatedPerson) => {
+    if(updateProductInLocal(id, updatedPerson)) { //Lo actualiza en el local storage
+      setPersons((prevPersons) => 
+        prevPersons.map((person) => (person.id === Number(id) ? updatedPerson : person))
+      );
+    }
+  }
+  const updateEntity = (id, updatedEntity) => {
+    if(updateProductInLocal(id, updatedEntity)) { //Lo actualiza en el local storage
+      setEntities((prevEntities) => 
+        prevEntities.map((entity) => (entity.id === Number(id) ? updatedEntity : entity))
+      );
+    }
   }
 
   const deletePerson = (id) => {
     if(deletePersonFromLocal(id)) {
-      setPersons((prevPersons) => prevPersons.filter((person) => person.id !== id)); //Lo quita de las constantes
+      setPersons((prevPersons) => prevPersons.filter((person) => person.id !== Number(id))); //Lo quita de las constantes
     }
   }
   const deleteEntity = (id) => {
     if(deleteEntityFromLocal(id)) { //Lo borra de localstorage
-      setEntities((prevEntities) => prevEntities.filter((entity) => entity.id !== id)); //Lo quita de las constantes
+      setEntities((prevEntities) => prevEntities.filter((entity) => entity.id !== Number(id))); //Lo quita de las constantes
     }
   }
   const deleteProduct = (id) => {
     if(deleteProductFromLocal(id)) {
-      setProducts((prevProducts) => prevProducts.filter((product) => product.id !== id)); //Lo quita de las constantes
+      setProducts((prevProducts) => prevProducts.filter((product) => product.id !== Number(id))); //Lo quita de las constantes
     }
   }
 
@@ -321,6 +270,8 @@ export const DataProvider = ({ children }) => {
   }
 
 
+
+
   return (
     <DataContext.Provider value={{ 
           persons, 
@@ -333,12 +284,15 @@ export const DataProvider = ({ children }) => {
           deleteEntity,
           deleteProduct,
           deletePerson,
-          //createObject: createNewObject,
+          updateProduct,
+          updatePerson,
+          updateEntity,
           createNewEntity,
           createNewProduct,
           createNewPerson,
           deleteRelation,
-          addRelation}}>
+          addRelationToProduct,
+          addRelationToEntity}}>
       {children}
     </DataContext.Provider>
   );

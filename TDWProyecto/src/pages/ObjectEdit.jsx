@@ -12,7 +12,9 @@ const ObjectEdit = () => {
   const location = useLocation();
   const { type, id } = useParams();
   const [object, setObject] = useState(null); // Estado para el objeto
-  const { getProductById, getPersonById, getEntityById, createNewEntity, createNewPerson, createNewProduct} = useContext(DataContext); // Accede al método getObjectById del contexto
+  const { getProductById, getPersonById, getEntityById, 
+          createNewEntity, createNewPerson, createNewProduct,
+          updateEntity, updateProduct, updatePerson} = useContext(DataContext); // Accede al método getObjectById del contexto
 
 
   const isNew= location.state?.new || false;
@@ -57,16 +59,7 @@ const ObjectEdit = () => {
           console.error('Error al obtener el objeto:', error);
           setObject(null); // Maneja errores estableciendo el estado como null
         } finally {
-          //setIsLoading(false); // Finaliza la carga
-          /*if (!isNew) {
-            // Si es un objeto existente, rellenar los campos con sus datos
-            setName(object.name || '');
-            setBirthDate(object.birthDate  || '');
-            setDeathDate(object.deathDate  || '');
-            setWikiUrl(object.wikiUrl || '');
-            setImageUrl(object.imageUrl || ''); // Inicializar la URL de la imagen
-      
-          }*/
+
         }
       }
     
@@ -108,6 +101,24 @@ const ObjectEdit = () => {
   }
 
   const updateObject = () => {
+    // Crear una copia local del objeto actualizado
+  const updatedObject = { ...object, name, birthDate, deathDate, wikiUrl, imageUrl };
+  console.log('Objeto actualizado:', updatedObject); // Verifica el objeto actualizado
+  // Actualizar el estado con el objeto actualizado
+  setObject(updatedObject);
+
+    switch (type) {
+      case 'person':       
+        updatePerson(id,updatedObject); // Guardar como persona
+        break;
+      case 'entity':
+        updateEntity(id,updatedObject); // Guardar como entidad
+        break;
+      case 'product':
+        updateProduct(id,updatedObject); // Guardar como producto
+        break;
+      default: break;
+    }
   }
 
   const newTitle = () => {
@@ -207,6 +218,8 @@ const ObjectEdit = () => {
           Guardar
         </button>
       </div>
+
+      
     </div>
   );
 };

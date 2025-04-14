@@ -25,6 +25,7 @@ const ObjectView = (props) => {
   //console.log("getObjectById:", getObject);
 
   useEffect(() => {
+    setIsLoading(true); // Inicia la carga
     async function fetchObject() {
       try {
         let fetchedObject = null;

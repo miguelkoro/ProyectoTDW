@@ -9,7 +9,7 @@ import { useLocation } from 'react-router-dom'; // Importa useLocation para obte
 const RelatedSection = ({ type, relatedObjects = [], father, fatherType, onAddRelation}) => {
     //console.log("Objetos relacionados:", objects); // Verifica los objetos relacionados
     const { user } = useAuth(); // Obtén el usuario autenticado del contexto
-    const { persons, entities, addRelation } = useContext(DataContext); // Obtén datos y método del contexto
+    const { persons, entities } = useContext(DataContext); // Obtén datos y método del contexto
     const [selectedId, setSelectedId] = useState(''); // Estado para el ID seleccionado
     const [localRelatedObjects, setLocalRelatedObjects] = useState(relatedObjects); // Estado local para los objetos relacionados
     const location = useLocation(); // Obtén la ubicación actual
@@ -34,11 +34,11 @@ const RelatedSection = ({ type, relatedObjects = [], father, fatherType, onAddRe
     // Actualiza el estado local cuando cambien las props `relatedObjects`
   useEffect(() => {
     setLocalRelatedObjects(relatedObjects);
-    console.log('Objetos relacionados actualizados:', isView); // Depuración
-  }, [relatedObjects]);
+    console.log('Objetos relacionados actualizados:', relatedObjects); // Depuración
+  }, [localRelatedObjects]);
 
     const handleAddRelation = () => {
-      if (!selectedId) {
+     /* if (!selectedId) {
         console.log('No se seleccionó un ID'); // Depuración
         return; // No hacer nada si no se seleccionó un ID
       }
@@ -60,7 +60,7 @@ const RelatedSection = ({ type, relatedObjects = [], father, fatherType, onAddRe
         }
       } else {
         console.log('La relación ya existe, no se añadió.');
-      }
+      }*/
         //setRelatedObjects((prevRelatedObjects) => [...prevRelatedObjects, selectedObject]);
       
     };
