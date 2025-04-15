@@ -78,9 +78,9 @@ export const DataProvider = ({ children }) => {
   const getPersonById = async (id) => {
     if (LOCAL_STORAGE) {
       // Obtén la persona desde localStorage
-      console.log("getPersonById", id); // Verifica el ID recibido
+      //console.log("getPersonById", id); // Verifica el ID recibido
       const person = await fetchPersonByIdFromLocal(id);  
-      console.log('Persona encontrada:', person);
+      //console.log('Persona encontrada:', person);
       //console.log('Persona encontrada:', person);
       if (person) {
         //console.log('Persona encontrada:', person);  
@@ -302,7 +302,7 @@ export const DataProvider = ({ children }) => {
     createNewProductToLocal(product); //Llama al servicio para crear el nuevo producto
     //setProducts((prevProducts) => [...prevProducts, product]);
     fetchProductsFromLocal(); // Cargar datos desde local storage
-    console.log("creat", products); // Verifica el nuevo producto creado
+    //console.log("creat", products); // Verifica el nuevo producto creado
   }
 
 

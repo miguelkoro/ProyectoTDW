@@ -115,7 +115,7 @@ export const fetchProductsFromLocalStorage = () => {
 //getObject by id from local storage
 export const fetchPersonByIdFromLocal = (id) => {
   const persons = fetchPersonsFromLocalStorage();
-  console.log("fetchPersonByIdFromLocal", id, persons); // Verifica los datos obtenidos
+  //console.log("fetchPersonByIdFromLocal", id, persons); // Verifica los datos obtenidos
   const person = persons.find((person) => person.id === Number(id));
   return person; // Devuelve la persona encontrada o undefined si no existe
 };
@@ -263,7 +263,7 @@ export const updateProductInLocal = (id, updatedProduct) => {
     const products = fetchProductsFromLocalStorage();     // Obtén todos los productos del localStorage
     // Encuentra el índice del producto con el ID especificado
     const productIndex = products.findIndex((product) => product.id === Number(id));
-    console.log("updateProductInLocal", id, updatedProduct); // Verifica los datos obtenidos
+    //console.log("updateProductInLocal", id, updatedProduct); // Verifica los datos obtenidos
     if (productIndex === -1) {
       console.error(`Producto con ID ${id} no encontrado.`);
       return false; // Indica que no se encontró el producto
@@ -278,7 +278,7 @@ export const updateProductInLocal = (id, updatedProduct) => {
     // Guarda la lista actualizada en el localStorage
     localStorage.setItem('products', JSON.stringify(products));
 
-    console.log(`Producto con ID ${id} actualizado en el localStorage.`, products[productIndex]);
+    //console.log(`Producto con ID ${id} actualizado en el localStorage.`, products[productIndex]);
     return true; // Indica que la operación fue exitosa
   } catch (error) {
     console.error(`Error al actualizar el producto con ID ${id} en el localStorage:`, error);
@@ -300,7 +300,7 @@ export const updatePersonInLocal = (id, updatedPerson) => {
       ...updatedPerson, // Sobrescribe con los valores actualizados
     };
     localStorage.setItem('persons', JSON.stringify(persons)); // Guarda la lista actualizada en el localStorage
-    console.log(`Persona con ID ${id} actualizada en el localStorage.`, persons[personIndex]);
+    //console.log(`Persona con ID ${id} actualizada en el localStorage.`, persons[personIndex]);
     return true; // Indica que la operación fue exitosa
   } catch (error) {
     console.error(`Error al actualizar la persona con ID ${id} en el localStorage:`, error);
@@ -321,7 +321,7 @@ export const updateEntityInLocal = (id, updatedEntity) => {
       ...updatedEntity, // Sobrescribe con los valores actualizados
     };
     localStorage.setItem('entities', JSON.stringify(entities)); // Guarda la lista actualizada en el localStorage
-    console.log(`Entidad con ID ${id} actualizada en el localStorage.`, entities[entityIndex]);
+    //console.log(`Entidad con ID ${id} actualizada en el localStorage.`, entities[entityIndex]);
     return true; // Indica que la operación fue exitosa
   } catch (error) {
     console.error(`Error al actualizar la entidad con ID ${id} en el localStorage:`, error);
@@ -350,11 +350,13 @@ export const createNewEntityToLocal = (entity) => {
   return newEntity; // Devuelve la nueva entidad creada
 }
 export const createNewProductToLocal = (product) => {
+  //console.log("createNewProductToLocal", product); // Verifica el producto recibido
   const products = fetchProductsFromLocalStorage(); // Obtén la lista actual de productos
   const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1; // Genera un nuevo ID
   const newProduct = new Producto({ ...product, id: newId }); // Crea una nueva instancia de Producto con el nuevo ID
   newProduct.setType('product'); // Configura el tipo como 'product'
   products.push(newProduct); // Agrega el nuevo producto a la lista
+  //console.log("createNewProduct", newProduct); // Verifica el nuevo producto creado
   localStorage.setItem('products', JSON.stringify(products)); // Guarda la lista actualizada en el local storage
   return newProduct; // Devuelve el nuevo producto creado
 }

@@ -33,7 +33,7 @@ const RelatedSection = ({ type, relatedObjects = [], father}) => {
 
     // Actualiza el estado local cuando cambien las props `relatedObjects`
   useEffect(() => {
-    console.log("relatedObjects: ", relatedObjects, " dfdfdf: ",father); // Verifica los objetos relacionados
+    //console.log("relatedObjects: ", relatedObjects, " dfdfdf: ",father); // Verifica los objetos relacionados
   }, []);
 
     const handleAddRelation = () => {

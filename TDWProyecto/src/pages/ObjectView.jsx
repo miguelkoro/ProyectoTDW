@@ -29,7 +29,7 @@ const ObjectView = (props) => {
     async function fetchObject() {
       try {
         let fetchedObject = null;
-        console.log("fetchObject", type, id); // Verifica el tipo y el id
+        //console.log("fetchObject", type, id); // Verifica el tipo y el id
         // Realiza el fetch según el tipo
         switch (type) {
           case 'person':fetchedObject = await getPersonById(id); break;

@@ -20,7 +20,7 @@ const Card = ({object}) => {
   const handleEditClick = (e)=> {
     e.stopPropagation(); // Evita que el evento de clic se propague al contenedor del card
     navigate(`/edit/${object.type}/${object.id}`, { state: { object } }); // Redirige al ObjectView con el objeto como estado
-    console.log("editar objeto:", object);
+    //console.log("editar objeto:", object);
   }
 
   const handleDeleteClick = (e) => {
@@ -29,7 +29,7 @@ const Card = ({object}) => {
       `¿Estás seguro de que deseas eliminar el objeto "${object.name}"?`
     );
     if (confirmDelete) {
-      console.log("Eliminando objeto:", object);
+      //console.log("Eliminando objeto:", object);
       //onDelete(object.id); // Llama a la función de eliminación pasada como prop
       //Tengo que ver si el objeto es una persona o una entidad y llamar a la función de eliminación correspondiente
       switch (object.type) {

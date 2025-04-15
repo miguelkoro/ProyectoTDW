@@ -27,7 +27,7 @@ const Section = ({title, objects = []}) => {
     }
     // Aquí puedes implementar la lógica para crear un nuevo objeto
     navigate(`/new/${newTitle} `, {state:{new:true}}); // Redirige a la página de creación de nuevo objeto
-    console.log("Crear nuevo objeto:", title);
+    //console.log("Crear nuevo objeto:", title);
   }
 
   return (

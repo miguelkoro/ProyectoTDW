@@ -40,7 +40,7 @@ const ObjectEdit = () => {
 
 
    useEffect(() => {
-    console.log("type", type); // Verifica si es un nuevo objeto
+    //console.log("type", type); // Verifica si es un nuevo objeto
     if(isNew) return; // Si es un nuevo objeto, no hacemos nada
       async function fetchObject() {
         try {
@@ -114,18 +114,30 @@ const ObjectEdit = () => {
 
 
   const saveNewObject = () => {
+    //console.log("nacimiento: ", birthDate, " muerte: ", deathDate, " wikiUrl: ", wikiUrl, " imageUrl: ", imageUrl);
+    if(!name) {
+      console.error("El nombre no puede estar vacío"); // Mensaje de error si el nombre está vacío
+      return; // Si el nombre está vacío, no se puede crear el objeto
+    }
+
     let newObject;
+    let birthDateTemp = birthDate === '' ? '2015-12-05' : birthDate; // Si la fecha de nacimiento está vacía, asigna una fecha por defecto
+    let deathDateTemp = deathDate === '' ? '2025-05-30' : deathDate; // Si la fecha de muerte está vacía, asigna una fecha por defecto
+    let imageUrlTemp = imageUrl === '' ? "https://static.thenounproject.com/png/559530-200.png" : imageUrl; // Si la URL de la imagen está vacía, asigna una URL por defecto
+    //console.log("nacimiento: ", birthDateTemp, " muerte: ", deathDateTemp, " wikiUrl: ", wikiUrl, " imageUrl: ", imageUrlTemp);
     switch (type) {
       case 'person':
-        newObject = new Persona({name,birthDate,deathDate,wikiUrl,imageUrl,type:'person'}); // Crear un nuevo objeto persona
+        newObject = new Persona({name, birthDate:birthDateTemp, deathDate:deathDateTemp, wikiUrl, imageUrl:imageUrlTemp, type: 'person'}); // Crear un nuevo objeto persona
+
         createNewPerson(newObject); // Guardar como persona
         break;
       case 'entity':
-        newObject = new Entidad({name,birthDate,deathDate,wikiUrl,imageUrl,type:'entity'}); // Crear un nuevo objeto persona
+        newObject = new Entidad({name,birthDate:birthDateTemp,deathDate:deathDateTemp,wikiUrl,imageUrl:imageUrlTemp,type:'entity'}); // Crear un nuevo objeto entidad
         createNewEntity(newObject); // Guardar como entidad
         break;
       case 'product':
-        newObject = new Producto({name,birthDate,deathDate,wikiUrl,imageUrl,type:'product'}); // Crear un nuevo objeto persona
+        newObject = new Producto({name,birthDate:birthDateTemp,deathDate:deathDateTemp,wikiUrl,imageUrl:imageUrlTemp,type:'product'}); // Crear un nuevo objeto producto
+        console.log("newObject: ", newObject);
         createNewProduct(newObject); // Guardar como producto
         break;
       default: break;
@@ -137,7 +149,7 @@ const ObjectEdit = () => {
   const updateObject = () => {
     // Crear una copia local del objeto actualizado
   const updatedObject = { ...object, name, birthDate, deathDate, wikiUrl, imageUrl };
-  console.log('Objeto actualizado:', updatedObject); // Verifica el objeto actualizado
+  //console.log('Objeto actualizado:', updatedObject); // Verifica el objeto actualizado
   // Actualizar el estado con el objeto actualizado
   setObject(updatedObject);
 
@@ -252,8 +264,9 @@ const ObjectEdit = () => {
           Guardar
         </button>
       </div>
+
       <div className="related-columns">
-      {(type==="product") && (
+      {(type==="product" && !isNew) && (
         <div
           className={`related-column ${
             relatedEntities.length === 0 ? 'single-column' : ''
@@ -264,7 +277,7 @@ const ObjectEdit = () => {
             />
         </div>
       )}
-      {(type==="product" || type === "entity") && (
+      {((type==="product" || type === "entity") && !isNew) && (
         <div
           className={`related-column ${
             relatedPersons.length === 0 ? 'single-column' : ''
