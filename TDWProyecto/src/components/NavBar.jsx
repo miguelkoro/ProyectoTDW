@@ -1,6 +1,6 @@
 import { useAuth } from "../context/AuthContext";
 import { Link } from 'react-router-dom'; // Importa Link para la navegación
-import './NavBar.css'; // Importa el archivo CSS
+import '../styles/NavBar.css'; // Importa el archivo CSS
 
 const NavBar = () => {
   const { user, logout } = useAuth();

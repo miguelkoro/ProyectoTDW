@@ -1,4 +1,4 @@
-import "./Home.css";
+import "../styles/Home.css";
 import React, { useContext } from 'react';
 import Section from '../components/Section';
 import { DataContext } from '../context/DataContext';

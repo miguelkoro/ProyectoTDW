@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
-import './ObjectView.css'; // Reutilizamos los estilos de ObjectView
+import '../styles/ObjectView.css'; // Reutilizamos los estilos de ObjectView
 import { DataContext } from '../context/DataContext'; // Contexto para guardar datos
-import './ObjectView.css'; // Archivo CSS para estilos
+
 import  Persona  from '../models/Persona'; // Importa el modelo Persona
 import  Entidad  from '../models/Entidad'; // Importa el modelo Entidad
 import  Producto  from '../models/Producto'; // Importa el modelo Producto

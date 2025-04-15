@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from "../context/AuthContext";
-import './Login.css'; // Archivo CSS para estilos
+import '../styles/Login.css'; // Archivo CSS para estilos
 import { useNavigate } from "react-router-dom"; // Importa useNavigate para redirección
 
 const Login = () => { // Recibe la función como prop

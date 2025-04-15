@@ -1,5 +1,5 @@
 import React from 'react';
-import './Section.css'; // Archivo CSS para estilos
+import '../styles/Section.css'; // Archivo CSS para estilos
 import Card from './Card.jsx'; // Importa el componente de sección pequeña
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom'; // Importa useNavigate para redirección

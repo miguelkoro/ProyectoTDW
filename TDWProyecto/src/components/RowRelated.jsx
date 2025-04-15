@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import './RelatedSection.css'; // Archivo CSS para estilos
+import '../styles/RelatedSection.css'; // Archivo CSS para estilos
 import { useAuth } from '../context/AuthContext'; // Importa el contexto de autenticación
 import { useLocation } from 'react-router-dom'; // Importa useLocation para obtener la ubicación actual
 import { DataContext } from '../context/DataContext';

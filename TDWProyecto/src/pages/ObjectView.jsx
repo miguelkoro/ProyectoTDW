@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext, use } from 'react';
 import { useParams } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import { DataContext } from '../context/DataContext'; // Importa el contexto
-import './ObjectView.css'; // Archivo CSS para estilos
+import '../styles/ObjectView.css'; // Archivo CSS para estilos
 import RelatedSection from '../components/RelatedSection'; // Importa el componente de objetos relacionados
 
 
