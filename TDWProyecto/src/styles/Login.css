@@ -53,3 +53,19 @@
     margin-top: 10px;
     text-align: center;
   }
+
+  .login-redirect {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    text-align: center;
+    color: white;
+  }
+  
+  .login-redirect a {
+    color: #3a98fd;
+    text-decoration: none;
+  }
+  
+  .login-redirect a:hover {
+    text-decoration: underline;
+  }
