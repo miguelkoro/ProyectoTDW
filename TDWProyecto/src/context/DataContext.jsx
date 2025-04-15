@@ -4,7 +4,9 @@ import { fetchJSONPersons, fetchJSONEntities, fetchJSONProducts,
   fetchPersonByIdFromLocal, fetchEntityByIdFromLocal, fetchProductByIdFromLocal, 
   deletePersonFromLocal, deleteEntityFromLocal, deleteProductFromLocal,
   createNewPersonToLocal, createNewEntityToLocal, createNewProductToLocal,
-  updateProductInLocal} from '../services/dataService';
+  updateProductInLocal, updatePersonInLocal, updateEntityInLocal,
+addRelationToProductLocal, addRelationToEntityLocal,
+deleteRelationFromEntityLocal, deleteRelationFromProductLocal} from '../services/dataService';
 
 export const DataContext = createContext();
 //Aquí, los datos (persons, entities, products) se cargan una vez y se almacenan en el contexto.
@@ -204,13 +206,45 @@ export const DataProvider = ({ children }) => {
     }
   };
 
+  const deleteRelationFromEntity = (idObject, typeRelation, idRelation) => {
+    let relationDeleted = deleteRelationFromEntityLocal(idObject, typeRelation, idRelation); // Llama al servicio para eliminar la relación
+    if (relationDeleted) { // Si se eliminó la relación, lo actualiza en la constante
+      setEntities((prevEntities) => prevEntities.map((entity) =>
+          entity.id === Number(idObject) ? { ...entity, [typeRelation]: entity[typeRelation].filter((relationId) => relationId !== idRelation),}: entity ));
+    } else {
+      console.error('No se pudo eliminar la relación de la entidad.'); // Maneja el error si no se pudo eliminar la relación
+    }
+  }
+
+  const deleteRelationFromProduct = (idObject, typeRelation, idRelation) => {
+    /*let relationDeleted = deleteRelationFromProductLocal(idObject, typeRelation, idRelation); // Llama al servicio para eliminar la relación
+    if (relationDeleted) { // Si se eliminó la relación, lo actualiza en la constante
+      setProducts((prevProducts) => prevProducts.map((product) =>
+          product.id === Number(idObject) ? { ...product, [typeRelation]: product[typeRelation].filter((relationId) => relationId !== idRelation),}: product ));
+    } else {
+      console.error('No se pudo eliminar la relación del producto.'); // Maneja el error si no se pudo eliminar la relación
+    }*/
+   console.log("deleteRelationFromProduct", idObject, typeRelation, idRelation); // Verifica los parámetros recibidos
+  }
+
   const addRelationToProduct = (idObject, typeRelation, idRelation) => {
-    let relationAdded = false; // Variable para rastrear si se añadió la relación  
-    return relationAdded; // Devuelve true si se añadió la relación, false en caso contrario
+    let relationAdded = addRelationToProductLocal(idObject, typeRelation, idRelation); // Llama al servicio para añadir la relación
+    if (relationAdded) { // Si se añadió la relación, lo actualiza en la constante
+      setProducts((prevProducts) => prevProducts.map((product) =>
+          product.id === Number(idObject) ? { ...product, [typeRelation]: [...(product[typeRelation] || []), idRelation],}: product ));
+    } else {
+      console.error('No se pudo añadir la relación al producto.'); // Maneja el error si no se pudo añadir la relación
+    }
+    //return relationAdded; // Devuelve true si se añadió la relación, false en caso contrario
   };
   const addRelationToEntity = (idObject, typeRelation, idRelation) => {
-    let relationAdded = false; // Variable para rastrear si se añadió la relación
-    return relationAdded; // Devuelve true si se añadió la relación, false en caso contrario
+    let relationAdded = addRelationToEntityLocal(idObject, typeRelation, idRelation); // Llama al servicio para añadir la relación
+    if (relationAdded) { // Si se añadió la relación, lo actualiza en la constante
+      setEntities((prevEntities) => prevEntities.map((entity) =>
+          entity.id === Number(idObject) ? { ...entity, [typeRelation]: [...(entity[typeRelation] || []), idRelation],}: entity ));
+    } else {
+      console.error('No se pudo añadir la relación a la entidad.'); // Maneja el error si no se pudo añadir la relación
+    }
   }
 
   const updateProduct = (id, updatedProduct) => {    
@@ -221,14 +255,14 @@ export const DataProvider = ({ children }) => {
     }
   };
   const updatePerson = (id, updatedPerson) => {
-    if(updateProductInLocal(id, updatedPerson)) { //Lo actualiza en el local storage
+    if(updatePersonInLocal(id, updatedPerson)) { //Lo actualiza en el local storage
       setPersons((prevPersons) => 
         prevPersons.map((person) => (person.id === Number(id) ? updatedPerson : person))
       );
     }
   }
   const updateEntity = (id, updatedEntity) => {
-    if(updateProductInLocal(id, updatedEntity)) { //Lo actualiza en el local storage
+    if(updateEntityInLocal(id, updatedEntity)) { //Lo actualiza en el local storage
       setEntities((prevEntities) => 
         prevEntities.map((entity) => (entity.id === Number(id) ? updatedEntity : entity))
       );
@@ -290,9 +324,10 @@ export const DataProvider = ({ children }) => {
           createNewEntity,
           createNewProduct,
           createNewPerson,
-          deleteRelation,
           addRelationToProduct,
-          addRelationToEntity}}>
+          addRelationToEntity,
+          deleteRelationFromProduct,
+          deleteRelationFromEntity}}>
       {children}
     </DataContext.Provider>
   );

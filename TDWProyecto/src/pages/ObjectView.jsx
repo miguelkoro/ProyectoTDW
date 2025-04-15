@@ -54,7 +54,7 @@ const ObjectView = (props) => {
     }
   
     fetchObject(); // Llama a la función para obtener el objeto
-  }, [type, id, getPersonById, getEntityById, getProductById]);
+  }, [getPersonById, getEntityById, getProductById]);
   
   useEffect(() => {
     const fetchRelatedObjects = async () => {
@@ -137,8 +137,8 @@ const ObjectView = (props) => {
           }`}
         >
           <RelatedSection type="persons" relatedObjects={relatedPersons} father={object} fatherType={type}
-            onAddRelation={(newPerson) => setRelatedPersons((prev) => [...prev, newPerson])
-            }/>
+            
+            />
         </div>
       )}
       {relatedEntities.length > 0 && (
@@ -148,7 +148,7 @@ const ObjectView = (props) => {
           }`}
         >
           <RelatedSection type="entities" relatedObjects={relatedEntities} father={object} fatherType={type}
-            onAddRelation={(newEntity) => setRelatedEntities((prev) => [...prev, newEntity])}/>
+            />
         </div>
       )}
     </div>

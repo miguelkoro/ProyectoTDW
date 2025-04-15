@@ -6,10 +6,10 @@ import { DataContext } from '../context/DataContext'; // Importa el DataContext
 import RowRelated from './RowRelated'; // Importa el componente de fila relacionada
 import { useLocation } from 'react-router-dom'; // Importa useLocation para obtener la ubicación actual
 
-const RelatedSection = ({ type, relatedObjects = [], father, fatherType, onAddRelation}) => {
+const RelatedSection = ({ type, relatedObjects = [], father}) => {
     //console.log("Objetos relacionados:", objects); // Verifica los objetos relacionados
     const { user } = useAuth(); // Obtén el usuario autenticado del contexto
-    const { persons, entities } = useContext(DataContext); // Obtén datos y método del contexto
+    const { persons, entities, addRelationToProduct, addRelationToEntity } = useContext(DataContext); // Obtén datos y método del contexto
     const [selectedId, setSelectedId] = useState(''); // Estado para el ID seleccionado
     const [localRelatedObjects, setLocalRelatedObjects] = useState(relatedObjects); // Estado local para los objetos relacionados
     const location = useLocation(); // Obtén la ubicación actual
@@ -33,9 +33,8 @@ const RelatedSection = ({ type, relatedObjects = [], father, fatherType, onAddRe
 
     // Actualiza el estado local cuando cambien las props `relatedObjects`
   useEffect(() => {
-    setLocalRelatedObjects(relatedObjects);
-    console.log('Objetos relacionados actualizados:', relatedObjects); // Depuración
-  }, [localRelatedObjects]);
+    console.log("relatedObjects: ", relatedObjects, " dfdfdf: ",father); // Verifica los objetos relacionados
+  }, []);
 
     const handleAddRelation = () => {
      /* if (!selectedId) {
@@ -64,6 +63,25 @@ const RelatedSection = ({ type, relatedObjects = [], father, fatherType, onAddRe
         //setRelatedObjects((prevRelatedObjects) => [...prevRelatedObjects, selectedObject]);
       
     };
+
+    const addRelation =() =>{
+      console.log("Añadiendo reón a: ", father.type);
+      switch (father.type) {
+        //case 'person':
+        
+        //break;
+        case 'entity':
+          console.log("Añadiendo relación a:", father, father.type, " con el hijo: ", selectedId, type);
+          addRelationToEntity(father.id, type, selectedId); // Llama al método del contexto
+          break;
+        case 'product':
+          console.log("Añadiendo relación a:", father, father.type, " con el hijo: ", selectedId, type);
+          addRelationToProduct(father.id, type, selectedId); // Llama al método del contexto
+          break;
+        default:
+          break;
+      }
+    }
       
 
     
@@ -90,7 +108,7 @@ const RelatedSection = ({ type, relatedObjects = [], father, fatherType, onAddRe
               </option>
             ))}
           </select>
-          <button onClick={handleAddRelation} className="related-add-button">
+          <button onClick={addRelation} className="related-add-button">
             Añadir
           </button>
         </div>
@@ -105,14 +123,12 @@ const RelatedSection = ({ type, relatedObjects = [], father, fatherType, onAddRe
       {/* Lista de objetos relacionados */}
       <div className="related-list">
         {relatedObjects
-            .filter((object) => object && object.id) // Filtra objetos válidos
             .map((object) => (
             <RowRelated
                 key={object.id}
                 type={type}
                 object={object}
                 father={father}
-                fatherType={fatherType}
                 />
             ))}
         </div>

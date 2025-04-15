@@ -4,10 +4,10 @@ import { useAuth } from '../context/AuthContext'; // Importa el contexto de aute
 import { useLocation } from 'react-router-dom'; // Importa useLocation para obtener la ubicación actual
 import { DataContext } from '../context/DataContext';
 
-const RowRelated = ({ type, object,father, fatherType}) => {
+const RowRelated = ({ type, object,father}) => {
     //console.log("Objetos relacionados:", objects); // Verifica los objetos relacionados
     const { user } = useAuth(); // Obtén el usuario autenticado del contexto
-    const { deleteRelation } = useContext(DataContext);
+    const { deleteRelationFromProduct, deleteRelationFromEntity } = useContext(DataContext);
     const [isDeleted, setIsDeleted] = useState(false); // Estado local para controlar la eliminación
     const location = useLocation(); // Obtén la ubicación actual
     const isView = location.state?.view || false;
@@ -18,10 +18,15 @@ const RowRelated = ({ type, object,father, fatherType}) => {
         `¿Estás seguro de que deseas eliminar la relación con "${object.name}"?`
       );
       if (confirmDelete) {
-        console.log('Eliminando relación:', object);
+        /*console.log('Eliminando relación:', object);
         setIsDeleted(true); // Marca el RowRelated como eliminado localmente
-        console.log("deleteRelation", father.id, fatherType, type, object.id);
-       deleteRelation(father.id, fatherType, type, object.id); // Llama al método del contexto
+        console.log("deleteRelation", father.id, father.type, type, object.id);
+        deleteRelation(father.id, father.type, type, object.id); // Llama al método del contexto*/
+        //console.log('Eliminando relación:', object.type, " fdfd: ", father.type);
+        father.type === 'product'
+          ? deleteRelationFromProduct(father.id, object.id) // Llama al método del contexto para productos
+          : deleteRelationFromEntity(father.id, type, object.id); // Llama al método del contexto para entidades
+
       }
     };
 

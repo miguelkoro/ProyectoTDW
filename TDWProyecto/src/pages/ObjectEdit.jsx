@@ -6,6 +6,7 @@ import './ObjectView.css'; // Archivo CSS para estilos
 import  Persona  from '../models/Persona'; // Importa el modelo Persona
 import  Entidad  from '../models/Entidad'; // Importa el modelo Entidad
 import  Producto  from '../models/Producto'; // Importa el modelo Producto
+import RelatedSection from '../components/RelatedSection'; // Importa el componente de objetos relacionados
 
 const ObjectEdit = () => {
   const navigate = useNavigate();
@@ -15,6 +16,11 @@ const ObjectEdit = () => {
   const { getProductById, getPersonById, getEntityById, 
           createNewEntity, createNewPerson, createNewProduct,
           updateEntity, updateProduct, updatePerson} = useContext(DataContext); // Accede al método getObjectById del contexto
+
+  const [relatedPersons, setRelatedPersons] = useState([]);
+  const [relatedEntities, setRelatedEntities] = useState([]);
+
+  const [isLoading, setIsLoading] = useState(true); // Estado de carga
 
 
   const isNew= location.state?.new || false;
@@ -77,6 +83,34 @@ const ObjectEdit = () => {
 
     }
   }, [ object]);
+
+    useEffect(() => {
+      const fetchRelatedObjects = async () => {
+        if (!object) return; // Asegúrate de que `object` esté cargado antes de continuar
+    
+        //console.log("fetchRelatedObjects", object); // Verifica el objeto recibido
+        try {
+          if (object?.persons) {
+            // Espera a que todas las promesas se resuelvan
+            const persons = await Promise.all(
+              object.persons.map((personId) => getPersonById(personId))
+            );
+            setRelatedPersons(persons);
+            //console.log("Personas relacionadas:", persons); // Verifica las personas relacionadas
+          }
+          if (object?.entities) {
+            const entities = await Promise.all(
+              object.entities.map((entityId) => getEntityById(entityId))
+            );
+            setRelatedEntities(entities);
+          }
+        } catch (error) {
+          console.error("Error al obtener objetos relacionados:", error);
+        }
+      };
+    
+      fetchRelatedObjects(); // Llama a la función para obtener los objetos relacionados
+    }, [object, getPersonById, getEntityById]); // Dependencias necesarias
 
 
   const saveNewObject = () => {
@@ -218,7 +252,29 @@ const ObjectEdit = () => {
           Guardar
         </button>
       </div>
-
+      <div className="related-columns">
+      {relatedPersons.length > 0 && (
+        <div
+          className={`related-column ${
+            relatedEntities.length === 0 ? 'single-column' : ''
+          }`}
+        >
+          <RelatedSection type="persons" relatedObjects={relatedPersons} father={object} fatherType={type}
+            
+            />
+        </div>
+      )}
+      {relatedEntities.length > 0 && (
+        <div
+          className={`related-column ${
+            relatedPersons.length === 0 ? 'single-column' : ''
+          }`}
+        >
+          <RelatedSection type="entities" relatedObjects={relatedEntities} father={object} fatherType={type}
+            />
+        </div>
+      )}
+    </div>
       
     </div>
   );
