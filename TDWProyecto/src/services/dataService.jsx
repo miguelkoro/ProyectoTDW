@@ -4,7 +4,7 @@ import Producto from '../models/Producto.js';
 
 //Volcado de datos de JSON a local storage
 export const fetchJSONPersons = async () => {
-  const response = await fetch('/assets/jsons/persons.json');
+  const response = await fetch('/ProyectoTDW/assets/jsons/persons.json');
   if (!response.ok) {
     throw new Error('Error al cargar persons.json');
   }
@@ -20,7 +20,7 @@ export const fetchJSONPersons = async () => {
   return persons;
 };
 export const fetchJSONEntities = async () => {
-  const response = await fetch('/assets/jsons/entities.json');
+  const response = await fetch('/ProyectoTDW/assets/jsons/entities.json');
   if (!response.ok) {
     throw new Error('Error al cargar entities.json');
   }
@@ -37,7 +37,7 @@ export const fetchJSONEntities = async () => {
   return entities;
 };
 export const fetchJSONProducts = async () => {
-  const response = await fetch('/assets/jsons/products.json');
+  const response = await fetch('/ProyectoTDW/assets/jsons/products.json');
   if (!response.ok) {
     throw new Error('Error al cargar products.json');
   }

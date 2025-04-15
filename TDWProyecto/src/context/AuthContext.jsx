@@ -7,7 +7,7 @@ const AuthContext = createContext();
 // Usuarios simulados
 const mockUsers = {
   x: { id: 1508, password: "x", profileImage: "https://unavatar.io/Nintenderos",  role: "reader"},
-  y: { id: 2501, password: "y", profileImage: "https://unavatar.io/miguelkoro", role: "reader" },
+  y: { id: 2501, password: "y", profileImage: "https://unavatar.io/miguelkoro", role: "writer" },
   z: { id: 3652, password: "z", profileImage: "https://unavatar.io/realDonaldTrump", role: "writer" },
 };
 

@@ -12,7 +12,7 @@ const NavBar = () => {
     <>
     <nav className="navbar">
       <Link className="navbar-left" to="/">
-        <img src="/assets/images/code.png" alt="Logo" className="navbar-logo" />
+        <img src="/ProyectoTDW/assets/images/code.png" alt="Logo" className="navbar-logo" />
         <div className="typewriter">
           <p className="navbar-title">ANALES DE LA CIENCIA</p>
         </div>
