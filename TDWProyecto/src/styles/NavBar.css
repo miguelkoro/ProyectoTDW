@@ -140,7 +140,7 @@ animation: typing 3s steps(22) forwards, blink 1s step-end infinite;
     border-radius: 5px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     z-index: 1000;
-    animation: fadeOut 4s forwards; /* Animación para desaparecer */
+    animation: fadeOut 3s forwards; /* Animación para desaparecer */
   }
   
   .message-container.success {

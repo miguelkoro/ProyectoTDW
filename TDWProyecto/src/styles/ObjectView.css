@@ -77,9 +77,18 @@
   flex: 1;
   display: flex;
   flex-direction: column; /* Apila los elementos verticalmente */
-  justify-content: flex-start; /* Alinea los elementos al inicio */
-  align-items: center; /* Centra los elementos horizontalmente */
+  justify-content: space-between; /* Espacia los elementos para que el input quede abajo */
+  height: 100%; /* Asegura que ocupe toda la altura disponible */
   gap: 10px; /* Espaciado entre la imagen y el campo de entrada */
+}
+
+.image-url-input {
+  margin-top: auto; /* Empuja el input hacia abajo */
+  width: 100%; /* Asegura que el input ocupe todo el ancho disponible */
+  padding: 5px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
 .object-image {

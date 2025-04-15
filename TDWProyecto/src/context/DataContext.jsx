@@ -30,7 +30,7 @@ export const DataProvider = ({ children }) => {
     setMessageType(type);
     setTimeout(() => {
       setMessage(null);
-    }, 4000);
+    }, 2000);
   };
 
 
