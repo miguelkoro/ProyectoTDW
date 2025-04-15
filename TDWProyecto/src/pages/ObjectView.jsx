@@ -109,11 +109,11 @@ const ObjectView = (props) => {
       {/* Columna derecha: Detalles */}
       <div className="object-details-column">
         <div className="object-detail-row">
-          <strong>{type === "persona" ? "Nacimiento" : "Creacion"}:</strong>
+          <strong>{type === "person" ? "Nacimiento" : "Creacion"}:</strong>
           <span>{new Date(object.birthDate).toLocaleDateString()}</span>
         </div>
         <div className="object-detail-row">
-          <strong>{type === "entidad" ? "Fallecimiento" : "Descontinuacion"}:</strong>
+          <strong>{type === "person" ? "Fallecimiento" : "Descontinuacion"}:</strong>
           <span>{new Date(object.deathDate).toLocaleDateString()}</span>
         </div>
         <div className="object-detail-row">

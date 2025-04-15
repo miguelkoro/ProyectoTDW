@@ -140,6 +140,7 @@ export const deletePersonFromLocal = (id) => {
     // Guarda la lista actualizada en el localStorage
     localStorage.setItem('persons', JSON.stringify(updatedPersons));
 
+    deletePersonRelations(id); // Llama a la función para eliminar relaciones asociadas
     console.log(`Persona con ID ${id} eliminada del localStorage.`);
     return true; // Indica que la operación fue exitosa
   } catch (error) {
@@ -156,6 +157,7 @@ export const deleteEntityFromLocal = (id) => {
     // Guarda la lista actualizada en el localStorage
     localStorage.setItem('entities', JSON.stringify(updatedEntities));
 
+    deleteEntityRelations(id); // Llama a la función para eliminar relaciones asociadas
     console.log(`Entidad con ID ${id} eliminada del localStorage.`);
     return true; // Indica que la operación fue exitosa
   } catch (error) {
@@ -163,7 +165,7 @@ export const deleteEntityFromLocal = (id) => {
     return false; // Indica que ocurrió un error
   }
 }
-export const deleteProductFromLocal = (id) => {
+export const deleteProductFromLocal = (id) => {  
   try {
     // Obtén todos los productos del localStorage
     const products = fetchProductsFromLocalStorage();
@@ -171,6 +173,9 @@ export const deleteProductFromLocal = (id) => {
     const updatedProducts = products.filter((product) => product.id !== Number(id));
     // Guarda la lista actualizada en el localStorage
     localStorage.setItem('products', JSON.stringify(updatedProducts));
+    
+    //Eliminar tambien las relaciones que tengan un producto con el id
+    //deleteProductRelations(id); // Llama a la función para eliminar relaciones asociadas
 
     console.log(`Producto con ID ${id} eliminado del localStorage.`);
     return true; // Indica que la operación fue exitosa
@@ -179,6 +184,39 @@ export const deleteProductFromLocal = (id) => {
     return false; // Indica que ocurrió un error
   }
 }
+
+const deletePersonRelations = (id) => {
+   // Eliminar el ID de los arrays `persons` en `products`
+   const products = fetchProductsFromLocalStorage();
+   const updatedProducts = products.map((product) => {
+     if (Array.isArray(product.persons)) {
+       product.persons = product.persons.filter((personId) => personId !== Number(id));
+     }
+     return product;
+   });
+   localStorage.setItem('products', JSON.stringify(updatedProducts));
+   // Eliminar el ID de los arrays `persons` en `entities`
+   const entities = fetchEntitiesFromLocalStorage();
+   const updatedEntities = entities.map((entity) => {
+     if (Array.isArray(entity.persons)) {
+       entity.persons = entity.persons.filter((personId) => personId !== Number(id));
+     }
+     return entity;
+   });
+   localStorage.setItem('entities', JSON.stringify(updatedEntities));
+}
+
+const deleteEntityRelations = (id) => {
+  const products = fetchProductsFromLocalStorage();
+   const updatedProducts = products.map((product) => {
+     if (Array.isArray(product.entities)) {
+       product.entities = product.entities.filter((entityId) => entityId !== Number(id));
+     }
+     return product;
+   });
+   localStorage.setItem('products', JSON.stringify(updatedProducts));
+}
+
 
 //create relations
 export const addRelationToProductLocal = (fatherId, type, childId) => {
