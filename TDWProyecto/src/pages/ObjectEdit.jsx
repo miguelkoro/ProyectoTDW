@@ -15,12 +15,14 @@ const ObjectEdit = () => {
   const [object, setObject] = useState(null); // Estado para el objeto
   const { getProductById, getPersonById, getEntityById, 
           createNewEntity, createNewPerson, createNewProduct,
-          updateEntity, updateProduct, updatePerson} = useContext(DataContext); // Accede al método getObjectById del contexto
+          updateEntity, updateProduct, updatePerson,
+          showMessage} = useContext(DataContext); // Accede al método getObjectById del contexto
 
   const [relatedPersons, setRelatedPersons] = useState([]);
   const [relatedEntities, setRelatedEntities] = useState([]);
 
   const [isLoading, setIsLoading] = useState(true); // Estado de carga
+  const [nameError, setNameError] = useState(false); // Estado para el error de nombre
 
 
   const isNew= location.state?.new || false;
@@ -116,9 +118,13 @@ const ObjectEdit = () => {
   const saveNewObject = () => {
     //console.log("nacimiento: ", birthDate, " muerte: ", deathDate, " wikiUrl: ", wikiUrl, " imageUrl: ", imageUrl);
     if(!name) {
-      console.error("El nombre no puede estar vacío"); // Mensaje de error si el nombre está vacío
+      //console.error("El nombre no puede estar vacío"); // Mensaje de error si el nombre está vacío
+      showMessage("El nombre no puede estar vacío", "error"); // Mensaje de error si el nombre está vacío
+      setNameError(true); // Cambia el estado para mostrar el error en el campo     
       return; // Si el nombre está vacío, no se puede crear el objeto
     }
+
+    setNameError(false); // Restablece el estado si el nombre es válido
 
     let newObject;
     let birthDateTemp = birthDate === '' ? '2015-12-05' : birthDate; // Si la fecha de nacimiento está vacía, asigna una fecha por defecto
@@ -147,8 +153,17 @@ const ObjectEdit = () => {
   }
 
   const updateObject = () => {
+    if(!name) {
+      //console.error("El nombre no puede estar vacío"); // Mensaje de error si el nombre está vacío
+      showMessage("El nombre no puede estar vacío", "error"); // Mensaje de error si el nombre está vacío
+      setNameError(true); // Cambia el estado para mostrar el error en el campo     
+      return; // Si el nombre está vacío, no se puede crear el objeto
+    }
+
+    setNameError(false); // Restablece el estado si el nombre es válido
     // Crear una copia local del objeto actualizado
   const updatedObject = { ...object, name, birthDate, deathDate, wikiUrl, imageUrl };
+
   //console.log('Objeto actualizado:', updatedObject); // Verifica el objeto actualizado
   // Actualizar el estado con el objeto actualizado
   setObject(updatedObject);
@@ -224,6 +239,7 @@ const ObjectEdit = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Introduce el nombre"
+              className={nameError ? 'input-error' : ''}
             />
           </div>
           <div className="object-detail-row">

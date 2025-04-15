@@ -9,7 +9,7 @@ import { useLocation } from 'react-router-dom'; // Importa useLocation para obte
 const RelatedSection = ({ type, relatedObjects = [], father}) => {
     //console.log("Objetos relacionados:", objects); // Verifica los objetos relacionados
     const { user } = useAuth(); // Obtén el usuario autenticado del contexto
-    const { persons, entities, addRelationToProduct, addRelationToEntity } = useContext(DataContext); // Obtén datos y método del contexto
+    const { persons, entities, addRelationToProduct, addRelationToEntity, showMessage } = useContext(DataContext); // Obtén datos y método del contexto
     const [selectedId, setSelectedId] = useState(''); // Estado para el ID seleccionado
     const [localRelatedObjects, setLocalRelatedObjects] = useState(relatedObjects); // Estado local para los objetos relacionados
     const location = useLocation(); // Obtén la ubicación actual
@@ -38,14 +38,16 @@ const RelatedSection = ({ type, relatedObjects = [], father}) => {
 
     const checkAddRelation = () => {
       if (!selectedId) {
-        console.error("No se ha seleccionado ningún ID."); // Mensaje de error si no hay nada seleccionado
+        //console.error("No se ha seleccionado ningún ID."); // Mensaje de error si no hay nada seleccionado
+        showMessage("No se ha seleccionado ningún ID."); // Mensaje de error si no hay nada seleccionado
         return false; // No se puede añadir la relación
       }
     
       // Verifica si el ID ya está en la lista de objetos relacionados
       const alreadyExists = relatedObjects.some((object) => object.id === Number(selectedId));
       if (alreadyExists) {
-        console.error(`El ID ${selectedId} ya está en la lista de objetos relacionados.`);
+        //console.error(`El ID ${selectedId} ya está en la lista de objetos relacionados.`);
+        showMessage(`El ID ${selectedId} ya está en la lista de objetos relacionados.`); // Mensaje de error si ya existe
         return false; // No se puede añadir la relación
       }    
       return true; // Se puede añadir la relación

@@ -130,4 +130,32 @@ animation: typing 3s steps(22) forwards, blink 1s step-end infinite;
     white-space: nowrap; /* Asegura que el texto esté en una sola línea */
 }
 
+.message-container {
+    position: fixed;
+    top: 70px; /* Ajusta según la altura del navbar */
+    right: 20px;
+    background-color: #f8d7da; /* Color de fondo para errores */
+    color: #721c24; /* Color del texto para errores */
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    animation: fadeOut 4s forwards; /* Animación para desaparecer */
+  }
+  
+  .message-container.success {
+    background-color: #d4edda; /* Color de fondo para éxito */
+    color: #155724; /* Color del texto para éxito */
+  }
+  
+  @keyframes fadeOut {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+  }
+
 /*Colores utilizados: azul oscuro clásico (#0A1828), turquesa (#178582), dorado (#BFA181)*/ 

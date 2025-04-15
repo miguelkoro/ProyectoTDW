@@ -221,3 +221,12 @@
   max-width: 50%; /* Limita el ancho máximo al 50% */
   box-sizing: border-box; /* Incluye padding y borde en el ancho */
 }
+
+.input-error {
+  /*border: 2px solid red; /* Borde rojo */
+  /*background-color: rgba(255, 0, 0, 0.1); /* Relleno rojo claro */
+  background-color: rgb(255, 196, 196); /* Texto rojo */
+  border-radius: 5px; /* Bordes redondeados */
+  transition: background-color 0.3s ease, border-color 0.3s ease; /* Transición suave */
+  border: 2px solid rgba(153, 0, 0, 0.774) !important;
+}

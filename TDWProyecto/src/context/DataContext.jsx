@@ -20,8 +20,18 @@ export const DataProvider = ({ children }) => {
 
   const [isLoading, setIsLoading] = useState(true);
 
-  const [error, setError] = useState(null); // Estado para manejar errores
   const LOCAL_STORAGE = true; // Estado para manejar el local storage
+
+  const [message, setMessage] = useState(null);
+  const [messageType, setMessageType] = useState("");
+
+  const showMessage = (text, type) => {
+    setMessage(text);
+    setMessageType(type);
+    setTimeout(() => {
+      setMessage(null);
+    }, 4000);
+  };
 
 
   //Que coja los datos del json y los almacene en el local storage
@@ -146,84 +156,28 @@ export const DataProvider = ({ children }) => {
     return null; // Devuelve null si LOCAL_STORAGE es false o no se encuentra el producto
   };
 
-  const deleteRelation = async (idObject, type, typeRelation, idRelation) => {
-    try {
-      console.log(
-        `Eliminando relación con ID: ${idObject}, tipo: ${type}, tipo de relación: ${typeRelation}, ID de relación: ${idRelation}`
-      );
-  
-      switch (type) {
-        case 'person':
-          setPersons((prevPersons) =>
-            prevPersons.map((person) =>
-              person.id === idObject
-                ? {
-                    ...person,
-                    [typeRelation]: person[typeRelation]?.filter(
-                      (relationId) => relationId !== idRelation
-                    ),
-                  }
-                : person
-            )
-          );
-          break;
-  
-        case 'entity':
-          setEntities((prevEntities) =>
-            prevEntities.map((entity) =>
-              entity.id === idObject
-                ? {
-                    ...entity,
-                    [typeRelation]: entity[typeRelation]?.filter(
-                      (relationId) => relationId !== idRelation
-                    ),
-                  }
-                : entity
-            )
-          );
-          break;
-  
-        case 'product':
-          setProducts((prevProducts) =>
-            prevProducts.map((product) =>
-              product.id === idObject
-                ? {
-                    ...product,
-                    [typeRelation]: product[typeRelation]?.filter(
-                      (relationId) => relationId !== idRelation
-                    ),
-                  }
-                : product
-            )
-          );
-          break;
-  
-        default:
-          console.error('Tipo de objeto no reconocido:', type);
-      }
-    } catch (error) {
-      console.error('Error al eliminar la relación:', error);
-    }
-  };
 
   const deleteRelationFromEntity = (idObject, typeRelation, idRelation) => {
     let relationDeleted = deleteRelationFromEntityLocal(idObject, typeRelation, idRelation); // Llama al servicio para eliminar la relación
     if (relationDeleted) { // Si se eliminó la relación, lo actualiza en la constante
       setEntities((prevEntities) => prevEntities.map((entity) =>
           entity.id === Number(idObject) ? { ...entity, [typeRelation]: entity[typeRelation].filter((relationId) => relationId !== idRelation),}: entity ));
+      showMessage(`Relación eliminada correctamente de la entidad (${idObject})`,"success"); // Tipo de mensaje
     } else {
-      console.error('No se pudo eliminar la relación de la entidad.'); // Maneja el error si no se pudo eliminar la relación
+      showMessage('No se pudo eliminar la relación de la entidad.', 'error'); // Mensaje de error si no se pudo eliminar la relación
+      //console.error('No se pudo eliminar la relación de la entidad.'); // Maneja el error si no se pudo eliminar la relación
     }
   }
-
   const deleteRelationFromProduct = (idObject, typeRelation, idRelation) => {
     let relationDeleted = deleteRelationFromProductLocal(idObject, typeRelation, idRelation); // Llama al servicio para eliminar la relación
     if (relationDeleted) { // Si se eliminó la relación, lo actualiza en la constante
       setProducts((prevProducts) => prevProducts.map((product) =>
           product.id === Number(idObject) ? { ...product, [typeRelation]: product[typeRelation].filter((relationId) => relationId !== idRelation),}: product ));
+      showMessage(`Relación eliminada correctamente del producto (${idObject})`,"success"); // Tipo de mensaje
       return true;
     } else {
-      console.error('No se pudo eliminar la relación del producto.'); // Maneja el error si no se pudo eliminar la relación
+      //console.error('No se pudo eliminar la relación del producto.'); // Maneja el error si no se pudo eliminar la relación
+      showMessage('No se pudo eliminar la relación del producto.', 'error'); // Mensaje de error si no se pudo eliminar la relación
       return false;
     }
    //console.log("deleteRelationFromProduct", idObject, typeRelation, idRelation); // Verifica los parámetros recibidos
@@ -234,8 +188,10 @@ export const DataProvider = ({ children }) => {
     if (relationAdded) { // Si se añadió la relación, lo actualiza en la constante
       setProducts((prevProducts) => prevProducts.map((product) =>
           product.id === Number(idObject) ? { ...product, [typeRelation]: [...(product[typeRelation] || []), idRelation],}: product ));
+      showMessage(`Relación añadida correctamente al producto (${idObject})`,"success"); // Tipo de mensaje
     } else {
-      console.error('No se pudo añadir la relación al producto.'); // Maneja el error si no se pudo añadir la relación
+      //console.error('No se pudo añadir la relación al producto.'); // Maneja el error si no se pudo añadir la relación
+      showMessage('No se pudo añadir la relación al producto.', 'error'); // Mensaje de error si no se pudo añadir la relación
     }
     //return relationAdded; // Devuelve true si se añadió la relación, false en caso contrario
   };
@@ -244,8 +200,10 @@ export const DataProvider = ({ children }) => {
     if (relationAdded) { // Si se añadió la relación, lo actualiza en la constante
       setEntities((prevEntities) => prevEntities.map((entity) =>
           entity.id === Number(idObject) ? { ...entity, [typeRelation]: [...(entity[typeRelation] || []), idRelation],}: entity ));
+      showMessage(`Relación añadida correctamente a la entidad (${idObject})`,"success"); // Tipo de mensaje
     } else {
-      console.error('No se pudo añadir la relación a la entidad.'); // Maneja el error si no se pudo añadir la relación
+      //console.error('No se pudo añadir la relación a la entidad.'); // Maneja el error si no se pudo añadir la relación
+      showMessage('No se pudo añadir la relación a la entidad.', 'error'); // Mensaje de error si no se pudo añadir la relación
     }
   }
 
@@ -254,6 +212,9 @@ export const DataProvider = ({ children }) => {
       setProducts((prevProducts) => 
         prevProducts.map((product) => (product.id === Number(id) ? updatedProduct : product))
       );
+      showMessage(`Producto (${id}) actualizado correctamente`,"success"); // Tipo de mensaje
+    }else{
+      showMessage(`Error al actualizar el producto (${id})`,"error"); // Tipo de mensaje
     }
   };
   const updatePerson = (id, updatedPerson) => {
@@ -261,6 +222,9 @@ export const DataProvider = ({ children }) => {
       setPersons((prevPersons) => 
         prevPersons.map((person) => (person.id === Number(id) ? updatedPerson : person))
       );
+      showMessage(`Persona (${id}) actualizada correctamente`,"success"); // Tipo de mensaje
+    }else{
+      showMessage(`Error al actualizar la persona (${id})`,"error"); // Tipo de mensaje
     }
   }
   const updateEntity = (id, updatedEntity) => {
@@ -268,22 +232,34 @@ export const DataProvider = ({ children }) => {
       setEntities((prevEntities) => 
         prevEntities.map((entity) => (entity.id === Number(id) ? updatedEntity : entity))
       );
+      showMessage(`Entidad (${id}) actualizada correctamente`,"success"); // Tipo de mensaje
+    }else{
+      showMessage(`Error al actualizar la entidad (${id})`,"error"); // Tipo de mensaje
     }
   }
 
   const deletePerson = (id) => {
     if(deletePersonFromLocal(id)) {
       setPersons((prevPersons) => prevPersons.filter((person) => person.id !== Number(id))); //Lo quita de las constantes
+      showMessage(`Persona (${id}) eliminada correctamente`,"success"); // Tipo de mensaje
+    }else{
+      showMessage(`Error al eliminar la persona (${id})`,"error"); // Tipo de mensaje
     }
   }
   const deleteEntity = (id) => {
     if(deleteEntityFromLocal(id)) { //Lo borra de localstorage
       setEntities((prevEntities) => prevEntities.filter((entity) => entity.id !== Number(id))); //Lo quita de las constantes
+      showMessage(`Entidad (${id}) eliminada correctamente`,"success"); // Tipo de mensaje
+    }else{
+      showMessage(`Error al eliminar la entidad (${id})`,"error"); // Tipo de mensaje
     }
   }
   const deleteProduct = (id) => {
     if(deleteProductFromLocal(id)) {
       setProducts((prevProducts) => prevProducts.filter((product) => product.id !== Number(id))); //Lo quita de las constantes
+      showMessage(`Producto (${id}) eliminado correctamente`,"success"); // Tipo de mensaje
+    }else{
+      showMessage(`Error al eliminar el producto (${id})`,"error"); // Tipo de mensaje
     }
   }
 
@@ -291,17 +267,20 @@ export const DataProvider = ({ children }) => {
     createNewPersonToLocal(person); //Crea la persona en el local storage 
     //setPersons((prevPersons) => [...prevPersons, person]);
     fetchPersonsFromLocal(); // Cargar datos desde local storage
+    showMessage(`Persona creada correctamente`,"success"); // Tipo de mensaje
   };
   const createNewEntity = (entity) => {
     createNewEntityToLocal(entity); //Llama al servicio para crear la nueva entidad
     //setEntities((prevEntities) => [...prevEntities, entity]);
     fetchEntitiesFromLocal(); // Cargar datos desde local storage
+    showMessage(`Entidad creada correctamente`,"success"); // Tipo de mensaje
   }
   const createNewProduct = (product) => {
-    console.log("createNewProdfdfduct", product); // Verifica el nuevo producto creado
+    //console.log("createNewProdfdfduct", product); // Verifica el nuevo producto creado
     createNewProductToLocal(product); //Llama al servicio para crear el nuevo producto
     //setProducts((prevProducts) => [...prevProducts, product]);
     fetchProductsFromLocal(); // Cargar datos desde local storage
+    showMessage(`Producto creado correctamente`,"success"); // Tipo de mensaje
     //console.log("creat", products); // Verifica el nuevo producto creado
   }
 
@@ -329,7 +308,10 @@ export const DataProvider = ({ children }) => {
           addRelationToProduct,
           addRelationToEntity,
           deleteRelationFromProduct,
-          deleteRelationFromEntity}}>
+          deleteRelationFromEntity,
+          showMessage,
+          message,
+          messageType,}}>
       {children}
     </DataContext.Provider>
   );

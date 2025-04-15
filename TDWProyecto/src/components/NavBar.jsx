@@ -1,11 +1,15 @@
 import { useAuth } from "../context/AuthContext";
-import { Link } from 'react-router-dom'; // Importa Link para la navegación
-import '../styles/NavBar.css'; // Importa el archivo CSS
+import { DataContext } from '../context/DataContext';
+import { Link } from "react-router-dom";
+import React, {useContext} from 'react';
+import "../styles/NavBar.css";
 
 const NavBar = () => {
   const { user, logout } = useAuth();
+  const { showMessage, message, messageType } = useContext(DataContext);
 
   return (
+    <>
     <nav className="navbar">
       <Link className="navbar-left" to="/">
         <img src="/assets/images/code.png" alt="Logo" className="navbar-logo" />
@@ -33,6 +37,12 @@ const NavBar = () => {
           )}
       </div>
     </nav>
+    {message && (
+      <div className={`message-container ${messageType}`}>
+        <p>{message}</p>
+      </div>
+    )}
+    </>
   );
 };
 export default NavBar;
