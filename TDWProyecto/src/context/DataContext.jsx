@@ -217,14 +217,16 @@ export const DataProvider = ({ children }) => {
   }
 
   const deleteRelationFromProduct = (idObject, typeRelation, idRelation) => {
-    /*let relationDeleted = deleteRelationFromProductLocal(idObject, typeRelation, idRelation); // Llama al servicio para eliminar la relación
+    let relationDeleted = deleteRelationFromProductLocal(idObject, typeRelation, idRelation); // Llama al servicio para eliminar la relación
     if (relationDeleted) { // Si se eliminó la relación, lo actualiza en la constante
       setProducts((prevProducts) => prevProducts.map((product) =>
           product.id === Number(idObject) ? { ...product, [typeRelation]: product[typeRelation].filter((relationId) => relationId !== idRelation),}: product ));
+      return true;
     } else {
       console.error('No se pudo eliminar la relación del producto.'); // Maneja el error si no se pudo eliminar la relación
-    }*/
-   console.log("deleteRelationFromProduct", idObject, typeRelation, idRelation); // Verifica los parámetros recibidos
+      return false;
+    }
+   //console.log("deleteRelationFromProduct", idObject, typeRelation, idRelation); // Verifica los parámetros recibidos
   }
 
   const addRelationToProduct = (idObject, typeRelation, idRelation) => {

@@ -24,8 +24,8 @@ const RowRelated = ({ type, object,father}) => {
         deleteRelation(father.id, father.type, type, object.id); // Llama al método del contexto*/
         //console.log('Eliminando relación:', object.type, " fdfd: ", father.type);
         father.type === 'product'
-          ? deleteRelationFromProduct(father.id, object.id) // Llama al método del contexto para productos
-          : deleteRelationFromEntity(father.id, type, object.id); // Llama al método del contexto para entidades
+          ? setIsDeleted(deleteRelationFromProduct(father.id,type, object.id)) // Llama al método del contexto para productos
+          : setIsDeleted(deleteRelationFromEntity(father.id, type, object.id)); // Llama al método del contexto para entidades
 
       }
     };
