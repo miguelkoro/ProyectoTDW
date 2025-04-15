@@ -32,39 +32,29 @@ const RelatedSection = ({ type, relatedObjects = [], father}) => {
     }
 
     // Actualiza el estado local cuando cambien las props `relatedObjects`
-  useEffect(() => {
-    //console.log("relatedObjects: ", relatedObjects, " dfdfdf: ",father); // Verifica los objetos relacionados
-  }, []);
+    useEffect(() => {
+      //console.log("relatedObjects: ", relatedObjects, " dfdfdf: ",father); // Verifica los objetos relacionados
+    }, []);
 
-    const handleAddRelation = () => {
-     /* if (!selectedId) {
-        console.log('No se seleccionó un ID'); // Depuración
-        return; // No hacer nada si no se seleccionó un ID
+    const checkAddRelation = () => {
+      if (!selectedId) {
+        console.error("No se ha seleccionado ningún ID."); // Mensaje de error si no hay nada seleccionado
+        return false; // No se puede añadir la relación
       }
-      
-      console.log('Añadiendo relación:', selectedId, 'tipo: ', type); // Ahora puedes usar selectedObject
     
-      
-      const relationAdded = addRelation(father.id, fatherType, type, selectedId); // Llama al método del contexto
-      if (relationAdded) {
-        console.log('Relación añadida correctamente:', selectedId);
-    
-        // Busca el objeto completo en relatedObjects
-        const relatedObject = relatedObjects.find((object) => object.id === parseInt(selectedId));
-        console.log('Obffjeto relacionado añadido:', relatedObject);
-        // Llama a onAddRelation con el objeto completo
-        if (relatedObject && onAddRelation) {
-          onAddRelation(relatedObject);
-          console.log('Objeto relacionado añadido:', relatedObject);
-        }
-      } else {
-        console.log('La relación ya existe, no se añadió.');
-      }*/
-        //setRelatedObjects((prevRelatedObjects) => [...prevRelatedObjects, selectedObject]);
-      
-    };
+      // Verifica si el ID ya está en la lista de objetos relacionados
+      const alreadyExists = relatedObjects.some((object) => object.id === Number(selectedId));
+      if (alreadyExists) {
+        console.error(`El ID ${selectedId} ya está en la lista de objetos relacionados.`);
+        return false; // No se puede añadir la relación
+      }    
+      return true; // Se puede añadir la relación
+    }
 
     const addRelation =() =>{
+      if (!checkAddRelation()) {
+        return; // Detener si no se cumplen las condiciones
+      }
       console.log("Añadiendo reón a: ", father.type);
       switch (father.type) {
         //case 'person':

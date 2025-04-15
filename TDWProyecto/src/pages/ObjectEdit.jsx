@@ -266,7 +266,7 @@ const ObjectEdit = () => {
       </div>
 
       <div className="related-columns">
-      {(type==="product" && !isNew) && (
+      {((type==="product" || type === "entity") && !isNew) && (
         <div
           className={`related-column ${
             relatedEntities.length === 0 ? 'single-column' : ''
@@ -277,7 +277,7 @@ const ObjectEdit = () => {
             />
         </div>
       )}
-      {((type==="product" || type === "entity") && !isNew) && (
+      {(type==="product" && !isNew) && (
         <div
           className={`related-column ${
             relatedPersons.length === 0 ? 'single-column' : ''
