@@ -6,13 +6,13 @@ import { useNavigate } from 'react-router-dom'; // Importa useNavigate para redi
 
 
 
-const Section = ({title, objects = []}) => {
+const Section = (props) => {
   const { user } = useAuth(); // Obtén el usuario autenticado del contexto
   const navigate = useNavigate(); // Hook para redirigir
 
   const handleNewClick = () => {
     let newTitle;
-    switch (title) {
+    switch (props.title) {
       case "Personas":
         newTitle = "person";
         break;
@@ -23,7 +23,7 @@ const Section = ({title, objects = []}) => {
         newTitle = "product";
         break;
       default:
-        newTitle = title; // Si no coincide con ninguno, usa el título original
+        newTitle = props.title; // Si no coincide con ninguno, usa el título original
     }
     // Aquí puedes implementar la lógica para crear un nuevo objeto
     navigate(`/new/${newTitle} `, {state:{new:true}}); // Redirige a la página de creación de nuevo objeto
@@ -33,7 +33,7 @@ const Section = ({title, objects = []}) => {
   return (
     <div className="section-container">
       <div className="section-header">
-        <h1 className="section-title">{title}</h1>
+        <h1 className="section-title">{props.title}</h1>
         {user?.role === "writer" && ( // Solo muestra el botón si el usuario ha iniciado sesión y es writer //user? se usa para que si es null, lo ponga como undefined en vez de dar error
           <button className="new-button" onClick={handleNewClick}>
             Nuevo
@@ -41,7 +41,7 @@ const Section = ({title, objects = []}) => {
         )}
       </div>
       <div className="card-wrapper">
-        {objects.map((object) => (
+        {props.objects.map((object) => (
           <Card key={object.id} object={object} />
           
         ))}

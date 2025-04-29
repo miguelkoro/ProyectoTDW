@@ -7,6 +7,12 @@ import { fetchJSONPersons, fetchJSONEntities, fetchJSONProducts,
   updateProductInLocal, updatePersonInLocal, updateEntityInLocal,
 addRelationToProductLocal, addRelationToEntityLocal,
 deleteRelationFromEntityLocal, deleteRelationFromProductLocal} from '../services/dataService';
+import * as dataService from '../services/dataService'; // Importa todos los servicios de dataService
+
+import { AuthProvider } from './AuthContext';
+import Persona from '../models/Persona.js'; 
+import Entidad from '../models/Entidad.js'; 
+import Producto from '../models/Producto.js'; 
 
 export const DataContext = createContext();
 //Aquí, los datos (persons, entities, products) se cargan una vez y se almacenan en el contexto.
@@ -17,6 +23,7 @@ export const DataProvider = ({ children }) => {
   const [persons, setPersons] = useState([]);
   const [entities, setEntities] = useState([]);
   const [products, setProducts] = useState([]);
+  const [associations, setAssociations] = useState([]); // Estado para las asociaciones 
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -33,6 +40,67 @@ export const DataProvider = ({ children }) => {
     }, 2000);
   };
 
+  // Cargar datos de la API
+  const loadProducts = async (name='', order='', ordering='') => {
+    try {
+      setIsLoading(true); // Indica que los datos están siendo cargados
+  
+      // Llama al servicio para cargar los productos
+      const response = await dataService.fetchAPIObjects('products', name, order, ordering);
+  
+      if (response.type === 'error') {
+        console.error(`Error al cargar productos: ${response.data}`);
+        showMessage('Error al cargar productos', 'error');
+        setIsLoading(false);
+        return;
+      }  
+      // Convierte cada producto del JSON en una instancia de Product
+      const productCollection = response.data.products.map((productData) => {
+        const product = new Producto(productData.product); // Crea una instancia de Product
+        product.setType('product'); // Configura el tipo como 'product'
+        //console.log('Producto cargado:', productData); // Verifica el producto cargado
+        return product;
+      });
+  
+      setProducts(productCollection); // Guarda los productos en el estado
+      //showMessage('Productos cargados correctamente', 'success');
+    } catch (error) {
+      console.error('Error al cargar productos:', error);
+      showMessage('Error al cargar productos', 'error');
+    } finally {
+      setIsLoading(false); // Indica que los datos han terminado de cargarse
+    }
+  }
+  const loadPersons = async (name='', order='', ordering='') => {
+    try {
+      setIsLoading(true); // Indica que los datos están siendo cargados
+  
+      // Llama al servicio para cargar los productos
+      const response = await dataService.fetchAPIObjects('persons', name, order, ordering);
+  
+      if (response.type === 'error') {
+        console.error(`Error al cargar personas: ${response.data}`);
+        showMessage('Error al cargar personas', 'error');
+        setIsLoading(false);
+        return;
+      }  
+      // Convierte cada producto del JSON en una instancia de Product
+      const personCollection = response.data.persons.map((personData) => {
+        const person = new Persona(personData.person); // Crea una instancia de Product
+        person.setType('person'); // Configura el tipo como 'product'
+        //console.log('Producto cargado:', productData); // Verifica el producto cargado
+        return person;
+      });
+  
+      setPersons(personCollection); // Guarda los productos en el estado
+      //showMessage('Productos cargados correctamente', 'success');
+    } catch (error) {
+      console.error('Error al cargar personas:', error);
+      showMessage('Error al cargar personas', 'error');
+    } finally {
+      setIsLoading(false); // Indica que los datos han terminado de cargarse
+    }
+  }
 
   //Que coja los datos del json y los almacene en el local storage
   const loadDataFromJson = async () => {
@@ -63,16 +131,17 @@ export const DataProvider = ({ children }) => {
   
   const fetchPersonsFromLocal = () => {
     setIsLoading(true); // Indica que los datos están siendo cargados
-    let fetchPersons = fetchPersonsFromLocalStorage()
-    setPersons(fetchPersons); // Cargar datos desde local storage      
+    /*let fetchPersons = fetchPersonsFromLocalStorage()
+    setPersons(fetchPersons); // Cargar datos desde local storage      */
+    loadPersons(); // Cargar datos desde local storage
     setIsLoading(false); // Indica que los datos han terminado de cargarse
   }
 
   const fetchProductsFromLocal = () => {
     setIsLoading(true); // Indica que los datos están siendo cargados
-    let fetchProducts = fetchProductsFromLocalStorage()
-    setProducts(fetchProducts); // Cargar datos desde local storage      
-    
+    //let fetchProducts = fetchProductsFromLocalStorage()
+    //setProducts(fetchProducts); // Cargar datos desde local storage      
+    loadProducts(); // Cargar datos desde local storage
     setIsLoading(false); // Indica que los datos han terminado de cargarse
   }
       
@@ -292,10 +361,11 @@ export const DataProvider = ({ children }) => {
           persons, 
           entities, 
           products, 
+          associations,
           isLoading, 
-          getPersonById : getPersonById,
-          getEntityById : getEntityById,
-          getProductById : getProductById,
+          getPersonById,
+          getEntityById,
+          getProductById,
           deleteEntity,
           deleteProduct,
           deletePerson,

@@ -2,6 +2,52 @@ import Persona from '../models/Persona.js';
 import Entidad from '../models/Entidad.js'; 
 import Producto from '../models/Producto.js'; 
 
+const API_URL = 'http://127.0.0.1:8000'; // Cambia esto a la URL de tu API
+const BASE_PATH = '/api/v1/'
+
+const fetchParams = (name, order, ordering) => {
+  const queryParams = new URLSearchParams();
+  name!=='' && queryParams.append('name', name); // Agrega el parámetro de nombre si se proporciona   
+  (order === 'id' || order === 'name')  && queryParams.append('order', order); // Agrega el parámetro de orden si se proporciona
+  (ordering === 'ASC' || ordering === 'DESC') && queryParams.append('ordering', ordering); // Agrega el parámetro de ordenamiento si se proporciona
+  return queryParams;
+}
+
+export const fetchAPIObjects = async (objectsType, name = '', order = '', ordering = '') => { //(contieneNombre, id | nombre, ASC | DESC)
+  try{
+    const queryParams = fetchParams(name, order, ordering); // Obtiene los parámetros de consulta   
+    const response = await fetch(`${API_URL}${BASE_PATH}${objectsType}?${queryParams}`); // Realiza la solicitud a la API con los parámetros de consulta
+    //console.log("URL de la API:", `${API_URL}${BASE_PATH}${objectsType}?${queryParams}`); // Muestra la URL de la API en la consola
+
+    if (!response.ok) {
+      //throw new Error('Error en la solicitud a la API');
+      //console.error('Error en la solicitud a la API:', response.status, response.statusText); // Muestra el error en la consola
+      return {type: 'error', data: response.status}; // Devuelve un objeto de error
+    }
+    const persons = await response.json(); // Convierte la respuesta en JSON
+    //console.log("Entidad obtenida de la API:", persons); // Muestra la entidad en la consola
+    return {type: 'success', data: persons}; // Devuelve los datos obtenidos de la API
+  }catch (error) {
+    console.error('Error al realizar la solicitud:', error);
+  }
+
+}
+
+
+///////
+
+const test = async () => {
+  try{
+    const response = await fetch(`${API_URL}${BASE_PATH}entities/1`);
+    if (!response.ok) {
+      throw new Error('Error en la solicitud a la API');
+    }
+    const entity = await response.json(); // Convierte la respuesta en JSON
+    console.log("Entidad obtenida de la API:", entity); // Muestra la entidad en la consola
+  }catch (error) {
+    console.error('Error al realizar la solicitud:', error);
+  }
+}
 //Volcado de datos de JSON a local storage
 export const fetchJSONPersons = async () => {
   const response = await fetch('/ProyectoTDW/assets/jsons/persons.json');
@@ -9,7 +55,8 @@ export const fetchJSONPersons = async () => {
     throw new Error('Error al cargar persons.json');
   }
   const data = await response.json();
-
+  //fetchAPIObjects('associations'); 
+  //test(); // Llama a la función test para verificar la respuesta de la API
   // Transforma los datos en instancias de Persona
   const persons = data.persons.map((person) => {
     const instance = new Persona(person); // Crea una instancia de Persona

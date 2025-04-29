@@ -7,6 +7,7 @@ export default class Objeto {
       this.imageUrl = imageUrl;
       this.wikiUrl = wikiUrl;
       this.type = null; // Inicializa el tipo como null      
+      this.etag = null;
     }
     setType(type) {
       this.type = type;
