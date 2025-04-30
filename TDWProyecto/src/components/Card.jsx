@@ -54,37 +54,21 @@ const Card = ({object}) => {
 
   return (
     <div className="card" onClick={handleCardClick}>
-      {user?.role === "writer" && ( // Solo muestra los botones si el usuario ha iniciado sesión
+      {user?.scope === "writer" && ( // Solo muestra los botones si el usuario ha iniciado sesión
         <div className="card-buttons">
           <button
             className="edit-button"
             onClick={(e) => {handleEditClick(e)}}
-            title="Editar"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              strokeLinecap="round"
-              strokeWidth="2"
-              strokeLinejoin="round"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              fill="none"
-              width="16px"
-              height="16px">
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+            title="Editar" >
+            <svg xmlns="http://www.w3.org/2000/svg" strokeLinecap="round" strokeWidth="2" strokeLinejoin="round" stroke="currentColor" viewBox="0 0 24 24" fill="none" width="16px" height="16px">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
             </svg>
           </button>
           <button
             className="delete-button"
             onClick={(e) => handleDeleteClick(e)}
             title="Eliminar">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              width="16px"
-              height="16px">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16px" height="16px">
               <path d="M3 6h18v2H3V6zm2 3h14v13H5V9zm3 2v9h2v-9H8zm6 0v9h2v-9h-2zM9 4h6v2H9V4z" />
             </svg>
           </button>

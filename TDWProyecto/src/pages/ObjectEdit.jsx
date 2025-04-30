@@ -6,6 +6,8 @@ import { DataContext } from '../context/DataContext'; // Contexto para guardar d
 import  Persona  from '../models/Persona'; // Importa el modelo Persona
 import  Entidad  from '../models/Entidad'; // Importa el modelo Entidad
 import  Producto  from '../models/Producto'; // Importa el modelo Producto
+import  Asociacion  from '../models/Asociacion'; // Importa el modelo Asociación
+import Objeto from '../models/Objeto'; // Importa el modelo Objeto
 import RelatedSection from '../components/RelatedSection'; // Importa el componente de objetos relacionados
 
 const ObjectEdit = () => {
@@ -13,9 +15,9 @@ const ObjectEdit = () => {
   const location = useLocation();
   const { type, id } = useParams();
   const [object, setObject] = useState(null); // Estado para el objeto
-  const { getProductById, getPersonById, getEntityById, 
-          createNewEntity, createNewPerson, createNewProduct,
-          updateEntity, updateProduct, updatePerson,
+  const { getProductById, getPersonById, getEntityById, getAssociationById,
+          createEntity, createPerson, createProduct, createAssociation,
+          updateEntity, updateProduct, updatePerson, updateAssociation,
           showMessage} = useContext(DataContext); // Accede al método getObjectById del contexto
 
   const [relatedPersons, setRelatedPersons] = useState([]);
@@ -37,10 +39,6 @@ const ObjectEdit = () => {
   const [imageUrl, setImageUrl] = useState(''); // Nuevo estado para la URL de la imagen
 
 
-  // Determinar si es un nuevo objeto o uno existente
-  //const isNew = !object;
-
-
    useEffect(() => {
     //console.log("type", type); // Verifica si es un nuevo objeto
     if(isNew) return; // Si es un nuevo objeto, no hacemos nada
@@ -53,12 +51,13 @@ const ObjectEdit = () => {
             case 'person':fetchedObject = await getPersonById(id); break;
             case 'entity':fetchedObject = await getEntityById(id);break;
             case 'product':fetchedObject = await getProductById(id);break;
+            case 'association':fetchedObject = await getAssociationById(id);break;
             default: console.error(`Tipo no válido: ${type}`); break;
           }
-    
+          console.log("fetchObject", fetchedObject); // Verifica el objeto recibido
           if (fetchedObject) {
             setObject(fetchedObject); // Guarda el objeto en el estado
-            //console.log('Objeto obtenido:', fetchedObject); // Verifica el objeto obtenido
+            console.log('Objeto obtenido:', fetchedObject); // Verifica el objeto obtenido
           } else {
             console.error(`No se encontró un objeto con ID ${id} y tipo ${type}`);
             setObject(null); // Establece el estado como null si no se encuentra el objeto
@@ -72,7 +71,7 @@ const ObjectEdit = () => {
       }
     
       fetchObject(); // Llama a la función para obtener el objeto
-    }, [type, id, getPersonById, getEntityById, getProductById]);
+    }, []);
 
   useEffect(() => {
     if (!isNew && object) {
@@ -83,13 +82,9 @@ const ObjectEdit = () => {
       setWikiUrl(object.wikiUrl || 'null');
       setImageUrl(object.imageUrl || 'https://static.thenounproject.com/png/559530-200.png'); // Inicializar la URL de la imagen
 
-    }
-  }, [ object]);
 
-    useEffect(() => {
       const fetchRelatedObjects = async () => {
-        if (!object) return; // Asegúrate de que `object` esté cargado antes de continuar
-    
+       
         //console.log("fetchRelatedObjects", object); // Verifica el objeto recibido
         try {
           if (object?.persons) {
@@ -112,7 +107,10 @@ const ObjectEdit = () => {
       };
     
       fetchRelatedObjects(); // Llama a la función para obtener los objetos relacionados
-    }, [object, getPersonById, getEntityById]); // Dependencias necesarias
+    }
+  }, [ object]);
+
+
 
 
   const saveNewObject = () => {
@@ -134,17 +132,21 @@ const ObjectEdit = () => {
     switch (type) {
       case 'person':
         newObject = new Persona({name, birthDate:birthDateTemp, deathDate:deathDateTemp, wikiUrl, imageUrl:imageUrlTemp, type: 'person'}); // Crear un nuevo objeto persona
-
-        createNewPerson(newObject); // Guardar como persona
+        createPerson(newObject); // Guardar como persona
         break;
       case 'entity':
         newObject = new Entidad({name,birthDate:birthDateTemp,deathDate:deathDateTemp,wikiUrl,imageUrl:imageUrlTemp,type:'entity'}); // Crear un nuevo objeto entidad
-        createNewEntity(newObject); // Guardar como entidad
+        createEntity(newObject); // Guardar como entidad
         break;
       case 'product':
         newObject = new Producto({name,birthDate:birthDateTemp,deathDate:deathDateTemp,wikiUrl,imageUrl:imageUrlTemp,type:'product'}); // Crear un nuevo objeto producto
         console.log("newObject: ", newObject);
-        createNewProduct(newObject); // Guardar como producto
+        createProduct(newObject); // Guardar como producto
+        break;
+      case 'association':
+        newObject = new Asociacion({name,birthDate:birthDateTemp,deathDate:deathDateTemp,wikiUrl,imageUrl:imageUrlTemp,type:'product'}); // Crear un nuevo objeto producto
+        console.log("newObject: ", newObject);
+        createAssociation(newObject); // Guardar como producto
         break;
       default: break;
     }
@@ -162,21 +164,25 @@ const ObjectEdit = () => {
 
     setNameError(false); // Restablece el estado si el nombre es válido
     // Crear una copia local del objeto actualizado
-  const updatedObject = { ...object, name, birthDate, deathDate, wikiUrl, imageUrl };
+  //const updatedObject = { ...object, name, birthDate, deathDate, wikiUrl, imageUrl };
 
   //console.log('Objeto actualizado:', updatedObject); // Verifica el objeto actualizado
   // Actualizar el estado con el objeto actualizado
-  setObject(updatedObject);
-
+  //setObject(updatedObject);
+    let objeto=new Objeto({id:object.id, name, birthDate, deathDate, imageUrl, wikiUrl}); // Crear un nuevo objeto con los datos actualizados
+    objeto.setEtag(object.etag); // Establecer el etag del objeto original
     switch (type) {
       case 'person':       
-        updatePerson(id,updatedObject); // Guardar como persona
+        updatePerson(objeto); // Guardar como persona
         break;
       case 'entity':
-        updateEntity(id,updatedObject); // Guardar como entidad
+        updateEntity(objeto); // Guardar como entidad
         break;
-      case 'product':
-        updateProduct(id,updatedObject); // Guardar como producto
+      case 'product':        
+        updateProduct(objeto); // Guardar como producto
+        break;
+      case 'association':
+        updateAssociation(objeto); // Guardar como producto
         break;
       default: break;
     }
@@ -190,6 +196,8 @@ const ObjectEdit = () => {
         return 'Nueva Entidad'; 
       case 'product':
         return 'Nuevo Producto';
+      case 'association':
+        return 'Nueva Asociación';
       default:
         return 'Objeto';
     }

@@ -13,14 +13,17 @@ const Section = (props) => {
   const handleNewClick = () => {
     let newTitle;
     switch (props.title) {
-      case "Personas":
+      case "PERSONAS":
         newTitle = "person";
         break;
-      case "Entidades":
+      case "ENTIDADES":
         newTitle = "entity";
         break;
-      case "Productos":
+      case "PRODUCTOS":
         newTitle = "product";
+        break;
+      case "ASOCIACIONES":
+        newTitle = "association";
         break;
       default:
         newTitle = props.title; // Si no coincide con ninguno, usa el título original
@@ -34,7 +37,7 @@ const Section = (props) => {
     <div className="section-container">
       <div className="section-header">
         <h1 className="section-title">{props.title}</h1>
-        {user?.role === "writer" && ( // Solo muestra el botón si el usuario ha iniciado sesión y es writer //user? se usa para que si es null, lo ponga como undefined en vez de dar error
+        {user?.scope === "writer" && ( // Solo muestra el botón si el usuario ha iniciado sesión y es writer //user? se usa para que si es null, lo ponga como undefined en vez de dar error
           <button className="new-button" onClick={handleNewClick}>
             Nuevo
           </button>

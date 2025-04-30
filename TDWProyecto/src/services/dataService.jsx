@@ -18,21 +18,94 @@ export const fetchAPIObjects = async (objectsType, name = '', order = '', orderi
     const queryParams = fetchParams(name, order, ordering); // Obtiene los parámetros de consulta   
     const response = await fetch(`${API_URL}${BASE_PATH}${objectsType}?${queryParams}`); // Realiza la solicitud a la API con los parámetros de consulta
     //console.log("URL de la API:", `${API_URL}${BASE_PATH}${objectsType}?${queryParams}`); // Muestra la URL de la API en la consola
-
     if (!response.ok) {
       //throw new Error('Error en la solicitud a la API');
       //console.error('Error en la solicitud a la API:', response.status, response.statusText); // Muestra el error en la consola
       return {type: 'error', data: response.status}; // Devuelve un objeto de error
     }
-    const persons = await response.json(); // Convierte la respuesta en JSON
+    const objects = await response.json(); // Convierte la respuesta en JSON
     //console.log("Entidad obtenida de la API:", persons); // Muestra la entidad en la consola
-    return {type: 'success', data: persons}; // Devuelve los datos obtenidos de la API
+    return {type: 'success', data: objects}; // Devuelve los datos obtenidos de la API
   }catch (error) {
     console.error('Error al realizar la solicitud:', error);
   }
+}
+//Obtener un objeto por ID de la API
+export const fetchAPIObjectById = async (objectsType, id) => {
+  try{
+    const response = await fetch(`${API_URL}${BASE_PATH}${objectsType}/${id}`) // Realiza la solicitud a la API con el ID
+      .then((res) => { 
+        const etag = res.headers.get('ETag'); // Obtiene el ETag de la respuesta 
+        return res.json().then((data) => ({ data, etag })); // Convierte la respuesta en JSON y devuelve el ETag
+      })
+      .then(
+        (result) => {return result},
+        (error) => { console.log('Error en la solicitud:', error); return error; });
 
+    //const object = await response.json(); // Convierte la respuesta en JSON
+    console.log("Objeto obtenido de la API:", response); // Muestra el objeto en la consola
+    return response; // Devuelve el objeto obtenido de la API
+  }catch (error) {
+    console.error('Error al realizar la solicitud:', error);
+  }
 }
 
+export const createAPIObject = async (objectsType, object, token) => {
+  try{
+    //console.log("createAPIObject", objectsType, object); // Verifica el objeto recibido
+    // Extrae solo las propiedades necesarias del objeto
+    const payload = {
+      name: object.name,
+      birthDate: object.birthDate,
+      deathDate: object.deathDate,
+      imageUrl: object.imageUrl,
+      wikiUrl: object.wikiUrl,
+    };
+    //console.log("crefdfdateAPIObject", JSON.stringify(name, birthdate, deathdate, imageurl, wikiurl)); // Verifica el objeto recibido
+    const response = await fetch(`${API_URL}${BASE_PATH}${objectsType}`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`, // Agrega el token en la cabecera de autorización
+      },
+      body: JSON.stringify(payload), // Convierte el objeto a JSON
+    }).then(res => res.json())
+      .then(
+        (result) => {return result},
+        (error) => { console.log('Error en la solicitud:', error); return error; });
+    return response; // Devuelve el resultado de la solicitud
+    //const createdObject = await response.json(); // Convierte la respuesta en JSON
+    //console.log("Objeto creado en la API:", createdObject); // Muestra el objeto creado en la consola
+    //return createdObject; // Devuelve el objeto creado
+  }catch (error) {
+    console.error('Error al realizar la solicitud:', error);
+  }
+}
+
+export const updateAPIObject = async (objectsType, object, token) => {
+  try{
+    // Extrae solo las propiedades necesarias del objeto
+    const payload = {
+      name: object.name,
+      birthDate: object.birthDate,
+      deathDate: object.deathDate,
+      imageUrl: object.imageUrl,
+      wikiUrl: object.wikiUrl,
+    };
+    console.log("ggf", payload); // Verifica el objeto recibido
+    const response = await fetch(`${API_URL}${BASE_PATH}${objectsType}/${object.id}`, {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json','If-Match': object.etag, 'Authorization': `Bearer ${token}`, // Agrega el token en la cabecera de autorización
+      },
+      body: JSON.stringify(payload), // Convierte el objeto a JSON
+    }).then(res => res.json())
+      .then(
+        (result) => {return result},
+        (error) => { console.log('Error en la solicitud:', error); return error; });
+    console.log("Objeto actualizado en la API:", response); // Muestra el objeto actualizado en la consola
+    return response; // Devuelve el resultado de la solicitud
+  }catch (error) {
+    console.error('Error al realizar la solicitud:', error);
+  }
+}
 
 ///////
 
@@ -434,15 +507,5 @@ export const createNewEntityToLocal = (entity) => {
   localStorage.setItem('entities', JSON.stringify(entities)); // Guarda la lista actualizada en el local storage
   return newEntity; // Devuelve la nueva entidad creada
 }
-export const createNewProductToLocal = (product) => {
-  //console.log("createNewProductToLocal", product); // Verifica el producto recibido
-  const products = fetchProductsFromLocalStorage(); // Obtén la lista actual de productos
-  const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1; // Genera un nuevo ID
-  const newProduct = new Producto({ ...product, id: newId }); // Crea una nueva instancia de Producto con el nuevo ID
-  newProduct.setType('product'); // Configura el tipo como 'product'
-  products.push(newProduct); // Agrega el nuevo producto a la lista
-  //console.log("createNewProduct", newProduct); // Verifica el nuevo producto creado
-  localStorage.setItem('products', JSON.stringify(products)); // Guarda la lista actualizada en el local storage
-  return newProduct; // Devuelve el nuevo producto creado
-}
+
 

@@ -11,7 +11,7 @@ import RelatedSection from '../components/RelatedSection'; // Importa el compone
 const ObjectView = (props) => {
   const { type, id } = useParams(); // Obtén el tipo y el id desde la URL
   const [object, setObject] = useState(null); // Estado para el objeto
-  const { getProductById, getPersonById, getEntityById} = useContext(DataContext); // Accede al método getObjectById del contexto
+  const { getProductById, getPersonById, getEntityById, getAssociationById} = useContext(DataContext); // Accede al método getObjectById del contexto
 
 
   const [relatedPersons, setRelatedPersons] = useState([]);
@@ -35,6 +35,7 @@ const ObjectView = (props) => {
           case 'person':fetchedObject = await getPersonById(id); break;
           case 'entity':fetchedObject = await getEntityById(id);break;
           case 'product':fetchedObject = await getProductById(id);break;
+          case 'association':fetchedObject = await getAssociationById(id);break;
           default: console.error(`Tipo no válido: ${type}`); break;
         }
   
@@ -54,7 +55,7 @@ const ObjectView = (props) => {
     }
   
     fetchObject(); // Llama a la función para obtener el objeto
-  }, [getPersonById, getEntityById, getProductById]);
+  }, []);
   
   useEffect(() => {
     const fetchRelatedObjects = async () => {
@@ -82,7 +83,7 @@ const ObjectView = (props) => {
     };
   
     fetchRelatedObjects(); // Llama a la función para obtener los objetos relacionados
-  }, [object, getPersonById, getEntityById]); // Dependencias necesarias
+  }, [object, getPersonById, getEntityById, getAssociationById]); // Dependencias necesarias
 
 
   if (!object) {

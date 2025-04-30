@@ -20,11 +20,11 @@ const NavBar = () => {
       <div className="navbar-profile">
         {user ? (
             <>
-              <img
+              {/*<img
                 src={user.profileImage}
                 alt="Profile"
                 className="navbar-profile-image"
-              />
+              />*/}
               <span>Bienvenido, {user.userName}</span>
               <button className="navbar-logout-button" onClick={logout}>
                 Cerrar Sesión

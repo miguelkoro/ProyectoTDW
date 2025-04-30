@@ -3,16 +3,17 @@ import { fetchJSONPersons, fetchJSONEntities, fetchJSONProducts,
   fetchPersonsFromLocalStorage, fetchEntitiesFromLocalStorage, fetchProductsFromLocalStorage, 
   fetchPersonByIdFromLocal, fetchEntityByIdFromLocal, fetchProductByIdFromLocal, 
   deletePersonFromLocal, deleteEntityFromLocal, deleteProductFromLocal,
-  createNewPersonToLocal, createNewEntityToLocal, createNewProductToLocal,
+  createNewPersonToLocal, createNewEntityToLocal,
   updateProductInLocal, updatePersonInLocal, updateEntityInLocal,
 addRelationToProductLocal, addRelationToEntityLocal,
 deleteRelationFromEntityLocal, deleteRelationFromProductLocal} from '../services/dataService';
 import * as dataService from '../services/dataService'; // Importa todos los servicios de dataService
 
-import { AuthProvider } from './AuthContext';
+import { useAuth } from './AuthContext';
 import Persona from '../models/Persona.js'; 
 import Entidad from '../models/Entidad.js'; 
 import Producto from '../models/Producto.js'; 
+import Asociacion from '../models/Asociacion.js';
 
 export const DataContext = createContext();
 //Aquí, los datos (persons, entities, products) se cargan una vez y se almacenan en el contexto.
@@ -26,6 +27,8 @@ export const DataProvider = ({ children }) => {
   const [associations, setAssociations] = useState([]); // Estado para las asociaciones 
 
   const [isLoading, setIsLoading] = useState(true);
+
+  const {user} = useAuth(); // Obtiene el usuario autenticado del contexto
 
   const LOCAL_STORAGE = true; // Estado para manejar el local storage
 
@@ -41,7 +44,7 @@ export const DataProvider = ({ children }) => {
   };
 
   // Cargar datos de la API
-  const loadProducts = async (name='', order='', ordering='') => {
+  const getProducts = async (name='', order='', ordering='') => {
     try {
       setIsLoading(true); // Indica que los datos están siendo cargados
   
@@ -71,7 +74,7 @@ export const DataProvider = ({ children }) => {
       setIsLoading(false); // Indica que los datos han terminado de cargarse
     }
   }
-  const loadPersons = async (name='', order='', ordering='') => {
+  const getPersons = async (name='', order='', ordering='') => {
     try {
       setIsLoading(true); // Indica que los datos están siendo cargados
   
@@ -101,130 +104,144 @@ export const DataProvider = ({ children }) => {
       setIsLoading(false); // Indica que los datos han terminado de cargarse
     }
   }
-
-  //Que coja los datos del json y los almacene en el local storage
-  const loadDataFromJson = async () => {
-    setIsLoading(true); // Indica que los datos están siendo cargados
-    localStorage.removeItem('persons'); // Elimina solo los datos de personas
-    localStorage.removeItem('entities'); // Elimina solo los datos de entidades
-    localStorage.removeItem('products'); // Elimina solo los datos de productos
-    // Cargar los datos desde el JSON
-    const [personsData, entitiesData, productsData] = await Promise.all([ 
-      fetchJSONPersons(),
-      fetchJSONEntities(),
-      fetchJSONProducts(),
-    ]);
-    // Guardar los datos en el local storage
-    fetchPersonsFromLocal(); // Cargar datos desde local storage
-    fetchEntitiesFromLocal(); // Cargar datos desde local storage
-    fetchProductsFromLocal(); // Cargar datos desde local storage
-    setIsLoading(false); // Indica que los datos han terminado de cargarse
-  }
+  const getEntities = async (name='', order='', ordering='') => {
+    try {
+      setIsLoading(true); // Indica que los datos están siendo cargados
   
-  // Cargar datos desde local storage
-  const fetchEntitiesFromLocal = () => {
-    setIsLoading(true); // Indica que los datos están siendo cargados
-    let fetchEntities = fetchEntitiesFromLocalStorage()
-    setEntities(fetchEntities); // Cargar datos desde local storage
-    setIsLoading(false); // Indica que los datos han terminado de cargarse
-  }   
+      // Llama al servicio para cargar los productos
+      const response = await dataService.fetchAPIObjects('entities', name, order, ordering);
   
-  const fetchPersonsFromLocal = () => {
-    setIsLoading(true); // Indica que los datos están siendo cargados
-    /*let fetchPersons = fetchPersonsFromLocalStorage()
-    setPersons(fetchPersons); // Cargar datos desde local storage      */
-    loadPersons(); // Cargar datos desde local storage
-    setIsLoading(false); // Indica que los datos han terminado de cargarse
+      if (response.type === 'error') {
+        console.error(`Error al cargar entidades: ${response.data}`);
+        showMessage('Error al cargar entidades', 'error');
+        setIsLoading(false);
+        return;
+      }  
+      // Convierte cada producto del JSON en una instancia de Product
+      const entityCollection = response.data.entities.map((entityData) => {
+        const entity = new Entidad(entityData.entity); // Crea una instancia de Product
+        entity.setType('entity'); // Configura el tipo como 'product'
+        //console.log('Producto cargado:', productData); // Verifica el producto cargado
+        return entity;
+      });
+  
+      setEntities(entityCollection); // Guarda los productos en el estado
+      //showMessage('Productos cargados correctamente', 'success');
+      //console.log("loadEntities", entityCollection); // Verifica el nuevo producto creado
+    } catch (error) {
+      console.error('Error al cargar entidades:', error);
+      showMessage('Error al cargar entidades', 'error');
+    } finally {
+      setIsLoading(false); // Indica que los datos han terminado de cargarse
+    }
   }
-
-  const fetchProductsFromLocal = () => {
-    setIsLoading(true); // Indica que los datos están siendo cargados
-    //let fetchProducts = fetchProductsFromLocalStorage()
-    //setProducts(fetchProducts); // Cargar datos desde local storage      
-    loadProducts(); // Cargar datos desde local storage
-    setIsLoading(false); // Indica que los datos han terminado de cargarse
-  }
+  const getAssociations = async (name='', order='', ordering='') => {
+    try {
+      setIsLoading(true); // Indica que los datos están siendo cargados
+  
+      // Llama al servicio para cargar los productos
+      const response = await dataService.fetchAPIObjects('associations', name, order, ordering);
+  
+      if (response.type === 'error') {
+        console.error(`Error al cargar asociaciones: ${response.data}`);
+        showMessage('Error al cargar asociaciones', 'error');
+        setIsLoading(false);
+        return;
+      }  
+      // Convierte cada producto del JSON en una instancia de Product
+      const associationCollection = response.data.associations.map((associationData) => {
+        const association = new Asociacion(associationData.association); // Crea una instancia de Product
+        association.setType('association'); // Configura el tipo como 'product'
+        //console.log('Producto cargado:', productData); // Verifica el producto cargado
+        return association;
+      });
+  
+      setAssociations(associationCollection); // Guarda los productos en el estado
       
-
-  // Llama a loadData al montar el componente
-  useEffect(() => {
-    //loadData();
-    LOCAL_STORAGE && loadDataFromJson() // Cargar datos desde JSON al montar el componente
-  }, []);
-
-  //Metodo que pasandole un id, y el tipo de objeto devuelva el objeto correspondiente
+      //showMessage('Productos cargados correctamente', 'success');
+    } catch (error) {
+      console.error('Error al cargar asociaciones:', error);
+      showMessage('Error al cargar asociaciones', 'error');
+    } finally {
+      setIsLoading(false); // Indica que los datos han terminado de cargarse
+    }
+  }
 
   const getPersonById = async (id) => {
-    if (LOCAL_STORAGE) {
-      // Obtén la persona desde localStorage
-      //console.log("getPersonById", id); // Verifica el ID recibido
-      const person = await fetchPersonByIdFromLocal(id);  
-      //console.log('Persona encontrada:', person);
-      //console.log('Persona encontrada:', person);
-      if (person) {
-        //console.log('Persona encontrada:', person);  
-        // Actualiza el estado de persons con la nueva persona si no existe
-        setPersons((prevPersons) => {
-          const exists = prevPersons.some((p) => p.id === Number(person.id)); // Verifica si ya existe
-          if (!exists) {
-            console.log('Añadiendo nueva persona al estado:', person);
-            return [...prevPersons, person]; // Agrega la nueva persona si no existe
-          }
-          return prevPersons; // Devuelve la lista sin cambios si ya existe
-        });  
-        
-        return person; // Devuelve la persona encontrada
-      } else {
-        console.error(`Persona con ID ${id} no encontrada en localStorage.`);
-      }
-    }
-    return null; // Devuelve null si LOCAL_STORAGE es false o no se encuentra la persona
+    // Llama al servicio para obtener la persona por ID
+    const { data, etag } = await dataService.fetchAPIObjectById('persons', id);
+    // Convierte el objeto en una instancia de Persona
+    const person = new Persona(data.person);
+    person.etag = etag; // Asigna el ETag al objeto
+    person.setType('person'); // Configura el tipo como 'person'
+
+    return person; // Devuelve la persona encontrada
+
   };
   const getEntityById = async (id) => {
-    if (LOCAL_STORAGE) {
-      const entity = await fetchEntityByIdFromLocal(id);
-      //console.log('Entidad encontrada:', entity);
-      if(entity) {
-        setEntities((prevEntities) => {
-          const exists = prevEntities.some((e) => e.id === Number(entity.id)); // Verifica si ya existe
-          if (!exists) {
-            console.log('Añadiendo nueva entidad al estado:', entity);
-            return [...prevEntities, entity]; // Agrega la nueva entidad si no existe
-          }
-          return prevEntities; // Devuelve la lista sin cambios si ya existe
-        });
-        return entity; // Devuelve la entidad encontrada
-      }
-      else {
-        console.error(`Entidad con ID ${id} no encontrada en localStorage.`);
-      }
-      return null; // Devuelve null si LOCAL_STORAGE es false o no se encuentra la entidad
-    }
+    const { data, etag } = await dataService.fetchAPIObjectById('entities', id);
+    // Convierte el objeto en una instancia de Persona
+    const entity = new Entidad(data.entity);
+    entity.etag = etag; // Asigna el ETag al objeto
+    entity.setType('entity'); // Configura el tipo como 'person'
+
+    return entity; // Devuelve la persona encontrada
   }
   const getProductById = async (id) => {
-    if (LOCAL_STORAGE) {
-      const product = fetchProductByIdFromLocal(id);
-      if (product) {
-        //console.log('Producto encontrado:', product);
-  
-        // Actualiza el estado de products con el nuevo producto si no existe
-        setProducts((prevProducts) => {
-          const exists = prevProducts.some((p) => p.id === Number(product.id)); // Verifica si ya existe
-          if (!exists) {
-           // console.log('Añadiendo nuevo producto al estado:', product);
-            return [...prevProducts, product]; // Agrega el nuevo producto si no existe
-          }
-          return prevProducts; // Devuelve la lista sin cambios si ya existe
-        });
-  
-        return product; // Devuelve el producto encontrado
-      } else {
-        console.error(`Producto con ID ${id} no encontrado en localStorage.`);
-      }
-    }
-    return null; // Devuelve null si LOCAL_STORAGE es false o no se encuentra el producto
+    const { data, etag } = await dataService.fetchAPIObjectById('products', id);
+    // Convierte el objeto en una instancia de Persona
+    const product = new Producto(data.product);
+    product.etag = etag; // Asigna el ETag al objeto
+    product.setType('product'); // Configura el tipo como 'person'
+    console.log(JSON.stringify(product))
+    return product; // Devuelve la persona encontrada
+  };
+  const getAssociationById = async (id) => {
+    const { data, etag } = await dataService.fetchAPIObjectById('associations', id);
+    // Convierte el objeto en una instancia de Persona
+    const association = new Asociacion(data.association);
+    association.etag = etag; // Asigna el ETag al objeto
+    association.setType('association'); // Configura el tipo como 'person'
+
+    return association; // Devuelve la persona encontrada
   };
 
+  const createProduct = async (product) => {
+    !user && console.error("No hay usuario autenticado para crear el producto."); // Verifica si hay un usuario autenticado
+    const result = dataService.createAPIObject("products",product, user.token); // Llama al servicio para crear el producto
+    //console.log("createProduct", result); // Verifica el nuevo producto creado
+  } 
+  const createEntity = async (entity) => {
+    !user && console.error("No hay usuario autenticado para crear la entidad."); // Verifica si hay un usuario autenticado
+    const result = dataService.createAPIObject("entities",entity, user.token); // Llama al servicio para crear el producto
+  }
+  const createAssociation = async (association) => {
+    !user && console.error("No hay usuario autenticado para crear la asociación."); // Verifica si hay un usuario autenticado
+    const result = dataService.createAPIObject("associations",association, user.token); // Llama al servicio para crear el producto
+  }
+  const createPerson = async (person) => {
+    !user && console.error("No hay usuario autenticado para crear la persona."); // Verifica si hay un usuario autenticado
+    const result = dataService.createAPIObject("persons",person, user.token); // Llama al servicio para crear el producto
+  }
+
+  const updateProduct = async(updatedProduct) => {
+    !user && console.error("No hay usuario autenticado para actualizar el producto."); // Verifica si hay un usuario autenticado
+    //console.log("updateProduct", updatedProduct); // Verifica el nuevo producto creado
+    const result = dataService.updateAPIObject("products", updatedProduct, user.token); // Llama al servicio para crear el producto
+    //console.log("updateProduct", result); // Verifica el nuevo producto creado
+  }
+  const updatePerson = async(updatedPerson) => {
+    !user && console.error("No hay usuario autenticado para actualizar la persona."); 
+    const result = dataService.updateAPIObject("persons", updatedPerson, user.token); // Llama al servicio para crear el producto
+  }
+  const updateEntity = async(updatedEntity) => {
+    !user && console.error("No hay usuario autenticado para actualizar la entidad."); // Verifica si hay un usuario autenticado
+    const result = dataService.updateAPIObject("entities", updatedEntity, user.token); // Llama al servicio para crear el producto
+  }
+  const updateAssociation = async(updatedAssociation) => {
+    !user && console.error("No hay usuario autenticado para actualizar la asociación."); // Verifica si hay un usuario autenticado
+    const result = dataService.updateAPIObject("associations", updatedAssociation, user.token); // Llama al servicio para crear el producto
+  }
 
   const deleteRelationFromEntity = (idObject, typeRelation, idRelation) => {
     let relationDeleted = deleteRelationFromEntityLocal(idObject, typeRelation, idRelation); // Llama al servicio para eliminar la relación
@@ -276,7 +293,7 @@ export const DataProvider = ({ children }) => {
     }
   }
 
-  const updateProduct = (id, updatedProduct) => {    
+  /*const updateProduct = (id, updatedProduct) => {    
     if(updateProductInLocal(id, updatedProduct)) { //Lo actualiza en el local storage
       setProducts((prevProducts) => 
         prevProducts.map((product) => (product.id === Number(id) ? updatedProduct : product))
@@ -285,8 +302,8 @@ export const DataProvider = ({ children }) => {
     }else{
       showMessage(`Error al actualizar el producto (${id})`,"error"); // Tipo de mensaje
     }
-  };
-  const updatePerson = (id, updatedPerson) => {
+  };*/
+ /* const updatePerson = (id, updatedPerson) => {
     if(updatePersonInLocal(id, updatedPerson)) { //Lo actualiza en el local storage
       setPersons((prevPersons) => 
         prevPersons.map((person) => (person.id === Number(id) ? updatedPerson : person))
@@ -295,8 +312,8 @@ export const DataProvider = ({ children }) => {
     }else{
       showMessage(`Error al actualizar la persona (${id})`,"error"); // Tipo de mensaje
     }
-  }
-  const updateEntity = (id, updatedEntity) => {
+  }*/
+ /* const updateEntity = (id, updatedEntity) => {
     if(updateEntityInLocal(id, updatedEntity)) { //Lo actualiza en el local storage
       setEntities((prevEntities) => 
         prevEntities.map((entity) => (entity.id === Number(id) ? updatedEntity : entity))
@@ -305,7 +322,7 @@ export const DataProvider = ({ children }) => {
     }else{
       showMessage(`Error al actualizar la entidad (${id})`,"error"); // Tipo de mensaje
     }
-  }
+  }*/
 
   const deletePerson = (id) => {
     if(deletePersonFromLocal(id)) {
@@ -358,30 +375,18 @@ export const DataProvider = ({ children }) => {
 
   return (
     <DataContext.Provider value={{ 
-          persons, 
-          entities, 
-          products, 
-          associations,
-          isLoading, 
-          getPersonById,
-          getEntityById,
-          getProductById,
-          deleteEntity,
-          deleteProduct,
-          deletePerson,
-          updateProduct,
-          updatePerson,
-          updateEntity,
-          createNewEntity,
-          createNewProduct,
-          createNewPerson,
+          persons, entities, products, associations,
+          isLoading, message, messageType,
+          getEntities, getProducts, getPersons, getAssociations,
+          getPersonById, getEntityById, getProductById, getAssociationById,
+          deleteEntity, deleteProduct, deletePerson,
+          updateProduct, updatePerson, updateEntity, updateAssociation,
+          createEntity, createProduct, createPerson, createAssociation,
           addRelationToProduct,
           addRelationToEntity,
           deleteRelationFromProduct,
           deleteRelationFromEntity,
-          showMessage,
-          message,
-          messageType,}}>
+          showMessage,}}>
       {children}
     </DataContext.Provider>
   );

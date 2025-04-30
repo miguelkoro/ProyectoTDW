@@ -12,5 +12,8 @@ export default class Objeto {
     setType(type) {
       this.type = type;
     }
+    setEtag(etag) {
+      this.etag = etag;
+    }
 
   }
