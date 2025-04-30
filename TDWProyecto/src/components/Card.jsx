@@ -9,7 +9,7 @@ import { DataContext } from '../context/DataContext'; // Importa el DataContext
 const Card = ({object}) => {
   const { user } = useAuth(); // Obtén el usuario autenticado del contexto
   const navigate = useNavigate(); // Hook para redirigir
-  const { deleteEntity, deletePerson, deleteProduct } = useContext(DataContext); // Obtén el método deletePerson del DataContext
+  const { deleteEntity, deletePerson, deleteProduct, deleteAssociation } = useContext(DataContext); // Obtén el método deletePerson del DataContext
 
   const handleCardClick = () => {
     //console.log("Objeto clickeado:", object); // Verifica el objeto clickeado
@@ -42,9 +42,13 @@ const Card = ({object}) => {
         case 'product':
           deleteProduct(object.id); // Llama a la función de eliminación para productos
           break;
+        case 'association':
+          deleteAssociation(object.id); // Llama a la función de eliminación para asociaciones (asumiendo que es una entidad)
+          break;
         default:
           console.log("Tipo de objeto no válido:", object.type); // Maneja el caso de tipo no válido
       }
+      //navigate("/"); // Redirige a la página principal después de eliminar
     } else {
       console.log("Eliminación cancelada");
     }

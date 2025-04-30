@@ -1,10 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { fetchJSONPersons, fetchJSONEntities, fetchJSONProducts, 
-  fetchPersonsFromLocalStorage, fetchEntitiesFromLocalStorage, fetchProductsFromLocalStorage, 
-  fetchPersonByIdFromLocal, fetchEntityByIdFromLocal, fetchProductByIdFromLocal, 
-  deletePersonFromLocal, deleteEntityFromLocal, deleteProductFromLocal,
-  createNewPersonToLocal, createNewEntityToLocal,
-  updateProductInLocal, updatePersonInLocal, updateEntityInLocal,
+import {
 addRelationToProductLocal, addRelationToEntityLocal,
 deleteRelationFromEntityLocal, deleteRelationFromProductLocal} from '../services/dataService';
 import * as dataService from '../services/dataService'; // Importa todos los servicios de dataService
@@ -30,7 +25,6 @@ export const DataProvider = ({ children }) => {
 
   const {user} = useAuth(); // Obtiene el usuario autenticado del contexto
 
-  const LOCAL_STORAGE = true; // Estado para manejar el local storage
 
   const [message, setMessage] = useState(null);
   const [messageType, setMessageType] = useState("");
@@ -42,6 +36,8 @@ export const DataProvider = ({ children }) => {
       setMessage(null);
     }, 2000);
   };
+
+
 
   // Cargar datos de la API
   const getProducts = async (name='', order='', ordering='') => {
@@ -221,7 +217,7 @@ export const DataProvider = ({ children }) => {
   }
   const createPerson = async (person) => {
     !user && console.error("No hay usuario autenticado para crear la persona."); // Verifica si hay un usuario autenticado
-    const result = dataService.createAPIObject("persons",person, user.token); // Llama al servicio para crear el producto
+    const result = await dataService.createAPIObject("persons",person, user.token); // Llama al servicio para crear el producto
   }
 
   const updateProduct = async(updatedProduct) => {
@@ -242,6 +238,29 @@ export const DataProvider = ({ children }) => {
     !user && console.error("No hay usuario autenticado para actualizar la asociación."); // Verifica si hay un usuario autenticado
     const result = dataService.updateAPIObject("associations", updatedAssociation, user.token); // Llama al servicio para crear el producto
   }
+
+  const deletePerson = async (id) => {
+    !user && console.error("No hay usuario autenticado para eliminar la persona."); // Verifica si hay un usuario autenticado
+    const result = await dataService.deleteAPIObject("persons", id, user.token); // Llama al servicio para eliminar
+    await getPersons(); // Actualiza la lista de personas
+  }
+  const deleteEntity = async (id) => {
+    !user && console.error("No hay usuario autenticado para eliminar la entidad."); // Verifica si hay un usuario autenticado
+    const result = await dataService.deleteAPIObject("entities", id, user.token); // Llama al servicio para eliminar
+    await getEntities(); // Actualiza la lista de entidades
+  }
+  const deleteProduct = async (id) => {
+    !user && console.error("No hay usuario autenticado para eliminar el producto."); // Verifica si hay un usuario autenticado
+    const result = await dataService.deleteAPIObject("products", id, user.token); // Llama al servicio para eliminar
+    await getProducts(); // Actualiza la lista de productos
+  }
+  const deleteAssociation = async (id) => {
+    !user && console.error("No hay usuario autenticado para eliminar la asociación."); // Verifica si hay un usuario autenticado
+    const result = await dataService.deleteAPIObject("associations", id, user.token); // Llama al servicio para eliminar
+    await getAssociations(); // Actualiza la lista de asociaciones
+  }
+
+ 
 
   const deleteRelationFromEntity = (idObject, typeRelation, idRelation) => {
     let relationDeleted = deleteRelationFromEntityLocal(idObject, typeRelation, idRelation); // Llama al servicio para eliminar la relación
@@ -293,82 +312,6 @@ export const DataProvider = ({ children }) => {
     }
   }
 
-  /*const updateProduct = (id, updatedProduct) => {    
-    if(updateProductInLocal(id, updatedProduct)) { //Lo actualiza en el local storage
-      setProducts((prevProducts) => 
-        prevProducts.map((product) => (product.id === Number(id) ? updatedProduct : product))
-      );
-      showMessage(`Producto (${id}) actualizado correctamente`,"success"); // Tipo de mensaje
-    }else{
-      showMessage(`Error al actualizar el producto (${id})`,"error"); // Tipo de mensaje
-    }
-  };*/
- /* const updatePerson = (id, updatedPerson) => {
-    if(updatePersonInLocal(id, updatedPerson)) { //Lo actualiza en el local storage
-      setPersons((prevPersons) => 
-        prevPersons.map((person) => (person.id === Number(id) ? updatedPerson : person))
-      );
-      showMessage(`Persona (${id}) actualizada correctamente`,"success"); // Tipo de mensaje
-    }else{
-      showMessage(`Error al actualizar la persona (${id})`,"error"); // Tipo de mensaje
-    }
-  }*/
- /* const updateEntity = (id, updatedEntity) => {
-    if(updateEntityInLocal(id, updatedEntity)) { //Lo actualiza en el local storage
-      setEntities((prevEntities) => 
-        prevEntities.map((entity) => (entity.id === Number(id) ? updatedEntity : entity))
-      );
-      showMessage(`Entidad (${id}) actualizada correctamente`,"success"); // Tipo de mensaje
-    }else{
-      showMessage(`Error al actualizar la entidad (${id})`,"error"); // Tipo de mensaje
-    }
-  }*/
-
-  const deletePerson = (id) => {
-    if(deletePersonFromLocal(id)) {
-      setPersons((prevPersons) => prevPersons.filter((person) => person.id !== Number(id))); //Lo quita de las constantes
-      showMessage(`Persona (${id}) eliminada correctamente`,"success"); // Tipo de mensaje
-    }else{
-      showMessage(`Error al eliminar la persona (${id})`,"error"); // Tipo de mensaje
-    }
-  }
-  const deleteEntity = (id) => {
-    if(deleteEntityFromLocal(id)) { //Lo borra de localstorage
-      setEntities((prevEntities) => prevEntities.filter((entity) => entity.id !== Number(id))); //Lo quita de las constantes
-      showMessage(`Entidad (${id}) eliminada correctamente`,"success"); // Tipo de mensaje
-    }else{
-      showMessage(`Error al eliminar la entidad (${id})`,"error"); // Tipo de mensaje
-    }
-  }
-  const deleteProduct = (id) => {
-    if(deleteProductFromLocal(id)) {
-      setProducts((prevProducts) => prevProducts.filter((product) => product.id !== Number(id))); //Lo quita de las constantes
-      showMessage(`Producto (${id}) eliminado correctamente`,"success"); // Tipo de mensaje
-    }else{
-      showMessage(`Error al eliminar el producto (${id})`,"error"); // Tipo de mensaje
-    }
-  }
-
-  const createNewPerson = (person) => {
-    createNewPersonToLocal(person); //Crea la persona en el local storage 
-    //setPersons((prevPersons) => [...prevPersons, person]);
-    fetchPersonsFromLocal(); // Cargar datos desde local storage
-    showMessage(`Persona creada correctamente`,"success"); // Tipo de mensaje
-  };
-  const createNewEntity = (entity) => {
-    createNewEntityToLocal(entity); //Llama al servicio para crear la nueva entidad
-    //setEntities((prevEntities) => [...prevEntities, entity]);
-    fetchEntitiesFromLocal(); // Cargar datos desde local storage
-    showMessage(`Entidad creada correctamente`,"success"); // Tipo de mensaje
-  }
-  const createNewProduct = (product) => {
-    //console.log("createNewProdfdfduct", product); // Verifica el nuevo producto creado
-    createNewProductToLocal(product); //Llama al servicio para crear el nuevo producto
-    //setProducts((prevProducts) => [...prevProducts, product]);
-    fetchProductsFromLocal(); // Cargar datos desde local storage
-    showMessage(`Producto creado correctamente`,"success"); // Tipo de mensaje
-    //console.log("creat", products); // Verifica el nuevo producto creado
-  }
 
 
 
@@ -379,7 +322,7 @@ export const DataProvider = ({ children }) => {
           isLoading, message, messageType,
           getEntities, getProducts, getPersons, getAssociations,
           getPersonById, getEntityById, getProductById, getAssociationById,
-          deleteEntity, deleteProduct, deletePerson,
+          deleteEntity, deleteProduct, deletePerson, deleteAssociation,
           updateProduct, updatePerson, updateEntity, updateAssociation,
           createEntity, createProduct, createPerson, createAssociation,
           addRelationToProduct,

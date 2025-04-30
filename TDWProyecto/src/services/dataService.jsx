@@ -107,6 +107,21 @@ export const updateAPIObject = async (objectsType, object, token) => {
   }
 }
 
+export const deleteAPIObject = async (objectsType,id, token) => {
+  try{
+    const response = await fetch(`${API_URL}${BASE_PATH}${objectsType}/${id}`, {
+      method: 'DELETE',
+      headers: {'Authorization': `Bearer ${token}`}}) // Agrega el token en la cabecera de autorización})
+      .then(
+        (result) => {return result},
+        (error) => { console.log('Error en la solicitud:', error); return error; });
+        console.log("Objeto eliminado de la API:", response); // Muestra el objeto eliminado en la consola
+    return response; // Devuelve el resultado de la solicitud    
+  }catch (error) {
+    console.error('Error al realizar la solicitud:', error);
+  }
+}
+
 ///////
 
 const test = async () => {
