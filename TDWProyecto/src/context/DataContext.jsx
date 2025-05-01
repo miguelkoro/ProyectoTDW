@@ -11,9 +11,6 @@ import Producto from '../models/Producto.js';
 import Asociacion from '../models/Asociacion.js';
 
 export const DataContext = createContext();
-//Aquí, los datos (persons, entities, products) se cargan una vez y se almacenan en el contexto.
-//El estado isLoading se utiliza para indicar si los datos están siendo cargados.
-
 
 export const DataProvider = ({ children }) => {
   const [persons, setPersons] = useState([]);
@@ -202,22 +199,25 @@ export const DataProvider = ({ children }) => {
     return association; // Devuelve la persona encontrada
   };
 
-  const createProduct = async (product) => {
-    !user && console.error("No hay usuario autenticado para crear el producto."); // Verifica si hay un usuario autenticado
-    const result = dataService.createAPIObject("products",product, user.token); // Llama al servicio para crear el producto
-    //console.log("createProduct", result); // Verifica el nuevo producto creado
-  } 
-  const createEntity = async (entity) => {
-    !user && console.error("No hay usuario autenticado para crear la entidad."); // Verifica si hay un usuario autenticado
-    const result = dataService.createAPIObject("entities",entity, user.token); // Llama al servicio para crear el producto
+
+  const getPlural = (type) => {
+    switch (type) {
+      case 'person':
+        return 'persons'; // Retorna el plural de 'person'
+      case 'entity':
+        return 'entities'; // Retorna el plural de 'entity'
+      case 'product':
+        return 'products'; // Retorna el plural de 'product'
+      case 'association':
+        return 'associations'; // Retorna el plural de 'association'
+      default:
+        return type; // Retorna el tipo original si no coincide con ninguno de los anteriores
+    }
   }
-  const createAssociation = async (association) => {
-    !user && console.error("No hay usuario autenticado para crear la asociación."); // Verifica si hay un usuario autenticado
-    const result = dataService.createAPIObject("associations",association, user.token); // Llama al servicio para crear el producto
-  }
-  const createPerson = async (person) => {
-    !user && console.error("No hay usuario autenticado para crear la persona."); // Verifica si hay un usuario autenticado
-    const result = await dataService.createAPIObject("persons",person, user.token); // Llama al servicio para crear el producto
+
+  const createObject = async (object) => {
+    !user && console.error("No hay usuario autenticado para crear el objeto."); // Verifica si hay un usuario autenticado
+    const result = await dataService.createAPIObject(getPlural(object.type),object, user.token);
   }
 
   const updateProduct = async(updatedProduct) => {
@@ -260,7 +260,10 @@ export const DataProvider = ({ children }) => {
     await getAssociations(); // Actualiza la lista de asociaciones
   }
 
- 
+ const addRemRelation = async (objectsType, idObject, typeRelation, idRelation, action) => {
+  const response = await dataService.addRemRelationAPI(objectsType,idObject, typeRelation, idRelation, action, user.token); // Llama al servicio para añadir o eliminar la relación
+  console.log("addRemRelation", response); // Verifica la respuesta del servicio
+ }
 
   const deleteRelationFromEntity = (idObject, typeRelation, idRelation) => {
     let relationDeleted = deleteRelationFromEntityLocal(idObject, typeRelation, idRelation); // Llama al servicio para eliminar la relación
@@ -324,11 +327,12 @@ export const DataProvider = ({ children }) => {
           getPersonById, getEntityById, getProductById, getAssociationById,
           deleteEntity, deleteProduct, deletePerson, deleteAssociation,
           updateProduct, updatePerson, updateEntity, updateAssociation,
-          createEntity, createProduct, createPerson, createAssociation,
+          createObject,
           addRelationToProduct,
           addRelationToEntity,
           deleteRelationFromProduct,
           deleteRelationFromEntity,
+          addRemRelation,
           showMessage,}}>
       {children}
     </DataContext.Provider>

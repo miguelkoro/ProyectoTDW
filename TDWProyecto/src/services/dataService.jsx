@@ -122,6 +122,21 @@ export const deleteAPIObject = async (objectsType,id, token) => {
   }
 }
 
+export const addRemRelationAPI = async (objectsType, id, relationType, relationId, action, token) => {
+  try{                                                 //entities/idEntity/person/add|rem/idPerson (quita la personas de la entidad))
+    const response = await fetch(`${API_URL}${BASE_PATH}${objectsType}/${id}/${relationType}/${action}/${relationId}`, {
+      method: 'PUT',
+      headers: {'Authorization': `Bearer ${token}`}}) // Agrega el token en la cabecera de autorización})
+      .then(
+        (result) => {return result},
+        (error) => { console.log('Error en la solicitud:', error); return error; });
+    console.log("Relación añadida en la API:", response); // Muestra la relación añadida en la consola
+    return response; // Devuelve el resultado de la solicitud    
+  }catch (error) {
+    console.error('Error al realizar la solicitud:', error);
+  }
+}
+
 ///////
 
 const test = async () => {

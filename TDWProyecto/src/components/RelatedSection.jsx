@@ -6,12 +6,12 @@ import { DataContext } from '../context/DataContext'; // Importa el DataContext
 import RowRelated from './RowRelated'; // Importa el componente de fila relacionada
 import { useLocation } from 'react-router-dom'; // Importa useLocation para obtener la ubicación actual
 
-const RelatedSection = ({ type, relatedObjects = [], father}) => {
+const RelatedSection = ({ type, relatedObjects = [], father, fetchRelatedObjects}) => {
     //console.log("Objetos relacionados:", objects); // Verifica los objetos relacionados
     const { user } = useAuth(); // Obtén el usuario autenticado del contexto
-    const { persons, entities, addRelationToProduct, addRelationToEntity, showMessage } = useContext(DataContext); // Obtén datos y método del contexto
+    const { persons, entities, showMessage, addRemRelation } = useContext(DataContext); // Obtén datos y método del contexto
     const [selectedId, setSelectedId] = useState(''); // Estado para el ID seleccionado
-    const [localRelatedObjects, setLocalRelatedObjects] = useState(relatedObjects); // Estado local para los objetos relacionados
+    //const [localRelatedObjects, setLocalRelatedObjects] = useState(relatedObjects); // Estado local para los objetos relacionados
     const location = useLocation(); // Obtén la ubicación actual
     const isView = location.state?.view || false;
 
@@ -27,6 +27,7 @@ const RelatedSection = ({ type, relatedObjects = [], father}) => {
         title = 'Entidades relacionadas';
         options = entities; // Usa la lista de entidades
         break;
+        
       default:
         break;
     }
@@ -53,26 +54,32 @@ const RelatedSection = ({ type, relatedObjects = [], father}) => {
       return true; // Se puede añadir la relación
     }
 
-    const addRelation =() =>{
+    const addRelation = async () =>{
       if (!checkAddRelation()) {
         return; // Detener si no se cumplen las condiciones
       }
-      console.log("Añadiendo reón a: ", father.type);
+      //console.log("Añadiendo reón a: ", father.type);
       switch (father.type) {
         //case 'person':
         
         //break;
         case 'entity':
           console.log("Añadiendo relación a:", father, father.type, " con el hijo: ", selectedId, type);
-          addRelationToEntity(father.id, type, selectedId); // Llama al método del contexto
+          //addRelationToEntity(father.id, type, selectedId); // Llama al método del contexto
+          await addRemRelation('entities',father.id, type, selectedId,'add'); // Llama al método del contexto
           break;
         case 'product':
           console.log("Añadiendo relación a:", father, father.type, " con el hijo: ", selectedId, type);
-          addRelationToProduct(father.id, type, selectedId); // Llama al método del contexto
+          await addRemRelation('products',father.id, type, selectedId,'add'); // Llama al método del contexto
+          break;
+        case 'association':
+          console.log("Añadiendo relación a:", father, father.type, " con el hijo: ", selectedId, type);
+          await addRemRelation('associations',father.id, type, selectedId,'add'); // Llama al método del contexto          
           break;
         default:
           break;
       }
+      await fetchRelatedObjects();
     }
       
 
@@ -86,7 +93,7 @@ const RelatedSection = ({ type, relatedObjects = [], father}) => {
       </div>
 
       {/* Selector para añadir relaciones */}
-      {(user?.role === 'writer' && !isView) && (
+      {(user?.scope === 'writer' && !isView) && (
         <div className="related-add">
           <select
             value={selectedId}
@@ -116,12 +123,7 @@ const RelatedSection = ({ type, relatedObjects = [], father}) => {
       <div className="related-list">
         {relatedObjects
             .map((object) => (
-            <RowRelated
-                key={object.id}
-                type={type}
-                object={object}
-                father={father}
-                />
+            <RowRelated  key={object.id}  type={type}  object={object} father={father} />
             ))}
         </div>
     </div>
