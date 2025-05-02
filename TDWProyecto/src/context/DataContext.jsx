@@ -239,29 +239,38 @@ export const DataProvider = ({ children }) => {
     const result = dataService.updateAPIObject("associations", updatedAssociation, user.token); // Llama al servicio para crear el producto
   }
 
-  const deletePerson = async (id) => {
-    !user && console.error("No hay usuario autenticado para eliminar la persona."); // Verifica si hay un usuario autenticado
-    const result = await dataService.deleteAPIObject("persons", id, user.token); // Llama al servicio para eliminar
-    await getPersons(); // Actualiza la lista de personas
+  const updateObject = async(updatedObject) => {
+    !user && console.error("No hay usuario autenticado para actualizar la asociación."); // Verifica si hay un usuario autenticado
+    const result = dataService.updateAPIObject(getPlural(updatedObject.type), updatedObject, user.token); // Llama al servicio para crear el productor
+    //console.log("updateObject", result); // Verifica el nuevo producto creado
+    return result; // Devuelve el resultado de la actualización
   }
-  const deleteEntity = async (id) => {
-    !user && console.error("No hay usuario autenticado para eliminar la entidad."); // Verifica si hay un usuario autenticado
-    const result = await dataService.deleteAPIObject("entities", id, user.token); // Llama al servicio para eliminar
-    await getEntities(); // Actualiza la lista de entidades
-  }
-  const deleteProduct = async (id) => {
-    !user && console.error("No hay usuario autenticado para eliminar el producto."); // Verifica si hay un usuario autenticado
-    const result = await dataService.deleteAPIObject("products", id, user.token); // Llama al servicio para eliminar
-    await getProducts(); // Actualiza la lista de productos
-  }
-  const deleteAssociation = async (id) => {
-    !user && console.error("No hay usuario autenticado para eliminar la asociación."); // Verifica si hay un usuario autenticado
-    const result = await dataService.deleteAPIObject("associations", id, user.token); // Llama al servicio para eliminar
-    await getAssociations(); // Actualiza la lista de asociaciones
+
+
+  const deleteObject = async (type, id) => {
+    !user && console.error("No hay usuario autenticado para eliminar el objeto."); // Verifica si hay un usuario autenticado
+    const result = await dataService.deleteAPIObject(getPlural(type), id, user.token); // Llama al servicio para eliminar
+    switch (type) {
+      case 'person':
+        await getPersons(); // Actualiza la lista de personas
+        break;
+      case 'entity':
+        await getEntities(); // Actualiza la lista de entidades
+        break;
+      case 'product':
+        await getProducts(); // Actualiza la lista de productos
+        break;
+      case 'association':
+        await getAssociations(); // Actualiza la lista de asociaciones
+        break;
+      default:
+        console.error("Tipo de objeto no válido para eliminar."); // Maneja el error si el tipo no es válido
+        break;
+    }
   }
 
  const addRemRelation = async (objectsType, idObject, typeRelation, idRelation, action) => {
-  const response = await dataService.addRemRelationAPI(objectsType,idObject, typeRelation, idRelation, action, user.token); // Llama al servicio para añadir o eliminar la relación
+  const response = await dataService.addRemRelationAPI(getPlural(objectsType),idObject, typeRelation, idRelation, action, user.token); // Llama al servicio para añadir o eliminar la relación
   console.log("addRemRelation", response); // Verifica la respuesta del servicio
  }
 
@@ -325,9 +334,8 @@ export const DataProvider = ({ children }) => {
           isLoading, message, messageType,
           getEntities, getProducts, getPersons, getAssociations,
           getPersonById, getEntityById, getProductById, getAssociationById,
-          deleteEntity, deleteProduct, deletePerson, deleteAssociation,
           updateProduct, updatePerson, updateEntity, updateAssociation,
-          createObject,
+          createObject, deleteObject, updateObject,
           addRelationToProduct,
           addRelationToEntity,
           deleteRelationFromProduct,

@@ -6,10 +6,10 @@ import { DataContext } from '../context/DataContext'; // Importa el DataContext
 import RowRelated from './RowRelated'; // Importa el componente de fila relacionada
 import { useLocation } from 'react-router-dom'; // Importa useLocation para obtener la ubicación actual
 
-const RelatedSection = ({ type, relatedObjects = [], father, fetchRelatedObjects}) => {
+const RelatedSection = (props) => {
     //console.log("Objetos relacionados:", objects); // Verifica los objetos relacionados
     const { user } = useAuth(); // Obtén el usuario autenticado del contexto
-    const { persons, entities, showMessage, addRemRelation } = useContext(DataContext); // Obtén datos y método del contexto
+    const { persons, entities, showMessage } = useContext(DataContext); // Obtén datos y método del contexto
     const [selectedId, setSelectedId] = useState(''); // Estado para el ID seleccionado
     //const [localRelatedObjects, setLocalRelatedObjects] = useState(relatedObjects); // Estado local para los objetos relacionados
     const location = useLocation(); // Obtén la ubicación actual
@@ -18,7 +18,7 @@ const RelatedSection = ({ type, relatedObjects = [], father, fetchRelatedObjects
     let title = ''; // Asigna el tipo de relación basado en el título
     let options = []; // Opciones para el selector
   
-    switch (type) {
+    switch (props.type) {
       case 'persons':
         title = 'Personas relacionadas';
         options = persons; // Usa la lista de personas
@@ -35,6 +35,9 @@ const RelatedSection = ({ type, relatedObjects = [], father, fetchRelatedObjects
     // Actualiza el estado local cuando cambien las props `relatedObjects`
     useEffect(() => {
       //console.log("relatedObjects: ", relatedObjects, " dfdfdf: ",father); // Verifica los objetos relacionados
+      if(persons === undefined || entities === undefined){
+        
+      }
     }, []);
 
     const checkAddRelation = () => {
@@ -45,7 +48,7 @@ const RelatedSection = ({ type, relatedObjects = [], father, fetchRelatedObjects
       }
     
       // Verifica si el ID ya está en la lista de objetos relacionados
-      const alreadyExists = relatedObjects.some((object) => object.id === Number(selectedId));
+      const alreadyExists = props.relatedObjects.some((object) => object.id === Number(selectedId));
       if (alreadyExists) {
         //console.error(`El ID ${selectedId} ya está en la lista de objetos relacionados.`);
         showMessage(`El ID ${selectedId} ya está en la lista de objetos relacionados.`); // Mensaje de error si ya existe
@@ -58,8 +61,9 @@ const RelatedSection = ({ type, relatedObjects = [], father, fetchRelatedObjects
       if (!checkAddRelation()) {
         return; // Detener si no se cumplen las condiciones
       }
+      props.addRelation(selectedId, props.type); // Llama a la función para añadir la relación
       //console.log("Añadiendo reón a: ", father.type);
-      switch (father.type) {
+      /*switch (father.type) {
         //case 'person':
         
         //break;
@@ -79,7 +83,7 @@ const RelatedSection = ({ type, relatedObjects = [], father, fetchRelatedObjects
         default:
           break;
       }
-      await fetchRelatedObjects();
+      await fetchRelatedObjects();*/
     }
       
 
@@ -100,7 +104,7 @@ const RelatedSection = ({ type, relatedObjects = [], father, fetchRelatedObjects
             onChange={(e) => setSelectedId(e.target.value)}
             className="related-select"
           >
-            <option value="">Seleccionar {type === 'persons' ? 'persona' : 'entidad'}</option>
+            <option value="">Seleccionar {props.type === 'persons' ? 'persona' : 'entidad'}</option>
             {options.map((option) => (
               <option key={option.id} value={option.id}>
                 {option.name || `ID: ${option.id}`}
@@ -121,9 +125,9 @@ const RelatedSection = ({ type, relatedObjects = [], father, fetchRelatedObjects
 
       {/* Lista de objetos relacionados */}
       <div className="related-list">
-        {relatedObjects
+        {props.relatedObjects
             .map((object) => (
-            <RowRelated  key={object.id}  type={type}  object={object} father={father} />
+            <RowRelated  key={object.id}  type={props.type}  object={object} father={props.father} />
             ))}
         </div>
     </div>

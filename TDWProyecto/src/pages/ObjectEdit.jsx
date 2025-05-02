@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, use } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import '../styles/ObjectView.css'; // Reutilizamos los estilos de ObjectView
 import { DataContext } from '../context/DataContext'; // Contexto para guardar datos
@@ -13,8 +13,7 @@ const ObjectEdit = () => {
   const { type, id } = useParams();
   const [object, setObject] = useState(null); // Estado para el objeto
   const { getProductById, getPersonById, getEntityById, getAssociationById,
-          createObject,
-          updateEntity, updateProduct, updatePerson, updateAssociation,
+          createObject, updateObject, addRemRelation,
           showMessage} = useContext(DataContext); // Accede al método getObjectById del contexto
 
   const [relatedPersons, setRelatedPersons] = useState([]);
@@ -22,7 +21,6 @@ const ObjectEdit = () => {
 
   const [isLoading, setIsLoading] = useState(true); // Estado de carga
   const [nameError, setNameError] = useState(false); // Estado para el error de nombre
-
 
   const isNew= location.state?.new || false;
 
@@ -54,33 +52,30 @@ const ObjectEdit = () => {
           case 'association':fetchedObject = await getAssociationById(id);break;
           default: console.error(`Tipo no válido: ${type}`); break;
         }
-        console.log("fetchObject", fetchedObject); // Verifica el objeto recibido
+        //console.log("fetchObject", fetchedObject); // Verifica el objeto recibido
         if (fetchedObject) {
-          setObject(fetchedObject); // Guarda el objeto en el estado
-          console.log('Objeto obtenido:', fetchedObject); // Verifica el objeto obtenido
-        } else {
-          console.error(`No se encontró un objeto con ID ${id} y tipo ${type}`);
-          setObject(null); // Establece el estado como null si no se encuentra el objeto
+          
+          //console.log('Objeto obtenido:', fetchedObject); // Verifica el objeto obtenido
+          await setfetchObject(fetchedObject); // Llama a la función para establecer los datos del objeto
         }
       } catch (error) {
         console.error('Error al obtener el objeto:', error);
         setObject(null); // Maneja errores estableciendo el estado como null
-      } finally {
-
-      }
+        navigate('/'); // Redirige a la página principal en caso de error
+      } 
     }
 
-    const setfetchObject = async () => {
-      if (!isNew && object) {
+    const setfetchObject = async (fetchedObject) => {
+        setObject(fetchedObject); // Guarda el objeto en el estado
         // Si es un objeto existente, rellenar los campos con sus datos
-        setName(object.name || '');
-        setBirthDate(object.birthDate  || '');
-        setDeathDate(object.deathDate  || '');
-        setWikiUrl(object.wikiUrl || 'null');
-        setImageUrl(object.imageUrl || 'https://static.thenounproject.com/png/559530-200.png'); // Inicializar la URL de la imagen
+        setName(fetchedObject.name || '');
+        setBirthDate(fetchedObject.birthDate  || '');
+        setDeathDate(fetchedObject.deathDate  || '');
+        setWikiUrl(fetchedObject.wikiUrl || 'null');
+        setImageUrl(fetchedObject.imageUrl || 'https://static.thenounproject.com/png/559530-200.png'); // Inicializar la URL de la imagen
   
-        fetchRelatedObjects(); // Llama a la función para obtener los objetos relacionados
-      }
+       // await fetchRelatedObjects(); // Llama a la función para obtener los objetos relacionados
+      
     }
 
     const fetchRelatedObjects = async () => {       
@@ -105,20 +100,33 @@ const ObjectEdit = () => {
       }
     };
 
-  useEffect(() => {
-    setfetchObject(); // Llama a la función para establecer los datos del objeto
-  }, [ object]);
+    useEffect(() => {
+      if (object) {
+        fetchRelatedObjects(); // Llama a la función para obtener los objetos relacionados
+      }
+    }, [object]); // Dependencia para ejecutar cuando el objeto cambie
+
+    /*useEffect(() => {
+      if (updateTriggered) {
+        setfetchObject(object); // Llama a la función para establecer los datos del objeto
+        setUpdateTriggered(false); // Resetea el estado para evitar ejecuciones futuras
+      }
+    }, [updateTriggered]); */
 
 
-
+  const checkName = () => {
+    if (!name) {
+      //console.error("El nombre no puede estar vacío"); // Mensaje de error si el nombre está vacío
+      showMessage("El nombre no puede estar vacío", "error"); // Mensaje de error si el nombre está vacío
+      setNameError(true); // Cambia el estado para mostrar el error en el campo
+      return false; // Si el nombre está vacío, no se puede crear el objeto
+    }else return true;
+  }
 
   const saveNewObject = () => {
     //console.log("nacimiento: ", birthDate, " muerte: ", deathDate, " wikiUrl: ", wikiUrl, " imageUrl: ", imageUrl);
-    if(!name) {
-      //console.error("El nombre no puede estar vacío"); // Mensaje de error si el nombre está vacío
-      showMessage("El nombre no puede estar vacío", "error"); // Mensaje de error si el nombre está vacío
-      setNameError(true); // Cambia el estado para mostrar el error en el campo     
-      return; // Si el nombre está vacío, no se puede crear el objeto
+    if (!checkName()) {
+      return; // Si el nombre no es válido, no se puede crear el objeto
     }
 
     setNameError(false); // Restablece el estado si el nombre es válido
@@ -133,40 +141,28 @@ const ObjectEdit = () => {
     navigate(-1); // Volver a la página anterior
   }
 
-  const updateObject = () => {
-    if(!name) {
-      //console.error("El nombre no puede estar vacío"); // Mensaje de error si el nombre está vacío
-      showMessage("El nombre no puede estar vacío", "error"); // Mensaje de error si el nombre está vacío
-      setNameError(true); // Cambia el estado para mostrar el error en el campo     
-      return; // Si el nombre está vacío, no se puede crear el objeto
+  const update = async () => {
+    if (!checkName()) {
+      return; // Si el nombre no es válido, no se puede crear el objeto
     }
 
     setNameError(false); // Restablece el estado si el nombre es válido
-    // Crear una copia local del objeto actualizado
-  //const updatedObject = { ...object, name, birthDate, deathDate, wikiUrl, imageUrl };
 
-  //console.log('Objeto actualizado:', updatedObject); // Verifica el objeto actualizado
-  // Actualizar el estado con el objeto actualizado
-  //setObject(updatedObject);
     let objeto=new Objeto({id:object.id, name, birthDate, deathDate, imageUrl, wikiUrl}); // Crear un nuevo objeto con los datos actualizados
     objeto.setEtag(object.etag); // Establecer el etag del objeto original
-    switch (type) {
-      case 'person':       
-        updatePerson(objeto); // Guardar como persona
-        break;
-      case 'entity':
-        updateEntity(objeto); // Guardar como entidad
-        break;
-      case 'product':        
-        updateProduct(objeto); // Guardar como producto
-        break;
-      case 'association':
-        updateAssociation(objeto); // Guardar como producto
-        break;
-      default: break;
-    }
+    objeto.setType(type); // Establecer el tipo del objeto
+    let result = await updateObject(objeto); // Guardar el objeto usando el contexto
+    //console.log("result: ", result.product); // Verifica el resultado de la actualización
+    await fetchObject(); // Llama a la función para establecer los datos del objeto
   }
 
+  const addRelation = async (childId, childType) => {
+    console.log("addRelationdd: ", type, id, childId, childType); // Verifica los IDs de los objetos relacionados
+    let result = await addRemRelation(type,id, childType, childId,'add');
+    await fetchObject(); // Llama a la función para obtener los objetos relacionados
+  }
+
+  
   const newTitle = () => {
     switch (type) {
       case 'person':
@@ -183,7 +179,7 @@ const ObjectEdit = () => {
   }
 
   const handleSave = () => {
-    isNew ? saveNewObject() : updateObject(); // Guardar o actualizar el objeto según corresponda
+    isNew ? saveNewObject() : update(); // Guardar o actualizar el objeto según corresponda
   };
 
   const handleCancel = () => {
@@ -194,7 +190,7 @@ const ObjectEdit = () => {
     <div className="object-view-panel">
       {/* Fila principal: Título centrado y ID a la derecha */}
       <div className="object-header">
-        <h1 className="object-title">{isNew ? `${newTitle()}` : `Editar ${type || 'Objeto:'}: ${name}`}</h1>
+        <h1 className="object-title">{isNew ? `${newTitle()}` : `Editar ${type || 'Objeto:'}: ${object?.name}`}</h1>
         <span className="object-id">ID: {isNew ? '?' : id}</span>
       </div>
       <hr className="object-divider" />
@@ -276,7 +272,7 @@ const ObjectEdit = () => {
           }`}
         >
           <RelatedSection type="persons" relatedObjects={relatedPersons} father={object} fatherType={type}
-              fetchRelatedObjects={fetchRelatedObjects} 
+              addRelation={addRelation} 
             />
         </div>
       )}
@@ -287,7 +283,7 @@ const ObjectEdit = () => {
           }`}
         >
           <RelatedSection type="entities" relatedObjects={relatedEntities} father={object} fatherType={type}
-            fetchRelatedObjects={fetchRelatedObjects} />
+             addRelation={addRelation}/>
         </div>
       )}
     </div>
