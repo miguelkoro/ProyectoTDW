@@ -15,7 +15,7 @@ const RelatedSection = (props) => {
     const location = useLocation(); // Obtén la ubicación actual
     const isView = location.state?.view || false;
 
-    let title = ''; // Asigna el tipo de relación basado en el título
+    let title = ''; // 
     let options = []; // Opciones para el selector
   
     switch (props.type) {
@@ -32,13 +32,6 @@ const RelatedSection = (props) => {
         break;
     }
 
-    // Actualiza el estado local cuando cambien las props `relatedObjects`
-    useEffect(() => {
-      //console.log("relatedObjects: ", relatedObjects, " dfdfdf: ",father); // Verifica los objetos relacionados
-      if(persons === undefined || entities === undefined){
-        
-      }
-    }, []);
 
     const checkAddRelation = () => {
       if (!selectedId) {
@@ -62,31 +55,9 @@ const RelatedSection = (props) => {
         return; // Detener si no se cumplen las condiciones
       }
       props.addRelation(selectedId, props.type); // Llama a la función para añadir la relación
-      //console.log("Añadiendo reón a: ", father.type);
-      /*switch (father.type) {
-        //case 'person':
-        
-        //break;
-        case 'entity':
-          console.log("Añadiendo relación a:", father, father.type, " con el hijo: ", selectedId, type);
-          //addRelationToEntity(father.id, type, selectedId); // Llama al método del contexto
-          await addRemRelation('entities',father.id, type, selectedId,'add'); // Llama al método del contexto
-          break;
-        case 'product':
-          console.log("Añadiendo relación a:", father, father.type, " con el hijo: ", selectedId, type);
-          await addRemRelation('products',father.id, type, selectedId,'add'); // Llama al método del contexto
-          break;
-        case 'association':
-          console.log("Añadiendo relación a:", father, father.type, " con el hijo: ", selectedId, type);
-          await addRemRelation('associations',father.id, type, selectedId,'add'); // Llama al método del contexto          
-          break;
-        default:
-          break;
-      }
-      await fetchRelatedObjects();*/
     }
       
-
+  
     
 
   return (
@@ -127,7 +98,7 @@ const RelatedSection = (props) => {
       <div className="related-list">
         {props.relatedObjects
             .map((object) => (
-            <RowRelated  key={object.id}  type={props.type}  object={object} father={props.father} />
+            <RowRelated  key={object.id}  type={props.type}  object={object} father={props.father} removeRelation={props.removeRelation}/>
             ))}
         </div>
     </div>

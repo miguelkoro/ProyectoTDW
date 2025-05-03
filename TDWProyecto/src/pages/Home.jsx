@@ -19,10 +19,10 @@ const Home =() =>{
     return (
       <>
         <main>
-              <Section objects={products} title={"PRODUCTOS"}/>
-              <Section objects={persons} title={"PERSONAS"}/>
-              <Section objects={entities} title={"ENTIDADES"}/>
-              <Section objects={associations} title={"ASOCIACIONES"}/>
+              <Section objects={products} title={"💡 PRODUCTOS"} type={'product'}/>
+              <Section objects={persons} title={"🪠 PERSONAS"} type={'person'}/>
+              <Section objects={entities} title={"🧸 ENTIDADES"} type={'entity'}/>
+              <Section objects={associations} title={"🔥 ASOCIACIONES"} type={'association'}/>
         </main>
       </>
     )

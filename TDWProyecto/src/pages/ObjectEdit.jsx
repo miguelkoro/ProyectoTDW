@@ -162,6 +162,12 @@ const ObjectEdit = () => {
     await fetchObject(); // Llama a la función para obtener los objetos relacionados
   }
 
+  const removeRelation = async (childId, childType) => {
+    console.log("removeRelation: ", type, id, childId, childType); // Verifica los IDs de los objetos relacionados
+    let result = await addRemRelation(type,id, childType, childId,'rem');
+    await fetchObject(); // Llama a la función para obtener los objetos relacionados
+  }
+
   
   const newTitle = () => {
     switch (type) {
@@ -272,8 +278,7 @@ const ObjectEdit = () => {
           }`}
         >
           <RelatedSection type="persons" relatedObjects={relatedPersons} father={object} fatherType={type}
-              addRelation={addRelation} 
-            />
+              addRelation={addRelation} removeRelation={removeRelation} />
         </div>
       )}
       {((type==="product" || type === "association") && !isNew) && (
@@ -283,7 +288,7 @@ const ObjectEdit = () => {
           }`}
         >
           <RelatedSection type="entities" relatedObjects={relatedEntities} father={object} fatherType={type}
-             addRelation={addRelation}/>
+             addRelation={addRelation} removeRelation={removeRelation} />
         </div>
       )}
     </div>

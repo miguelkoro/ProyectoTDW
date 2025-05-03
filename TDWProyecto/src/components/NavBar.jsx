@@ -1,12 +1,26 @@
 import { useAuth } from "../context/AuthContext";
 import { DataContext } from '../context/DataContext';
 import { Link } from "react-router-dom";
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import "../styles/NavBar.css";
 
 const NavBar = () => {
   const { user, logout } = useAuth();
   const { showMessage, message, messageType } = useContext(DataContext);
+
+  const [menuOpen, setMenuOpen] = useState(false); // Estado para controlar el menú desplegable
+
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen); // Alterna la visibilidad del menú
+  };
+
+  const handleMouseEnter = () => {
+    setMenuOpen(true); // Muestra el menú cuando el ratón entra
+  };
+
+  const handleMouseLeave = () => {
+    setMenuOpen(false); // Oculta el menú cuando el ratón sale
+  };
 
   return (
     <>
@@ -18,17 +32,22 @@ const NavBar = () => {
         </div>
       </Link>
       <div className="navbar-profile">
-        {user ? (
+      {user ? (
             <>
-              {/*<img
-                src={user.profileImage}
-                alt="Profile"
-                className="navbar-profile-image"
-              />*/}
               <span>Bienvenido, {user.userName}</span>
-              <button className="navbar-logout-button" onClick={logout}>
-                Cerrar Sesión
-              </button>
+              <div className={`dropdown ${menuOpen ? "active" : ""}`} onMouseEnter={handleMouseEnter}  onMouseLeave={handleMouseLeave}>
+               <svg className="config"  xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"  fill="#EFEFEF"><path d="m382-80-18.67-126.67q-17-6.33-34.83-16.66-17.83-10.34-32.17-21.67L178-192.33 79.33-365l106.34-78.67q-1.67-8.33-2-18.16-.34-9.84-.34-18.17 0-8.33.34-18.17.33-9.83 2-18.16L79.33-595 178-767.67 296.33-715q14.34-11.33 32.34-21.67 18-10.33 34.66-16L382-880h196l18.67 126.67q17 6.33 35.16 16.33 18.17 10 31.84 22L782-767.67 880.67-595l-106.34 77.33q1.67 9 2 18.84.34 9.83.34 18.83 0 9-.34 18.5Q776-452 774-443l106.33 78-98.66 172.67-118-52.67q-14.34 11.33-32 22-17.67 10.67-35 16.33L578-80H382Zm55.33-66.67h85l14-110q32.34-8 60.84-24.5T649-321l103.67 44.33 39.66-70.66L701-415q4.33-16 6.67-32.17Q710-463.33 710-480q0-16.67-2-32.83-2-16.17-7-32.17l91.33-67.67-39.66-70.66L649-638.67q-22.67-25-50.83-41.83-28.17-16.83-61.84-22.83l-13.66-110h-85l-14 110q-33 7.33-61.5 23.83T311-639l-103.67-44.33-39.66 70.66L259-545.33Q254.67-529 252.33-513 250-497 250-480q0 16.67 2.33 32.67 2.34 16 6.67 32.33l-91.33 67.67 39.66 70.66L311-321.33q23.33 23.66 51.83 40.16 28.5 16.5 60.84 24.5l13.66 110Zm43.34-200q55.33 0 94.33-39T614-480q0-55.33-39-94.33t-94.33-39q-55.67 0-94.5 39-38.84 39-38.84 94.33t38.84 94.33q38.83 39 94.5 39ZM480-480Z"/></svg>
+                {menuOpen && (
+                  <div className="dropdown-menu">
+                    <Link to="/mi-cuenta" className="dropdown-item">
+                      Mi cuenta
+                    </Link>
+                    <div className="dropdown-item logout" onClick={logout}>
+                      Cerrar Sesión
+                    </div>
+                  </div>
+                )}
+              </div>
             </>
           ) : (
             <Link className="navbar-button" to="/login">

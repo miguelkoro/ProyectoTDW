@@ -11,25 +11,9 @@ const Section = (props) => {
   const navigate = useNavigate(); // Hook para redirigir
 
   const handleNewClick = () => {
-    let newTitle;
-    switch (props.title) {
-      case "PERSONAS":
-        newTitle = "person";
-        break;
-      case "ENTIDADES":
-        newTitle = "entity";
-        break;
-      case "PRODUCTOS":
-        newTitle = "product";
-        break;
-      case "ASOCIACIONES":
-        newTitle = "association";
-        break;
-      default:
-        newTitle = props.title; // Si no coincide con ninguno, usa el título original
-    }
+    
     // Aquí puedes implementar la lógica para crear un nuevo objeto
-    navigate(`/new/${newTitle} `, {state:{new:true}}); // Redirige a la página de creación de nuevo objeto
+    navigate(`/new/${props.type} `, {state:{new:true}}); // Redirige a la página de creación de nuevo objeto
     //console.log("Crear nuevo objeto:", title);
   }
 

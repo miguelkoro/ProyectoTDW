@@ -1,6 +1,3 @@
-import Persona from '../models/Persona.js'; 
-import Entidad from '../models/Entidad.js'; 
-import Producto from '../models/Producto.js'; 
 
 const API_URL = 'http://127.0.0.1:8000'; // Cambia esto a la URL de tu API
 const BASE_PATH = '/api/v1/'
@@ -137,211 +134,46 @@ export const addRemRelationAPI = async (objectsType, id, relationType, relationI
   }
 }
 
+export const createAPIUser = async (userName, email, password) => {
+  try{
+    const payload = {
+      username: userName,
+      email: email,
+      password: password      
+    };
+    const response = await fetch(`${API_URL}${BASE_PATH}users`, {
+      method: 'POST', body: JSON.stringify(payload), // Convierte el objeto a JSON
+      headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`,}
+
+    }).then(res => res.json())
+      .then(
+        (result) => {return result},
+        (error) => { console.log('Error en la solicitud:', error); return error; });
+    return response; // Devuelve el resultado de la solicitud
+  }catch (error) {
+    console.error('Error al realizar la solicitud:', error);
+  }
+}
+
+export const updateAPIUser = async (userId, userName, email, password, etag) => {
+  try{
+    const payload = {
+      username: userName,
+      email: email,
+      password: password      
+    };
+    const response = await fetch(`${API_URL}${BASE_PATH}users/${userId}`, {
+      method: 'PUT', body: JSON.stringify(payload), // Convierte el objeto a JSON
+      headers: {'Content-Type': 'application/json', 'If-Match': etag, 'Authorization': `Bearer ${token}`,}
+
+    }).then(res => res.json())
+      .then(
+        (result) => {return result},
+        (error) => { console.log('Error en la solicitud:', error); return error; });
+    return response; // Devuelve el resultado de la solicitud
+  }catch (error) {
+    console.error('Error al realizar la solicitud:', error);
+  }
+}
+
 ///////
-
-
-
-const deletePersonRelations = (id) => {
-   // Eliminar el ID de los arrays `persons` en `products`
-   const products = fetchProductsFromLocalStorage();
-   const updatedProducts = products.map((product) => {
-     if (Array.isArray(product.persons)) {
-       product.persons = product.persons.filter((personId) => personId !== Number(id));
-     }
-     return product;
-   });
-   localStorage.setItem('products', JSON.stringify(updatedProducts));
-   // Eliminar el ID de los arrays `persons` en `entities`
-   const entities = fetchEntitiesFromLocalStorage();
-   const updatedEntities = entities.map((entity) => {
-     if (Array.isArray(entity.persons)) {
-       entity.persons = entity.persons.filter((personId) => personId !== Number(id));
-     }
-     return entity;
-   });
-   localStorage.setItem('entities', JSON.stringify(updatedEntities));
-}
-
-const deleteEntityRelations = (id) => {
-  const products = fetchProductsFromLocalStorage();
-   const updatedProducts = products.map((product) => {
-     if (Array.isArray(product.entities)) {
-       product.entities = product.entities.filter((entityId) => entityId !== Number(id));
-     }
-     return product;
-   });
-   localStorage.setItem('products', JSON.stringify(updatedProducts));
-}
-
-
-//create relations
-export const addRelationToProductLocal = (fatherId, type, childId) => {
-  const products = fetchProductsFromLocalStorage(); // Obtén todos los productos del localStorage
-  const productIndex = products.findIndex((product) => product.id === Number(fatherId)); // Encuentra el índice del producto padre
-  if (productIndex === -1) {
-    console.error(`Producto con ID ${fatherId} no encontrado.`);
-    return false; // Indica que no se encontró el producto padre
-  }
-  let child;
-  if(type === "person") {
-    child = fetchPersonByIdFromLocal(childId); // Obtén la persona hijo por su ID
-  }else{
-    child = fetchEntityByIdFromLocal(childId); // Obtén la entidad hijo por su ID
-  }
-  if (!child) {
-    console.error(`Producto hijo con ID ${childId} no encontrado.`);
-    return false; // Indica que no se encontró el producto hijo
-  }
-  products[productIndex][type].push(child.id); // Agrega la relación al producto padre
-  localStorage.setItem('products', JSON.stringify(products)); // Guarda la lista actualizada en el localStorage
-  console.log(`Relación añadida entre Producto ${fatherId} y ${childId}.`);
-  return true; // Indica que la operación fue exitosa
-}
-export const addRelationToEntityLocal = (fatherId, type, childId) => {
-  const entities = fetchEntitiesFromLocalStorage(); // Obtén todas las entidades del localStorage
-  const entityIndex = entities.findIndex((entity) => entity.id === Number(fatherId)); // Encuentra el índice de la entidad padre
-  if (entityIndex === -1) {
-    console.error(`Entidad con ID ${fatherId} no encontrada.`);
-    return false; // Indica que no se encontró la entidad padre
-  }
-  const child = fetchEntityByIdFromLocal(childId); // Obtén la entidad hijo por su ID
-  if (!child) {
-    console.error(`Entidad hijo con ID ${childId} no encontrada.`);
-    return false; // Indica que no se encontró la entidad hijo
-  }
-  entities[entityIndex][type].push(child.id); // Agrega la relación a la entidad padre
-  localStorage.setItem('entities', JSON.stringify(entities)); // Guarda la lista actualizada en el localStorage
-  console.log(`Relación añadida entre Entidad ${fatherId} y ${childId}.`);
-  return true; // Indica que la operación fue exitosa
-}
-
-//deleteRelations
-export const deleteRelationFromProductLocal = (fatherId, type, childId) => {
-  const products = fetchProductsFromLocalStorage(); // Obtén todos los productos del localStorage
-  const productIndex = products.findIndex((product) => product.id === Number(fatherId)); // Encuentra el índice del producto padre
-  if (productIndex === -1) {
-    console.error(`Producto con ID ${fatherId} no encontrado.`);
-    return false; // Indica que no se encontró el producto padre
-  }
-  const childIndex = products[productIndex][type].indexOf(Number(childId)); // Encuentra el índice del hijo en el padre
-  if (childIndex === -1) {
-    console.error(`Hijo con ID ${childId} no encontrado en Producto ${fatherId}.`);
-    return false; // Indica que no se encontró el hijo en el padre
-  }
-  products[productIndex][type].splice(childIndex, 1); // Elimina la relación del producto padre
-  localStorage.setItem('products', JSON.stringify(products)); // Guarda la lista actualizada en el localStorage
-  console.log(`Relación eliminada entre Producto ${fatherId} y ${childId}.`);
-  return true; // Indica que la operación fue exitosa
-}
-export const deleteRelationFromEntityLocal = (fatherId, type, childId) => {
-  const entities = fetchEntitiesFromLocalStorage(); // Obtén todas las entidades del localStorage
-  const entityIndex = entities.findIndex((entity) => entity.id === Number(fatherId)); // Encuentra el índice de la entidad padre
-  if (entityIndex === -1) {
-    console.error(`Entidad con ID ${fatherId} no encontrada.`);
-    return false; // Indica que no se encontró la entidad padre
-  }
-  const childIndex = entities[entityIndex][type].indexOf(Number(childId)); // Encuentra el índice del hijo en el padre
-  if (childIndex === -1) {
-    console.error(`Hijo con ID ${childId} no encontrado en Entidad ${fatherId}.`);
-    return false; // Indica que no se encontró el hijo en el padre
-  }
-  entities[entityIndex][type].splice(childIndex, 1); // Elimina la relación de la entidad padre
-  localStorage.setItem('entities', JSON.stringify(entities)); // Guarda la lista actualizada en el localStorage
-  console.log(`Relación eliminada entre Entidad ${fatherId} y ${childId}.`);
-  return true; // Indica que la operación fue exitosa
-}
-
-//update objects
-export const updateProductInLocal = (id, updatedProduct) => {
-  try {
-    const products = fetchProductsFromLocalStorage();     // Obtén todos los productos del localStorage
-    // Encuentra el índice del producto con el ID especificado
-    const productIndex = products.findIndex((product) => product.id === Number(id));
-    //console.log("updateProductInLocal", id, updatedProduct); // Verifica los datos obtenidos
-    if (productIndex === -1) {
-      console.error(`Producto con ID ${id} no encontrado.`);
-      return false; // Indica que no se encontró el producto
-    }
-
-    // Actualiza los valores del producto en el índice encontrado
-    products[productIndex] = {
-      ...products[productIndex], // Mantén los valores existentes
-      ...updatedProduct, // Sobrescribe con los valores actualizados
-    };
-
-    // Guarda la lista actualizada en el localStorage
-    localStorage.setItem('products', JSON.stringify(products));
-
-    //console.log(`Producto con ID ${id} actualizado en el localStorage.`, products[productIndex]);
-    return true; // Indica que la operación fue exitosa
-  } catch (error) {
-    console.error(`Error al actualizar el producto con ID ${id} en el localStorage:`, error);
-    return false; // Indica que ocurrió un error
-  }
-};
-export const updatePersonInLocal = (id, updatedPerson) => {
-  try {
-    const persons = fetchPersonsFromLocalStorage(); // Obtén todas las personas del localStorage
-    // Encuentra el índice de la persona con el ID especificado
-    const personIndex = persons.findIndex((person) => person.id === Number(id));
-
-    if (personIndex === -1) {
-      console.error(`Persona con ID ${id} no encontrada.`);
-      return false; // Indica que no se encontró la persona
-    }
-    persons[personIndex] = {
-      ...persons[personIndex], // Mantén los valores existentes
-      ...updatedPerson, // Sobrescribe con los valores actualizados
-    };
-    localStorage.setItem('persons', JSON.stringify(persons)); // Guarda la lista actualizada en el localStorage
-    //console.log(`Persona con ID ${id} actualizada en el localStorage.`, persons[personIndex]);
-    return true; // Indica que la operación fue exitosa
-  } catch (error) {
-    console.error(`Error al actualizar la persona con ID ${id} en el localStorage:`, error);
-    return false; // Indica que ocurrió un error
-  }
-};
-export const updateEntityInLocal = (id, updatedEntity) => {
-  try {
-    const entities = fetchEntitiesFromLocalStorage(); // Obtén todas las entidades del localStorage
-    // Encuentra el índice de la entidad con el ID especificado
-    const entityIndex = entities.findIndex((entity) => entity.id === Number(id));
-    if (entityIndex === -1) {
-      console.error(`Entidad con ID ${id} no encontrada.`);
-      return false; // Indica que no se encontró la entidad
-    }
-    entities[entityIndex] = {
-      ...entities[entityIndex], // Mantén los valores existentes
-      ...updatedEntity, // Sobrescribe con los valores actualizados
-    };
-    localStorage.setItem('entities', JSON.stringify(entities)); // Guarda la lista actualizada en el localStorage
-    //console.log(`Entidad con ID ${id} actualizada en el localStorage.`, entities[entityIndex]);
-    return true; // Indica que la operación fue exitosa
-  } catch (error) {
-    console.error(`Error al actualizar la entidad con ID ${id} en el localStorage:`, error);
-    return false; // Indica que ocurrió un error
-  }
-};
-
-//Create objects
-export const createNewPersonToLocal = (person) => {
-  const persons = fetchPersonsFromLocalStorage(); // Obtén la lista actual de personas
-  const newId = persons.length > 0 ? Math.max(...persons.map(p => p.id)) + 1 : 1; // Genera un nuevo ID
-  const newPerson = new Persona({ ...person, id: newId}); // Crea una nueva instancia de Persona con el nuevo ID
-  newPerson.setType('person'); // Configura el tipo como 'person'
-  persons.push(newPerson); // Agrega la nueva persona a la lista
-  localStorage.setItem('persons', JSON.stringify(persons)); // Guarda la lista actualizada en el local storage
-  console.log("createNewPerson", newPerson); // Verifica la nueva persona creada
-  return newPerson; // Devuelve la nueva persona creada
-}
-export const createNewEntityToLocal = (entity) => {
-  const entities = fetchEntitiesFromLocalStorage(); // Obtén la lista actual de entidades
-  const newId = entities.length > 0 ? Math.max(...entities.map(e => e.id)) + 1 : 1; // Genera un nuevo ID
-  const newEntity = new Entidad({ ...entity, id: newId }); // Crea una nueva instancia de Entidad con el nuevo ID
-  newEntity.setType('entity'); // Configura el tipo como 'entity'
-  entities.push(newEntity); // Agrega la nueva entidad a la lista
-  localStorage.setItem('entities', JSON.stringify(entities)); // Guarda la lista actualizada en el local storage
-  return newEntity; // Devuelve la nueva entidad creada
-}
-
-

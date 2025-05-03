@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=settings" );
 .navbar {
     position: fixed; /* Fija la barra en la parte superior */
     top: 0;
@@ -156,6 +157,78 @@ animation: typing 3s steps(22) forwards, blink 1s step-end infinite;
       opacity: 0;
       transform: translateY(-10px);
     }
+  }
+
+
+  /* Estilo para el botón de configuración */
+.settings-icon {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+  }
+  
+  /* Contenedor del menú desplegable */
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  /* Menú desplegable */
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: rgba(40, 44, 52, 0.8); /* Color semitransparente */
+    border: 1px solid #0706065e;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    min-width: 150px;
+    padding: 8px 0;
+    color: white;
+  }
+  
+  /* Elementos del menú */
+  .dropdown-item {
+    display: block;
+    padding: 8px 16px;
+    text-decoration: none;
+    cursor: pointer;
+    color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra para destacar */
+    box-sizing: border-box; /* Asegura que el padding no desborde */
+    font-size: 1rem; /* Tamaño de la fuente */
+  }
+  
+  .dropdown-item:hover {
+    background-color: #05001a75;
+    font-size: 1.2rem; /* Aumenta el tamaño al pasar el ratón */
+    transition: transform 0.3s ease; /* Transición suave para el efecto de escala */
+  }
+  
+/* Estilo específico para "Cerrar Sesión" */
+.dropdown-item.logout:hover {
+    background-color: rgba(105, 2, 2, 0.562); /* Cambia el texto a rojo */
+    /*background-color: transparent; /* Mantén el fondo transparente */
+  }
+
+  /* Ocultar el menú cuando no está abierto */
+  .dropdown-menu.hidden {
+    display: none;
+  }
+
+
+/* Estilo base para el ícono */
+.config {
+    width: 2.5rem; /* Tamaño inicial del ícono */
+    transition: transform 0.5s ease, width 0.5s ease; /* Transición suave */
+    cursor: pointer; /* Cambia el puntero a clicable */
+  }
+  
+  /* Efecto al pasar el ratón */
+  .dropdown.active .config {
+    width: 2.7rem; /* Aumenta el tamaño del ícono */
+    transform: rotate(360deg); /* Gira el ícono */
   }
 
 /*Colores utilizados: azul oscuro clásico (#0A1828), turquesa (#178582), dorado (#BFA181)*/ 

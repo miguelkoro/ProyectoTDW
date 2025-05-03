@@ -52,10 +52,12 @@
   
   .related-row .related-column-id {
     flex: 1; /* Columna estrecha para el ID */
+    color: white; /* Color del texto */
   }
   
   .related-row .related-column-name {
     flex: 3; /* Columna más amplia para el nombre */
+    color: white; /* Color del texto */
   }
   .delete-button {
     background-color: rgba(0, 0, 0, 0.7); /* Fondo semitransparente */

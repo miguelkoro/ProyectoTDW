@@ -1,7 +1,4 @@
 import React, { createContext, useState, useEffect } from 'react';
-import {
-addRelationToProductLocal, addRelationToEntityLocal,
-deleteRelationFromEntityLocal, deleteRelationFromProductLocal} from '../services/dataService';
 import * as dataService from '../services/dataService'; // Importa todos los servicios de dataService
 
 import { useAuth } from './AuthContext';
@@ -220,24 +217,7 @@ export const DataProvider = ({ children }) => {
     const result = await dataService.createAPIObject(getPlural(object.type),object, user.token);
   }
 
-  const updateProduct = async(updatedProduct) => {
-    !user && console.error("No hay usuario autenticado para actualizar el producto."); // Verifica si hay un usuario autenticado
-    //console.log("updateProduct", updatedProduct); // Verifica el nuevo producto creado
-    const result = dataService.updateAPIObject("products", updatedProduct, user.token); // Llama al servicio para crear el producto
-    //console.log("updateProduct", result); // Verifica el nuevo producto creado
-  }
-  const updatePerson = async(updatedPerson) => {
-    !user && console.error("No hay usuario autenticado para actualizar la persona."); 
-    const result = dataService.updateAPIObject("persons", updatedPerson, user.token); // Llama al servicio para crear el producto
-  }
-  const updateEntity = async(updatedEntity) => {
-    !user && console.error("No hay usuario autenticado para actualizar la entidad."); // Verifica si hay un usuario autenticado
-    const result = dataService.updateAPIObject("entities", updatedEntity, user.token); // Llama al servicio para crear el producto
-  }
-  const updateAssociation = async(updatedAssociation) => {
-    !user && console.error("No hay usuario autenticado para actualizar la asociación."); // Verifica si hay un usuario autenticado
-    const result = dataService.updateAPIObject("associations", updatedAssociation, user.token); // Llama al servicio para crear el producto
-  }
+
 
   const updateObject = async(updatedObject) => {
     !user && console.error("No hay usuario autenticado para actualizar la asociación."); // Verifica si hay un usuario autenticado
@@ -274,56 +254,6 @@ export const DataProvider = ({ children }) => {
   console.log("addRemRelation", response); // Verifica la respuesta del servicio
  }
 
-  const deleteRelationFromEntity = (idObject, typeRelation, idRelation) => {
-    let relationDeleted = deleteRelationFromEntityLocal(idObject, typeRelation, idRelation); // Llama al servicio para eliminar la relación
-    if (relationDeleted) { // Si se eliminó la relación, lo actualiza en la constante
-      setEntities((prevEntities) => prevEntities.map((entity) =>
-          entity.id === Number(idObject) ? { ...entity, [typeRelation]: entity[typeRelation].filter((relationId) => relationId !== idRelation),}: entity ));
-      showMessage(`Relación eliminada correctamente de la entidad (${idObject})`,"success"); // Tipo de mensaje
-    } else {
-      showMessage('No se pudo eliminar la relación de la entidad.', 'error'); // Mensaje de error si no se pudo eliminar la relación
-      //console.error('No se pudo eliminar la relación de la entidad.'); // Maneja el error si no se pudo eliminar la relación
-    }
-  }
-  const deleteRelationFromProduct = (idObject, typeRelation, idRelation) => {
-    let relationDeleted = deleteRelationFromProductLocal(idObject, typeRelation, idRelation); // Llama al servicio para eliminar la relación
-    if (relationDeleted) { // Si se eliminó la relación, lo actualiza en la constante
-      setProducts((prevProducts) => prevProducts.map((product) =>
-          product.id === Number(idObject) ? { ...product, [typeRelation]: product[typeRelation].filter((relationId) => relationId !== idRelation),}: product ));
-      showMessage(`Relación eliminada correctamente del producto (${idObject})`,"success"); // Tipo de mensaje
-      return true;
-    } else {
-      //console.error('No se pudo eliminar la relación del producto.'); // Maneja el error si no se pudo eliminar la relación
-      showMessage('No se pudo eliminar la relación del producto.', 'error'); // Mensaje de error si no se pudo eliminar la relación
-      return false;
-    }
-   //console.log("deleteRelationFromProduct", idObject, typeRelation, idRelation); // Verifica los parámetros recibidos
-  }
-
-  const addRelationToProduct = (idObject, typeRelation, idRelation) => {
-    let relationAdded = addRelationToProductLocal(idObject, typeRelation, idRelation); // Llama al servicio para añadir la relación
-    if (relationAdded) { // Si se añadió la relación, lo actualiza en la constante
-      setProducts((prevProducts) => prevProducts.map((product) =>
-          product.id === Number(idObject) ? { ...product, [typeRelation]: [...(product[typeRelation] || []), idRelation],}: product ));
-      showMessage(`Relación añadida correctamente al producto (${idObject})`,"success"); // Tipo de mensaje
-    } else {
-      //console.error('No se pudo añadir la relación al producto.'); // Maneja el error si no se pudo añadir la relación
-      showMessage('No se pudo añadir la relación al producto.', 'error'); // Mensaje de error si no se pudo añadir la relación
-    }
-    //return relationAdded; // Devuelve true si se añadió la relación, false en caso contrario
-  };
-  const addRelationToEntity = (idObject, typeRelation, idRelation) => {
-    let relationAdded = addRelationToEntityLocal(idObject, typeRelation, idRelation); // Llama al servicio para añadir la relación
-    if (relationAdded) { // Si se añadió la relación, lo actualiza en la constante
-      setEntities((prevEntities) => prevEntities.map((entity) =>
-          entity.id === Number(idObject) ? { ...entity, [typeRelation]: [...(entity[typeRelation] || []), idRelation],}: entity ));
-      showMessage(`Relación añadida correctamente a la entidad (${idObject})`,"success"); // Tipo de mensaje
-    } else {
-      //console.error('No se pudo añadir la relación a la entidad.'); // Maneja el error si no se pudo añadir la relación
-      showMessage('No se pudo añadir la relación a la entidad.', 'error'); // Mensaje de error si no se pudo añadir la relación
-    }
-  }
-
 
 
 
@@ -334,13 +264,7 @@ export const DataProvider = ({ children }) => {
           isLoading, message, messageType,
           getEntities, getProducts, getPersons, getAssociations,
           getPersonById, getEntityById, getProductById, getAssociationById,
-          updateProduct, updatePerson, updateEntity, updateAssociation,
-          createObject, deleteObject, updateObject,
-          addRelationToProduct,
-          addRelationToEntity,
-          deleteRelationFromProduct,
-          deleteRelationFromEntity,
-          addRemRelation,
+          createObject, deleteObject, updateObject, addRemRelation,
           showMessage,}}>
       {children}
     </DataContext.Provider>
