@@ -11,11 +11,25 @@
   border-radius: 10px; /* Bordes redondeados */
   box-shadow: 0 4px 10px rgba(54, 54, 54, 0.575); /* Sombra para darle profundidad */
   width: 90%; /* Ancho responsivo */
-  max-width: 800px; /* Ancho máximo */
+  max-width: 50%; /* Ancho máximo */
   overflow-y: auto; /* Agrega scroll si el contenido es demasiado alto */
 }
 
-
+.myaccount-panel{
+  display: flex;
+  flex-direction: column;
+  position: absolute; /* Posiciona el contenedor en relación a la página */
+  top: 80px; /* Margen desde la parte superior (ajusta según la altura del navbar) */
+  left: 50%; /* Centra horizontalmente */
+  transform: translateX(-50%); /* Ajusta el contenedor al centro exacto horizontalmente */
+  padding: 30px;
+  background-color: rgba(255, 255, 255, 0.185); /* Fondo blanco translúcido */
+  border-radius: 10px; /* Bordes redondeados */
+  box-shadow: 0 4px 10px rgba(54, 54, 54, 0.575); /* Sombra para darle profundidad */
+  width: 50%; /* Ancho responsivo */
+  max-width: 40%; /* Ancho máximo */
+  overflow-y: auto; /* Agrega scroll si el contenido es demasiado alto */
+}
 /*.object-view-panel {
   display: flex;
   flex-direction: column;

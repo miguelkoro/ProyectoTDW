@@ -1,18 +1,20 @@
 import User from '../models/User.js'; 
 
-const API_URL = 'http://localhost:8000/access_token'; // Cambia esto según tu configuración
+const API_URL = 'http://localhost:8000'; // Cambia esto según tu configuración
+const BASE_PATH = "/api/v1"; // Cambia esto según tu configuración
 
 
 
-export const login = async (username, password, scope = 'reader') => {
+export const login = async (username, password) => {
     try {
-        const response = await fetch(API_URL, {method: 'POST', 
+        const response = await fetch(`${API_URL}/access_token`, {method: 'POST', 
                 body: new URLSearchParams({username, password,})})
             .then(res =>  res.json())
             .then(
                 (result) => {return result},
                 (error) => { console.log('Error en la solicitud:', error); return error; }
             )
+            console.log("login", response); // Muestra el objeto en la consola
             return response; // Devuelve el resultado de la solicitud
   
       /*if (!response.ok) {
@@ -27,3 +29,75 @@ export const login = async (username, password, scope = 'reader') => {
       throw error; // Lanza el error para manejarlo en el componente que llama a esta función
     }
 };
+
+export const checkAPIUserName = async (name) => {
+  const response = await fetch(`${API_URL}${BASE_PATH}/users/username/${name}`)
+  .then(
+      (result) => {return result},
+      (error) => { console.log('Error en la solicitud:', error); return error; }
+  )
+  //console.log("checkAPIUserName", response.ok); // Muestra el objeto en la consola
+  return response.ok; // Devuelve el resultado de la solicitud
+}
+
+export const createAPIUser = async (userName, email, password) => {
+  try{
+    const payload = {
+      username: userName,
+      email: email,
+      password: password      
+    };
+    const response = await fetch(`${API_URL}${BASE_PATH}users`, {
+      method: 'POST', body: JSON.stringify(payload), // Convierte el objeto a JSON
+      headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`,}
+
+    }).then(res => res.json())
+      .then(
+        (result) => {return result},
+        (error) => { console.log('Error en la solicitud:', error); return error; });
+    return response; // Devuelve el resultado de la solicitud
+  }catch (error) {
+    console.error('Error al realizar la solicitud:', error);
+  }
+}
+
+export const updateAPIUser = async (userId, userName, email, password, etag) => {
+  try{
+    const payload = {
+      username: userName,
+      email: email,
+      password: password      
+    };
+    const response = await fetch(`${API_URL}${BASE_PATH}users/${userId}`, {
+      method: 'PUT', body: JSON.stringify(payload), // Convierte el objeto a JSON
+      headers: {'Content-Type': 'application/json', 'If-Match': etag, 'Authorization': `Bearer ${token}`,}
+
+    }).then(res => res.json())
+      .then(
+        (result) => {return result},
+        (error) => { console.log('Error en la solicitud:', error); return error; });
+    return response; // Devuelve el resultado de la solicitud
+  }catch (error) {
+    console.error('Error al realizar la solicitud:', error);
+  }
+}
+
+//Delete
+
+//getAPIObject
+export const getAPIUserById = async (id, token) => {
+  const response = await fetch(`${API_URL}${BASE_PATH}/users/${id}`, { // Realiza la solicitud a la API con el ID
+    headers: {'Authorization': `Bearer ${token}`} // Agrega el token en la cabecera de autorización
+    }).then(async (res) => { 
+        const etag = res.headers.get('ETag'); // Obtiene el ETag de la respuesta 
+        const data = await res.json();
+      return ({ data, etag }); // Convierte la respuesta en JSON y devuelve el ETag
+      })
+      .then(
+        (result) => {return result},
+        (error) => { console.log('Error en la solicitud:', error); return error; });
+
+    //const object = await response.json(); // Convierte la respuesta en JSON
+    console.log("Objeto obtenido de la API:", response); // Muestra el objeto en la consola
+    return response; // Devuelve el objeto obtenido de la API 
+}

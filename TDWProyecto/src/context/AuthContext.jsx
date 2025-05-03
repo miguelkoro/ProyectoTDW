@@ -1,16 +1,10 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, use } from "react";
 import { useNavigate } from "react-router-dom";
 import * as authService from '../services/authService'; // Importa todos los servicios de dataService
 import User from '../models/User'; // Importa el modelo User
 // Crear el contexto
 const AuthContext = createContext();
 
-// Usuarios simulados
-/*const mockUsers = {
-  x: { id: 1508, password: "x", profileImage: "https://unavatar.io/Nintenderos",  role: "reader"},
-  y: { id: 2501, password: "y", profileImage: "https://unavatar.io/miguelkoro", role: "writer" },
-  z: { id: 3652, password: "z", profileImage: "https://unavatar.io/realDonaldTrump", role: "writer" },
-};*/
 
 function decodeJwt(token) {
   const payloadBase64Url = token.split('.')[1]; // Extrae el payload
@@ -46,7 +40,7 @@ export const AuthProvider = ({ children }) => {
           userName, // Guarda el nombre de usuario
           scope: decodedToken.scopes.includes("writer") ? "writer" : "reader", // Guarda el scope del token
           token: data.access_token, // Guarda el token de acceso
-          expiresIn: data.expires_in, // Guarda el tiempo de expiración
+          expiresIn: new Date(Date.now() + data.expires_in * 1000), // Guarda el tiempo de expiración
           //tokenType: data.token_type, // Guarda el tipo de token (opcional)
         });
         // Decodifica el token para obtener los datos del usuario
@@ -60,11 +54,25 @@ export const AuthProvider = ({ children }) => {
         // Redirige al usuario a la página principal
         navigate("/");
       } else {
-        throw new Error("Error en la autenticación: No se recibió un token válido.");
+        //throw new Error("Error en la autenticación: No se recibió un token válido.");
       }
     } catch (error) {
       console.error("Error al iniciar sesión:", error.message);
       alert("Usuario o contraseña incorrectos."); // Muestra un mensaje de error al usuario
+    }
+  };
+
+  const checkTokenExpiration = () => {
+    if(!user){
+      navigate("/login"); // Redirigir al usuario a la pantalla de login
+    }else if (user.expiresIn) {
+      const currentTime = new Date();
+      if (currentTime > user.expiresIn) {
+        // Si el token ha expirado, cierra sesión
+        logout();
+        alert("Su sesión ha expirado. Por favor, inicie sesión nuevamente."); // Muestra un mensaje de error al usuario
+        navigate("/login"); // Redirigir al usuario a la pantalla de login        
+      }
     }
   };
 
@@ -75,9 +83,28 @@ export const AuthProvider = ({ children }) => {
     navigate("/login"); // Redirigir al usuario a la pantalla de login
   };
 
+  const checkUserName = async (name) => {  
+      const response = await authService.checkAPIUserName(name); // Llama al servicio de autenticación
+      return response 
+  }
+
+  const getUserById = async (id) => {
+    checkTokenExpiration(); // Verifica si el token ha expirado
+    const response = await authService.getAPIUserById(id, user.token); // Llama al servicio de autenticación
+    const userObject = new User({
+      id: response.data.user.id, 
+      userName: response.data.user.username, 
+      scope: response.data.user.role, 
+      token:'',  
+      expiresIn:''});
+    userObject.setEtag(response.etag); // Guarda el ETag del usuario
+    userObject.setEmail(response.data.user.email); // Guarda el correo electrónico del usuario
+    return userObject; // Devuelve el objeto User 
+  }
+
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, checkTokenExpiration, checkUserName, getUserById }}>
       {children}
     </AuthContext.Provider>
   );

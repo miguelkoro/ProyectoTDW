@@ -134,46 +134,7 @@ export const addRemRelationAPI = async (objectsType, id, relationType, relationI
   }
 }
 
-export const createAPIUser = async (userName, email, password) => {
-  try{
-    const payload = {
-      username: userName,
-      email: email,
-      password: password      
-    };
-    const response = await fetch(`${API_URL}${BASE_PATH}users`, {
-      method: 'POST', body: JSON.stringify(payload), // Convierte el objeto a JSON
-      headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`,}
 
-    }).then(res => res.json())
-      .then(
-        (result) => {return result},
-        (error) => { console.log('Error en la solicitud:', error); return error; });
-    return response; // Devuelve el resultado de la solicitud
-  }catch (error) {
-    console.error('Error al realizar la solicitud:', error);
-  }
-}
 
-export const updateAPIUser = async (userId, userName, email, password, etag) => {
-  try{
-    const payload = {
-      username: userName,
-      email: email,
-      password: password      
-    };
-    const response = await fetch(`${API_URL}${BASE_PATH}users/${userId}`, {
-      method: 'PUT', body: JSON.stringify(payload), // Convierte el objeto a JSON
-      headers: {'Content-Type': 'application/json', 'If-Match': etag, 'Authorization': `Bearer ${token}`,}
-
-    }).then(res => res.json())
-      .then(
-        (result) => {return result},
-        (error) => { console.log('Error en la solicitud:', error); return error; });
-    return response; // Devuelve el resultado de la solicitud
-  }catch (error) {
-    console.error('Error al realizar la solicitud:', error);
-  }
-}
 
 ///////

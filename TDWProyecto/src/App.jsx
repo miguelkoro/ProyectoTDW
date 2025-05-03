@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from "./context/AuthContext.jsx";
 import { useContext, useEffect } from 'react';
 import { DataContext } from './context/DataContext';
+import ProtectedRoute from './components/ProtectedRoute';
 
 
 import './styles/App.css'
@@ -12,6 +13,7 @@ import NavBar from './components/NavBar';
 import ObjectView from './pages/ObjectView';
 import ObjectEdit from './pages/ObjectEdit';
 import Register from './pages/Register';
+import UserEdit from './pages/UserEdit';
 
 
 function App() {  
@@ -32,8 +34,9 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/view/:type/:id" element={<ObjectView />} />
-            <Route path="/edit/:type/:id" element={<ObjectEdit/>} />
-            <Route path="/new/:type" element={<ObjectEdit/>} />
+            <Route path="/edit/:type/:id" element={<ProtectedRoute><ObjectEdit/></ProtectedRoute>} />
+            <Route path="/new/:type" element={<ProtectedRoute><ObjectEdit/></ProtectedRoute>} />
+            <Route path="/profile" element={<ProtectedRoute><UserEdit/></ProtectedRoute>} />
             <Route path="*" element={<Home />} />
           </Routes>
     </>

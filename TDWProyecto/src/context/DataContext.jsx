@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import * as dataService from '../services/dataService'; // Importa todos los servicios de dataService
-
+import { Navigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import Persona from '../models/Persona.js'; 
 import Entidad from '../models/Entidad.js'; 
@@ -17,7 +17,7 @@ export const DataProvider = ({ children }) => {
 
   const [isLoading, setIsLoading] = useState(true);
 
-  const {user} = useAuth(); // Obtiene el usuario autenticado del contexto
+  const {user, checkTokenExpiration} = useAuth(); // Obtiene el usuario autenticado del contexto
 
 
   const [message, setMessage] = useState(null);
@@ -213,14 +213,16 @@ export const DataProvider = ({ children }) => {
   }
 
   const createObject = async (object) => {
-    !user && console.error("No hay usuario autenticado para crear el objeto."); // Verifica si hay un usuario autenticado
+    checkTokenExpiration(); // Verifica si el token ha expirado
+    //!user && console.error("No hay usuario autenticado para crear el objeto."); // Verifica si hay un usuario autenticado
     const result = await dataService.createAPIObject(getPlural(object.type),object, user.token);
   }
 
 
 
   const updateObject = async(updatedObject) => {
-    !user && console.error("No hay usuario autenticado para actualizar la asociación."); // Verifica si hay un usuario autenticado
+    //!user && console.error("No hay usuario autenticado para actualizar la asociación."); // Verifica si hay un usuario autenticado
+    checkTokenExpiration(); // Verifica si el token ha expirado
     const result = dataService.updateAPIObject(getPlural(updatedObject.type), updatedObject, user.token); // Llama al servicio para crear el productor
     //console.log("updateObject", result); // Verifica el nuevo producto creado
     return result; // Devuelve el resultado de la actualización
@@ -228,7 +230,8 @@ export const DataProvider = ({ children }) => {
 
 
   const deleteObject = async (type, id) => {
-    !user && console.error("No hay usuario autenticado para eliminar el objeto."); // Verifica si hay un usuario autenticado
+    //!user && console.error("No hay usuario autenticado para eliminar el objeto."); // Verifica si hay un usuario autenticado
+    checkTokenExpiration(); // Verifica si el token ha expirado
     const result = await dataService.deleteAPIObject(getPlural(type), id, user.token); // Llama al servicio para eliminar
     switch (type) {
       case 'person':
@@ -250,6 +253,7 @@ export const DataProvider = ({ children }) => {
   }
 
  const addRemRelation = async (objectsType, idObject, typeRelation, idRelation, action) => {
+  checkTokenExpiration(); // Verifica si el token ha expirado
   const response = await dataService.addRemRelationAPI(getPlural(objectsType),idObject, typeRelation, idRelation, action, user.token); // Llama al servicio para añadir o eliminar la relación
   console.log("addRemRelation", response); // Verifica la respuesta del servicio
  }

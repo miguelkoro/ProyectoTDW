@@ -5,5 +5,15 @@ export default class User {
     this.scope = scope; // Puede ser "reader" o "writer" o inactivo
     this.token = token; // Token de autenticación
     this.expiresIn = expiresIn; // Tiempo de expiración del token
+    this.etag = null; // ETag del usuario (opcional)
+    this.email= null; // Correo electrónico del usuario (opcional)
+  }
+
+  setEtag(etag) {
+    this.etag = etag; // Establece el ETag del usuario
+  }
+
+  setEmail(email) {
+    this.email = email; // Establece el correo electrónico del usuario
   }
 }
