@@ -108,9 +108,22 @@ export const AuthProvider = ({ children }) => {
     return response; // Devuelve el resultado de la solicitud
   }
 
+  const register = async (userName, email, password) => {
+    //console.log("register", userName, email, password); // Muestra el objeto en la consola
+    const response = await authService.createAPIUser(userName, email, password); // Llama al servicio de autenticación
+    if (response) {
+      alert("Usuario creado correctamente."); // Muestra un mensaje de éxito al usuario
+      navigate("/login"); // Redirige al usuario a la página de inicio de sesión
+    } else {
+      alert("Error al crear el usuario."); // Muestra un mensaje de error al usuario
+    }
+  }
+
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, checkTokenExpiration, checkUserName, getUserById, updateUser }}>
+    <AuthContext.Provider value={{ user, login, logout, 
+                checkTokenExpiration, checkUserName, 
+                getUserById, updateUser, register }}>
       {children}
     </AuthContext.Provider>
   );
