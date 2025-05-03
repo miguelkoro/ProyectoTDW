@@ -102,9 +102,15 @@ export const AuthProvider = ({ children }) => {
     return userObject; // Devuelve el objeto User 
   }
 
+  const updateUser = async (userObject, password, role) => {
+    checkTokenExpiration(); // Verifica si el token ha expirado
+    const response = await authService.updateAPIUser(userObject, password, role, user.token); // Llama al servicio de autenticación
+    return response; // Devuelve el resultado de la solicitud
+  }
+
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, checkTokenExpiration, checkUserName, getUserById }}>
+    <AuthContext.Provider value={{ user, login, logout, checkTokenExpiration, checkUserName, getUserById, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

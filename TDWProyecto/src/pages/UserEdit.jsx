@@ -10,7 +10,7 @@ const UserEdit = () => {
     const location = useLocation();
     const isProfile= location.state?.profile || false;
     const {showMessage} = useContext(DataContext); // Accede al método getObjectById del contexto
-    const {user, checkUserName, getUserById} = useAuth(); // Obtiene el usuario autenticado del contexto
+    const {user, checkUserName, getUserById, updateUser} = useAuth(); // Obtiene el usuario autenticado del contexto
 
 
     const [isLoading, setIsLoading] = useState(true); // Estado de carga
@@ -84,6 +84,7 @@ const UserEdit = () => {
   
     const checkName = async () => {
       if (!checkNameLength()) return false; // Verifica primero la longitud del nombre
+      if(username === userObject.userName) return true; // Si el nombre no ha cambiado, no verifica la disponibilidad
       if (await checkUserName(username)) {
         setNameError(true); // Establece el error si el nombre ya existe
         showMessage("El nombre de usuario ya está en uso", "error"); // Muestra un mensaje de error
@@ -103,6 +104,20 @@ const UserEdit = () => {
     if (!passwordsValid || !nameValid || !emailValid) {
       return; // Si alguna validación falla, no continúa
     }
+
+    let userObj = new User({ // Crea un nuevo objeto de usuario
+      id: userObject.id, // ID del usuario
+      userName: username, // Nombre de usuario
+      email: email, // Email del usuario
+      scope: userObject.scope, // Rol del usuario
+      token: userObject.token, // Token del usuario
+      expiresIn: '' // Fecha de expiración del token      
+    });
+    userObj.setEtag(userObject.etag); // Establece el ETag del usuario
+    userObj.setEmail(email); // Establece el email del usuario
+
+    await updateUser(userObj, password, userObj.scope); // Llama a la función de actualización del usuario
+    await fetchUser(userObject.id); // Vuelve a obtener el usuario actualizado
   };
 
   const handleCancel = () => {

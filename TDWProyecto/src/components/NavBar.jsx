@@ -76,7 +76,7 @@ const NavBar = () => {
                     <Link to="/profile" className="dropdown-item">
                       Mi cuenta
                     </Link>
-                    <div className="dropdown-item logout" onClick={logout}>
+                    <div className="dropdown-item logout" onClick={() => { setMenuOpen(false); logout(); }}>
                       Cerrar Sesión
                     </div>
                   </div>

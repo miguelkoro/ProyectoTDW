@@ -61,21 +61,23 @@ export const createAPIUser = async (userName, email, password) => {
   }
 }
 
-export const updateAPIUser = async (userId, userName, email, password, etag) => {
+export const updateAPIUser = async (userObject, password, role, token) => {
   try{
     const payload = {
-      username: userName,
-      email: email,
-      password: password      
+      username: userObject.userName,
+      email: userObject.email,
+      password: password,
+      role: role
     };
-    const response = await fetch(`${API_URL}${BASE_PATH}users/${userId}`, {
+    const response = await fetch(`${API_URL}${BASE_PATH}/users/${userObject.id}`, {
       method: 'PUT', body: JSON.stringify(payload), // Convierte el objeto a JSON
-      headers: {'Content-Type': 'application/json', 'If-Match': etag, 'Authorization': `Bearer ${token}`,}
+      headers: {'Content-Type': 'application/json', 'If-Match': userObject.etag, 'Authorization': `Bearer ${token}`,}
 
     }).then(res => res.json())
       .then(
         (result) => {return result},
         (error) => { console.log('Error en la solicitud:', error); return error; });
+    console.log("Objeto actualizado en la API:", response); // Muestra el objeto actualizado en la consola
     return response; // Devuelve el resultado de la solicitud
   }catch (error) {
     console.error('Error al realizar la solicitud:', error);
