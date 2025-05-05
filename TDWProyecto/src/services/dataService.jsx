@@ -1,4 +1,4 @@
-
+import { ROUTES } from '../Routes.js';
 const API_URL = 'http://127.0.0.1:8000'; // Cambia esto a la URL de tu API
 const BASE_PATH = '/api/v1/'
 
@@ -13,7 +13,7 @@ const fetchParams = (name, order, ordering) => {
 export const fetchAPIObjects = async (objectsType, name = '', order = '', ordering = '') => { //(contieneNombre, id | nombre, ASC | DESC)
   try{
     const queryParams = fetchParams(name, order, ordering); // Obtiene los parámetros de consulta   
-    const response = await fetch(`${API_URL}${BASE_PATH}${objectsType}?${queryParams}`); // Realiza la solicitud a la API con los parámetros de consulta
+    const response = await fetch(`${ROUTES.OBJECTS(objectsType)}?${queryParams}`); // Realiza la solicitud a la API con los parámetros de consulta
     //console.log("URL de la API:", `${API_URL}${BASE_PATH}${objectsType}?${queryParams}`); // Muestra la URL de la API en la consola
     if (!response.ok) {
       //throw new Error('Error en la solicitud a la API');
@@ -30,7 +30,7 @@ export const fetchAPIObjects = async (objectsType, name = '', order = '', orderi
 //Obtener un objeto por ID de la API
 export const fetchAPIObjectById = async (objectsType, id) => {
   try{
-    const response = await fetch(`${API_URL}${BASE_PATH}${objectsType}/${id}`) // Realiza la solicitud a la API con el ID
+    const response = await fetch(ROUTES.OBJECT_BY_ID(objectsType,id)) // Realiza la solicitud a la API con el ID
       .then((res) => { 
         const etag = res.headers.get('ETag'); // Obtiene el ETag de la respuesta 
         return res.json().then((data) => ({ data, etag })); // Convierte la respuesta en JSON y devuelve el ETag

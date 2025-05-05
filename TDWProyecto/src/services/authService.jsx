@@ -1,4 +1,5 @@
 import User from '../models/User.js'; 
+import { ROUTES } from '../Routes.js';
 
 const API_URL = 'http://localhost:8000'; // Cambia esto según tu configuración
 const BASE_PATH = "/api/v1/"; // Cambia esto según tu configuración
@@ -7,7 +8,7 @@ const BASE_PATH = "/api/v1/"; // Cambia esto según tu configuración
 
 export const login = async (username, password) => {
     try {
-        const response = await fetch(`${API_URL}/access_token`, {method: 'POST', 
+        const response = await fetch(ROUTES.LOGIN, {method: 'POST', 
                 body: new URLSearchParams({username, password,})})
             .then(res =>  res.json())
             .then(
@@ -31,7 +32,7 @@ export const login = async (username, password) => {
 };
 
 export const checkAPIUserName = async (name) => {
-  const response = await fetch(`${API_URL}${BASE_PATH}users/username/${name}`)
+  const response = await fetch(ROUTES.USERNAME_CHECK(name), ) // Realiza la solicitud a la API con el nombre de usuario
   .then(
       (result) => {return result},
       (error) => { console.log('Error en la solicitud:', error); return error; }
@@ -87,7 +88,7 @@ export const updateAPIUser = async (userObject, password, role, token) => {
 
 //getAPIObject
 export const getAPIUserById = async (id, token) => {
-  const response = await fetch(`${API_URL}${BASE_PATH}users/${id}`, { // Realiza la solicitud a la API con el ID
+  const response = await fetch(ROUTES.USER_BY_ID(id), { // Realiza la solicitud a la API con el ID
     headers: {'Authorization': `Bearer ${token}`} // Agrega el token en la cabecera de autorización
     }).then(async (res) => { 
         const etag = res.headers.get('ETag'); // Obtiene el ETag de la respuesta 
