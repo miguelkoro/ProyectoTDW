@@ -297,6 +297,12 @@ const getUsers = async (name='', order='', ordering='') => {
     }*/
 }
 
+const deleteUser = async (id) => {
+  checkTokenExpiration(); // Verifica si el token ha expirado
+  const response = await dataService.deleteAPIUser(id, user.token); // Llama al servicio de autenticación
+  await getUsers(); // Actualiza la lista de usuarios
+  return response; // Devuelve el resultado de la solicitud
+}
 
 
   return (
@@ -306,7 +312,7 @@ const getUsers = async (name='', order='', ordering='') => {
           getEntities, getProducts, getPersons, getAssociations,
           getPersonById, getEntityById, getProductById, getAssociationById,
           createObject, deleteObject, updateObject, addRemRelation,
-          showMessage, getUsers}}>
+          showMessage, getUsers, deleteUser }}>
       {children}
     </DataContext.Provider>
   );

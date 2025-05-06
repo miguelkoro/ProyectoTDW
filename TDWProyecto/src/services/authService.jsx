@@ -104,3 +104,4 @@ export const getAPIUserById = async (id, token) => {
     console.log("Objeto obtenido de la API:", response); // Muestra el objeto en la consola
     return response; // Devuelve el objeto obtenido de la API 
 }
+

@@ -128,10 +128,12 @@ export const AuthProvider = ({ children }) => {
   }
 
 
+
+
   return (
     <AuthContext.Provider value={{ user, login, logout, getLocalUser,
                 checkTokenExpiration, checkUserName, 
-                getUserById, updateUser, register }}>
+                getUserById, updateUser, register, }}>
       {children}
     </AuthContext.Provider>
   );

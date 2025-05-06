@@ -7,13 +7,13 @@ import { DataContext } from '../context/DataContext'; // Importa el DataContext
 
 
 const CardUser = ({object}) => {
-  const { user } = useAuth(); // Obtén el usuario autenticado del contexto
+  const { user,  } = useAuth(); // Obtén el usuario autenticado del contexto
   const navigate = useNavigate(); // Hook para redirigir
-  const { deleteObject } = useContext(DataContext); // Obtén el método deletePerson del DataContext
+  const { deleteUser } = useContext(DataContext); // Obtén el método deletePerson del DataContext
 
   const handleCardClick = () => {
     //console.log("Objeto clickeado:", object); // Verifica el objeto clickeado
-    //navigate(`/view/${object.type}/${object.id}`, { state: { view: true } }); // Redirige al ObjectView con el objeto como estado
+    navigate(`/view/user/${object.id}`, { state: { view: true } });
     console.log("Datos del objeto:", object);
 
   };
@@ -31,6 +31,7 @@ const CardUser = ({object}) => {
     );
     if (confirmDelete) {
       //deleteObject(object.type,object.id); // Llama a la función de eliminación para personas
+      deleteUser(object.id); // Llama a la función de eliminación para personas
     } else {
       console.log("Eliminación cancelada");
     }

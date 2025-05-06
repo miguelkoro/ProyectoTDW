@@ -152,7 +152,21 @@ export const fetchAPIUsers = async (token,name = '', order = '', ordering = '') 
   }
 }
 
-
+export const deleteAPIUser = async (id, token) => {
+  try{
+    const response = await fetch(`${API_URL}${BASE_PATH}users/${id}`, {
+      method: 'DELETE',
+      headers: {'Authorization': `Bearer ${token}`,} // Agrega el token en la cabecera de autorización
+    })
+      .then(
+        (result) => {return result},
+        (error) => { console.log('Error en la solicitud:', error); return error; });
+    console.log("Objeto eliminado de la API:", response); // Muestra el objeto eliminado en la consola
+    return response; // Devuelve el resultado de la solicitud
+  }catch (error) {
+    console.error('Error al realizar la solicitud:', error);
+  }
+}
 
 
 ///////
