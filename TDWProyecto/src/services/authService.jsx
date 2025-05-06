@@ -62,12 +62,13 @@ export const createAPIUser = async (userName, email, password) => {
 }
 
 export const updateAPIUser = async (userObject, password, role, token) => {
-  try{
+  try{    
     const payload = {
       username: userObject.userName,
       email: userObject.email,
-      password: password,
-      role: role
+      role: role,
+      ...(password && { password }), // Solo incluye la contraseña si no está vacía
+
     };
     const response = await fetch(`${API_URL}${BASE_PATH}users/${userObject.id}`, {
       method: 'PUT', body: JSON.stringify(payload), // Convierte el objeto a JSON

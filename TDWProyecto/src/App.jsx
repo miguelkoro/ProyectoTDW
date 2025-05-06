@@ -50,6 +50,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/view/:type/:id" element={<ObjectView />} />
             <Route path="/edit/:type/:id" element={<ProtectedRoute><ObjectEdit/></ProtectedRoute>} />
+            <Route path="/edit/user/:id" element={<ProtectedRoute><UserEdit/></ProtectedRoute>} />
             <Route path="/new/:type" element={<ProtectedRoute><ObjectEdit/></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><UserEdit/></ProtectedRoute>} />
             <Route path="*" element={<Home />} />

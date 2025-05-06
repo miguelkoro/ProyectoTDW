@@ -22,7 +22,7 @@ const Section = (props) => {
     <div className="section-container">
       <div className="section-header">
         <h1 className="section-title">{props.title}</h1>
-        {user?.scope === "writer" && ( // Solo muestra el botón si el usuario ha iniciado sesión y es writer //user? se usa para que si es null, lo ponga como undefined en vez de dar error
+        {(user?.scope === "writer" && props.type!=="user") && ( // Solo muestra el botón si el usuario ha iniciado sesión y es writer //user? se usa para que si es null, lo ponga como undefined en vez de dar error
           <button className="new-button" onClick={handleNewClick}>
             Nuevo
           </button>

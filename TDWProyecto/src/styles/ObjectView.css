@@ -221,8 +221,8 @@
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 5px;
-  max-width: 250px; /* Asegura que el texto no desborde el contenedor */
-  margin-right: 100px;
+  max-width: 15rem; /* Asegura que el texto no desborde el contenedor */
+  margin-right: 5rem;
 }
 /* Campo de entrada para la URL de la imagen */
 .image-url-input {
@@ -252,4 +252,14 @@
   border-radius: 5px; /* Bordes redondeados */
   transition: background-color 0.3s ease, border-color 0.3s ease; /* Transición suave */
   border: 2px solid rgba(153, 0, 0, 0.774) !important;
+}
+
+.role-selector {
+  max-width: 15rem;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 5rem;
+  /*align-content: left;*/
 }

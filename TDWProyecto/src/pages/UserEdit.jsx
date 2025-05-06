@@ -8,11 +8,11 @@ import User from '../models/User';
 const UserEdit = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const isProfile= location.state?.profile || false;
+    const isEdit= location.state?.edit || false;
     const {showMessage} = useContext(DataContext); // Accede al método getObjectById del contexto
     const {user, checkUserName, getUserById, updateUser} = useAuth(); // Obtiene el usuario autenticado del contexto
-
-
+    //const isEdit= location.state?.edit || false;
+    const { id } = useParams();
     const [isLoading, setIsLoading] = useState(true); // Estado de carga
     const [nameError, setNameError] = useState(false); // Estado para el error de nombre
     const [passwordError, setPasswordError] = useState(false); // Estado para el error de contraseña
@@ -22,24 +22,31 @@ const UserEdit = () => {
 
 
     // Estados para los campos del formulario
-    const [id, setId] = useState(''); // ID del usuario
+    const [userId, setUserId] = useState(''); // ID del usuario
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [scope, setScope] = useState(''); // Rol del usuario (por defecto es READER)
 
     useEffect(() => {
       if(!user) return; // Si no hay usuario, no hace nada
-      fetchUser(user.id)
+      let userId;
+      //console.log("user", isEdit); // Muestra el usuario en la consola
+      !isEdit ? userId = user.id : userId = id; // Si es edición, usa el ID del usuario autenticado, si no, usa el ID del objeto de usuario
+      fetchUser(userId); // Llama a la función para obtener el usuario por ID
     },[])
 
     const fetchUser = async (id) => {
       let fetchedUser = await getUserById(id); // Obtiene el usuario por ID
       
       if(fetchedUser){
+
         setUserObject(fetchedUser); // Obtiene el usuario por ID
+        setUserId(fetchedUser.id || ''); // Establece el ID del usuario
         setUsername(fetchedUser.userName || ''); // Establece el nombre de usuario
         setEmail(fetchedUser.email || ''); // Establece el email del usuario
+        setScope(fetchedUser.scope || ''); // Establece el rol del usuario
         //console.log("fetchedUser", fetchedUser); // Muestra el usuario en la consola
       }
     }
@@ -97,7 +104,9 @@ const UserEdit = () => {
 
   const handleSave = async () => {
        // Lógica para guardar los datos
-    const passwordsValid = checkPasswords(); // Verifica las contraseñas
+    let passwordsValid;
+    password === '' ? passwordsValid = true : passwordsValid = checkPasswords(); // Verifica las contraseñas
+    //const passwordsValid = checkPasswords(); // Verifica las contraseñas
     const nameValid = await checkName(); // Espera a que se resuelva la verificación del nombre
     const emailValid = checkEmail(); // Verifica el formato del email
 
@@ -109,13 +118,13 @@ const UserEdit = () => {
       id: userObject.id, // ID del usuario
       userName: username, // Nombre de usuario
       email: email, // Email del usuario
-      scope: userObject.scope, // Rol del usuario
+      scope: scope, // Rol del usuario
       token: userObject.token, // Token del usuario
       expiresIn: '' // Fecha de expiración del token      
     });
     userObj.setEtag(userObject.etag); // Establece el ETag del usuario
     userObj.setEmail(email); // Establece el email del usuario
-
+    console.log("userObj", userObj); // Muestra el objeto de usuario en la consola
     await updateUser(userObj, password, userObj.scope); // Llama a la función de actualización del usuario
     await fetchUser(userObject.id); // Vuelve a obtener el usuario actualizado
   };
@@ -128,11 +137,11 @@ const UserEdit = () => {
     <div className="myaccount-panel">
         <div className="object-header">
         <h1 className="object-title"></h1>
-        <span className="object-id">ID:{user.id}</span>
+        <span className="object-id">ID:{userObject.id}</span>
       </div>
       {/* Fila principal: Título centrado */}
       <div className="object-header">
-        <h1 className="object-title">Mi Cuenta</h1>
+        <h1 className="object-title">{isEdit ? `Editar usuario: ${userObject.userName}` : "Mi Cuenta"}</h1>
       </div>
       <hr className="object-divider" />
 
@@ -184,6 +193,20 @@ const UserEdit = () => {
               onBlur={checkPasswords} // Valida al deseleccionar el campo
             />
           </div>
+          {isEdit && // Solo muestra el selector de rol si es edición
+          <div className="object-detail-row">
+            <strong>Rol:</strong>
+            <select
+              value={scope}
+              onChange={(e) => setScope(e.target.value)} // Actualiza el estado cuando se selecciona una opción
+              className="role-selector"
+            >
+              <option value="READER">READER</option>
+              <option value="WRITER">WRITER</option>
+              <option value="INACTIVE">INACTIVE</option>
+            </select>
+        </div>
+        }
         </div>
       </div>
       <hr className="object-divider" />
