@@ -134,6 +134,24 @@ export const addRemRelationAPI = async (objectsType, id, relationType, relationI
   }
 }
 
+export const fetchAPIUsers = async (token,name = '', order = '', ordering = '') => {
+  //console.log(`${ROUTES.OBJECTS("users")}?${queryParams}`)
+  try{
+    const queryParams = fetchParams(name, order, ordering); 
+    const response = await fetch(`${ROUTES.OBJECTS("users")}?${queryParams}`, // Realiza la solicitud a la API con los parámetros de consulta
+      {headers: {'Authorization': `Bearer ${token}`}})
+      .then(res => res.json())
+      .then(
+        (result) => {return result},
+        (error) => { console.log('Error en la solicitud:', error); return error; });
+    //const objects = await response.json(); // Convierte la respuesta en JSON
+    //return {type: 'success', data: objects}; // Devuelve los datos obtenidos de la API
+    return response; // Devuelve el resultado de la solicitud
+  }catch (error) {
+    console.error('Error al realizar la solicitud:', error);
+  }
+}
+
 
 
 

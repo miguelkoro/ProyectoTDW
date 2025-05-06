@@ -1,6 +1,7 @@
 import React from 'react';
 import '../styles/Section.css'; // Archivo CSS para estilos
 import Card from './Card.jsx'; // Importa el componente de sección pequeña
+import CardUser from './CardUser.jsx'; // Importa el componente de sección pequeña
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom'; // Importa useNavigate para redirección
 
@@ -29,8 +30,8 @@ const Section = (props) => {
       </div>
       <div className="card-wrapper">
         {props.objects.map((object) => (
-          <Card key={object.id} object={object} />
-          
+          props.type!== "user" ? <Card key={object.id} object={object} />
+          : <CardUser key={object.id} object={object} /> // Si no hay tipo, muestra el card sin importar el tipo
         ))}
         
       </div>

@@ -20,12 +20,21 @@ export const AuthProvider = ({ children }) => {
 
   // Cargar usuario desde localStorage al iniciar
   // Cargar usuario desde localStorage al iniciar
-  useEffect(() => {
+  /*useEffect(() => {
+    const storedUser = sessionStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser)); // Carga el usuario desde localStorage
+      checkTokenExpiration(); // Verifica si el token ha expirado
+    }
+  }, []);*/
+
+  const getLocalUser = () => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser)); // Carga el usuario desde localStorage
+      checkTokenExpiration(); // Verifica si el token ha expirado
     }
-  }, []);
+  }
  
   // Función para iniciar sesión
   const login = async (userName, password) => {
@@ -63,9 +72,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   const checkTokenExpiration = () => {
-    if(!user){
-      navigate("/login"); // Redirigir al usuario a la pantalla de login
-    }else if (user.expiresIn) {
+    //console.log("checkTokenExpiration", user); // Muestra el token decodificado en la consola
+    if (user?.expiresIn) {
       const currentTime = new Date();
       if (currentTime > user.expiresIn) {
         // Si el token ha expirado, cierra sesión
@@ -121,7 +129,7 @@ export const AuthProvider = ({ children }) => {
 
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, 
+    <AuthContext.Provider value={{ user, login, logout, getLocalUser,
                 checkTokenExpiration, checkUserName, 
                 getUserById, updateUser, register }}>
       {children}

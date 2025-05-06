@@ -6,6 +6,7 @@ import Persona from '../models/Persona.js';
 import Entidad from '../models/Entidad.js'; 
 import Producto from '../models/Producto.js'; 
 import Asociacion from '../models/Asociacion.js';
+import User from '../models/User.js';
 
 export const DataContext = createContext();
 
@@ -14,6 +15,7 @@ export const DataProvider = ({ children }) => {
   const [entities, setEntities] = useState([]);
   const [products, setProducts] = useState([]);
   const [associations, setAssociations] = useState([]); // Estado para las asociaciones 
+  const [users, setUsers] = useState([]); // Estado para los usuarios
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -258,18 +260,53 @@ export const DataProvider = ({ children }) => {
   console.log("addRemRelation", response); // Verifica la respuesta del servicio
  }
 
+const getUsers = async (name='', order='', ordering='') => {
+    checkTokenExpiration(); // Verifica si el token ha expirado
+    setIsLoading(true); // Indica que los datos están siendo cargados
+    
+    // Llama al servicio para cargar los productos
+    const response = await dataService.fetchAPIUsers(user.token,name, order, ordering );
 
+    /*if (response.type === 'error') {
+      console.error(`Error al cargar productos: ${response.data}`);
+      showMessage('Error al cargar productos', 'error');
+      setIsLoading(false);
+      return;
+    }  */
+    // Convierte cada producto del JSON en una instancia de Product
+    //console.log("getUsers", response); // Verifica el nuevo producto creado
+    const userCollection = response.users.map((userData) => {
+      const newUser= new User({
+        id: userData.user.id,
+        userName: userData.user.username,
+        scope: userData.user.role,
+        //email: userData.user.email,
+      });
+      newUser.setEmail(userData.user.email); // Guarda el correo electrónico del usuario
+      return newUser; // Devuelve el nuevo objeto User
+    }); 
+    console.log("userCollection", userCollection); // Verifica el nuevo producto creado
+
+    setUsers(userCollection); // Guarda los productos en el estado
+    //showMessage('Productos cargados correctamente', 'success');
+    /*} catch (error) {
+      console.error('Error al cargar productos:', error);
+      showMessage('Error al cargar productos', 'error');
+    } finally {
+      setIsLoading(false); // Indica que los datos han terminado de cargarse
+    }*/
+}
 
 
 
   return (
     <DataContext.Provider value={{ 
-          persons, entities, products, associations,
+          persons, entities, products, associations, users,
           isLoading, message, messageType,
           getEntities, getProducts, getPersons, getAssociations,
           getPersonById, getEntityById, getProductById, getAssociationById,
           createObject, deleteObject, updateObject, addRemRelation,
-          showMessage,}}>
+          showMessage, getUsers}}>
       {children}
     </DataContext.Provider>
   );

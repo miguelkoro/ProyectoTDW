@@ -8,7 +8,7 @@
     color: #fff;
     margin: 10px;
     text-align: center;
-    max-width: 200px;
+    max-width: 14rem;
     width: 100%;
     height: auto;
 
@@ -42,6 +42,28 @@
     padding: 10px 0; /* Espaciado superior e inferior */
 
     margin-top: auto;
+}
+
+.card .card-username {
+    font-family: Montserrat, sans-serif;
+    font-size: clamp(0.8rem, 2.5vw, 1rem); /* Tamaño dinámico de la fuente */
+    color: white;
+    margin: 0;
+    padding: 1.5rem ; /* Espaciado superior e inferior */
+
+    margin-top: auto;
+}
+
+.card .card-email {
+    font-family: Montserrat, sans-serif;
+    font-size: clamp(0.5rem, 2vw, 0.8rem); /* Tamaño dinámico de la fuente */
+    color: white;
+    margin: 0;
+    padding: 1rem ; /* Espaciado superior e inferior */
+    /*display: block;*/
+    /*height: auto;*/
+    /*min-height: 5rem;;
+    /*margin-top: auto; */
 }
 
 .card .card-description {
