@@ -8,24 +8,54 @@
     margin: 0 auto; /* Centra el contenedor en la página */
 }
 
+.section-container-management {
+    /*display: flex; /* Usa Flexbox */
+    /*justify-content: center; /* Centra horizontalmente */
+    /*align-items: flex-start; /* Alinea el contenido al inicio verticalmente */
+    /*flex-direction: column; /* Asegura que los elementos internos se apilen verticalmente */
+    width: 100%; /* Asegura que ocupe todo el ancho disponible */
+    max-width: 70vw; /* Limita el ancho máximo */
+    height: 100vh; /* Ocupa toda la altura de la ventana */
+    margin: 0 auto; /* Centra el contenedor horizontalmente */
+    padding: 1rem; /* Espaciado interno */
+    box-sizing: border-box; /* Incluye el padding en el tamaño total */
+    margin-top: 5rem;
+
+}
+
+.section-header-management {
+    display: flex; /* Usa Flexbox */
+    justify-content: space-between; /* Coloca el título a la izquierda y el botón a la derecha */
+    align-items: center; /* Alinea verticalmente el título y el botón */
+    width: 100%; /* Asegura que ocupe todo el ancho del contenedor */
+    margin-bottom: 20px; /* Espaciado inferior */
+}
+
+
 .card-wrapper {
     display: flex; /* Usa flexbox para alinear las Cards horizontalmente */
     /*gap: 20px; /* Espacio entre las Cards */
     overflow-x: auto; /* Habilita el scroll horizontal */
     scrollbar-width: thin; /* Estilo del scroll en navegadores compatibles */
     padding-bottom: 0.5rem; /* Espaciado para evitar que el scroll tape las Cards */
-margin: 0 auto; 
-    /*width: 100%; /* Asegura que el contenedor ocupe todo el ancho */
-    /*white-space: nowrap;
-}
-
-  
-.card-wrapper a {
-    display: inline-block;
-    /*color: white;*/
+    margin: 0 auto; 
+    
     text-align: center;
     /*padding: 14px;*/
     text-decoration: none;
+  }
+
+  .card-management-wrapper{
+    display: grid; /* Cambia a Grid Layout */
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px; /* Espacio entre las tarjetas */
+    max-width: 100%; /* Asegura que el contenedor ocupe todo el ancho disponible */
+    max-height: calc(5 * 150rem); /* Altura máxima para 5 filas (ajusta 15rem según la altura de tus tarjetas) */
+    overflow-y: auto; /* Habilita el scroll vertical si hay más de 5 filas */
+    margin: 0 auto; /* Centra el contenedor horizontalmente */
+    padding: 10px; /* Espaciado interno */
+    text-align: center; /* Centra el texto dentro de las tarjetas */
+    scrollbar-width: thin;
   }
   
 .card-wrapper a:hover {

@@ -54,11 +54,11 @@ const NavBar = () => {
           <span className="manage-title">Gestión</span>
           {manageMenuOpen && (
             <div className="dropdown-menu-manage">
-              <Link to="/associations" state={{type: 'association'}} className="dropdown-item-manage">🔥 Asociaciones</Link>
-              <Link to="/products" state={{type: 'product'}} className="dropdown-item-manage">💡 Productos</Link>
-              <Link to="/persons" state={{type: 'person'}} className="dropdown-item-manage">🪠 Personas</Link>
-              <Link to="/entities" state={{type: 'entity'}} className="dropdown-item-manage">🧸 Entidades</Link> 
-              {user?.scope==="writer" && <Link to="/users" className="dropdown-item-manage" state={{type: 'user'}}>👥 Usuarios</Link>}
+              <Link to="/associations" state={{type: 'association'}} onClick={() => setManageMenuOpen(false)}  className="dropdown-item-manage">🔥 Asociaciones</Link>
+              <Link to="/products" state={{type: 'product'}} onClick={() => setManageMenuOpen(false)}  className="dropdown-item-manage">💡 Productos</Link>
+              <Link to="/persons" state={{type: 'person'}} onClick={() => setManageMenuOpen(false)}  className="dropdown-item-manage">🪠 Personas</Link>
+              <Link to="/entities" state={{type: 'entity'}} onClick={() => setManageMenuOpen(false)}  className="dropdown-item-manage">🧸 Entidades</Link> 
+              {user?.scope==="writer" && <Link to="/users" className="dropdown-item-manage" onClick={() => setManageMenuOpen(false)}  state={{type: 'user'}}>👥 Usuarios</Link>}
             </div>
           )}
         </div>

@@ -11,77 +11,79 @@ import { DataContext } from '../context/DataContext';
 const Management = (props) => {
   const { user } = useAuth(); // Obtén el usuario autenticado del contexto
   const navigate = useNavigate(); // Hook para redirigir
-  const typeFromState =  location.pathname.split('/')[2];
+  const typeFromState =  location.state?.type || location.pathname.split('/')[2];
   const [objects, setObjects] = useState([]); 
 
   const { persons, entities, products, associations, users, 
     getPersons, getEntities, getProducts, getAssociations, getUsers} = useContext(DataContext); 
-      //Aquí, los datos (persons, entities, products) se obtienen directamente del contexto.
-      /*useEffect(() => {
+
+  // Llama a las funciones de obtención al montar el componente
+  useEffect(() => {
+    switch (typeFromState) {
+      case 'persons':
         getPersons(); // Llama a la función para obtener personas
+        break;
+      case 'entities':
         getEntities(); // Llama a la función para obtener entidades
+        break;
+      case 'products':
         getProducts(); // Llama a la función para obtener productos
+        break;
+      case 'associations':
         getAssociations(); // Llama a la función para obtener asociaciones
-        if (user && user?.scope === "writer") getUsers(); // Llama a la función para obtener usuarios
-      }, []);*/
-// Función para obtener los datos según el tipo
-const fetchObjects = async () => {
-  /*switch (typeFromState) {
-    case 'persons':
-      await getPersons(); // Llama a la función para obtener personas
-      setObjects(persons); // Actualiza el estado con las personas
-      break;
-    case 'entities':
-      await getEntities(); // Llama a la función para obtener entidades
-      setObjects(entities); // Actualiza el estado con las entidades
-      break;
-    case 'products':
-      await getProducts(); // Llama a la función para obtener productos
-      setObjects(products); // Actualiza el estado con los productos
-      break;
-    case 'associations':
-      await getAssociations(); // Llama a la función para obtener asociaciones
-      setObjects(associations); // Actualiza el estado con las asociaciones
-      break;
-    case 'users':
-      await getUsers(); // Llama a la función para obtener usuarios
-      setObjects(users); // Actualiza el estado con los usuarios
-      break;
-    default:
-      setObjects([]); // Si no hay tipo válido, establece un array vacío
-      break;
-  }*/
-};
+        break;
+      case 'users':
+        getUsers(); // Llama a la función para obtener usuarios
+        break;
+      default:
+        break;
+    }
+    console.log("getObjects", typeFromState); // Muestra el tipo en la consola
+  }, [typeFromState]);
+
+  // Observa los cambios en las variables del contexto y actualiza el estado `objects`
+  useEffect(() => {
+    switch (typeFromState) {
+      case 'persons':
+        setObjects(persons || []); // Actualiza el estado con las personas
+        break;
+      case 'entities':
+        setObjects(entities || []); // Actualiza el estado con las entidades
+        break;
+      case 'products':
+        setObjects(products || []); // Actualiza el estado con los productos
+        break;
+      case 'associations':
+        setObjects(associations || []); // Actualiza el estado con las asociaciones
+        break;
+      case 'users':
+        setObjects(users || []); // Actualiza el estado con los usuarios
+        break;
+      default:
+        setObjects([]); // Si no hay tipo válido, establece un array vacío
+        break;
+    }
+  }, [typeFromState, persons, entities, products, associations, users]);
 
   const handleNewClick = () => {
-    
     // Aquí puedes implementar la lógica para crear un nuevo objeto
-    //navigate(`/new/${props.type} `, {state:{new:true}}); // Redirige a la página de creación de nuevo objeto
+    navigate(`/new/${typeFromState}`, {state:{new:true}}); // Redirige a la página de creación de nuevo objeto
     //console.log("Crear nuevo objeto:", title);
   }
 
-  useEffect(() => {
-    //fetchObjects(); // Llama a la función para obtener los datos
-  }, [typeFromState, persons, entities, products, associations, users]); // Incluye todas las dependencias relevantes
-
-
-  if (!objects || objects.length === 0) {
-    return <p>No hay datos disponibles para mostrar.</p>; // Muestra un mensaje si no hay datos
-  }
-
   return (
-    <div className="section-container">
-      <div className="section-header">
+    <div className="section-container-management">
+      <div className="section-header-management">
         <h1 className="section-title">{typeFromState}</h1>
-        {(user?.scope === "writer" && typeFromState!=="user") && ( // Solo muestra el botón si el usuario ha iniciado sesión y es writer //user? se usa para que si es null, lo ponga como undefined en vez de dar error
+        {(user?.scope === "writer" && typeFromState!=="users") && ( // Solo muestra el botón si el usuario ha iniciado sesión y es writer //user? se usa para que si es null, lo ponga como undefined en vez de dar error
           <button className="new-button" onClick={handleNewClick}>
             Nuevo
           </button>
         )}
       </div>
-      <div className="card-wrapper">
+      <div className="card-management-wrapper">
         {objects.map((object) => (
-          typeFromState!== "user" ? <Card key={object.id} object={object} />
+          typeFromState!== "users" ? <Card key={object.id} object={object} />
           : <CardUser key={object.id} object={object} /> // Si no hay tipo, muestra el card sin importar el tipo
         ))}
         

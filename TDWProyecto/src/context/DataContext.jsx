@@ -42,13 +42,7 @@ export const DataProvider = ({ children }) => {
   
       // Llama al servicio para cargar los productos
       const response = await dataService.fetchAPIObjects('products', name, order, ordering);
-  
-      if (response.type === 'error') {
-        console.error(`Error al cargar productos: ${response.data}`);
-        showMessage('Error al cargar productos', 'error');
-        setIsLoading(false);
-        return;
-      }  
+
       // Convierte cada producto del JSON en una instancia de Product
       const productCollection = response.data.products.map((productData) => {
         const product = new Producto(productData.product); // Crea una instancia de Product

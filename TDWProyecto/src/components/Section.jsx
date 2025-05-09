@@ -29,7 +29,7 @@ const Section = (props) => {
     if (!isLoading) {
       const timer = setTimeout(() => {
         setShowNoData(true); // Activa el estado después del retraso
-      }, 300); // Retraso de 300 ms
+      }, 600); // Retraso de 300 ms
 
       return () => clearTimeout(timer); // Limpia el temporizador si el componente se desmonta o `isLoading` cambia
     } else {
