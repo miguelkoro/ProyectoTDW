@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 import { DataContext } from '../context/DataContext'; // Importa el contexto
 import '../styles/ObjectView.css'; // Archivo CSS para estilos
 import RelatedSection from '../components/RelatedSection'; // Importa el componente de objetos relacionados
-
+import loadingGif from '../assets/images/Loading.gif';
 
 
 
@@ -49,9 +49,7 @@ const ObjectView = (props) => {
       } catch (error) {
         console.error('Error al obtener el objeto:', error);
         setObject(null); // Maneja errores estableciendo el estado como null
-      } finally {
-        setIsLoading(false); // Finaliza la carga
-      }
+      } 
     }
   
     fetchObject(); // Llama a la función para obtener el objeto
@@ -79,15 +77,21 @@ const ObjectView = (props) => {
         }
       } catch (error) {
         console.error("Error al obtener objetos relacionados:", error);
+      }finally {
+        setIsLoading(false); // Finaliza la carga
       }
     };
   
     fetchRelatedObjects(); // Llama a la función para obtener los objetos relacionados
-  }, [object, getPersonById, getEntityById, getAssociationById]); // Dependencias necesarias
+  }, [object]); // Dependencias necesarias
 
 
-  if (!object) {
-    return <p>No se encontró el objeto.</p>;
+  if (isLoading) {
+    return (
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" , width:"100vw"}}>
+      <img src={loadingGif} alt="Cargando..." style={{ height: "5rem" , margin:"0 auto"}} />
+    </div>
+    ); // Muestra un spinner de carga
   }
 
  

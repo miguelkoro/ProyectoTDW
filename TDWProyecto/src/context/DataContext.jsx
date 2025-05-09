@@ -160,14 +160,19 @@ export const DataProvider = ({ children }) => {
   }
 
   const getPersonById = async (id) => {
-    // Llama al servicio para obtener la persona por ID
-    const { data, etag } = await dataService.fetchAPIObjectById('persons', id);
-    // Convierte el objeto en una instancia de Persona
-    const person = new Persona(data.person);
-    person.etag = etag; // Asigna el ETag al objeto
-    person.setType('person'); // Configura el tipo como 'person'
 
-    return person; // Devuelve la persona encontrada
+      //setIsLoading(true); // Indica que los datos están siendo cargados
+      // Llama al servicio para obtener la persona por ID
+      const { data, etag } = await dataService.fetchAPIObjectById('persons', id);
+      // Convierte el objeto en una instancia de Persona
+      const person = new Persona(data.person);
+      person.etag = etag; // Asigna el ETag al objeto
+      person.setType('person'); // Configura el tipo como 'person'
+
+      return person; // Devuelve la persona encontrada
+
+      //setIsLoading(false); // Finaliza la carga en caso de error
+    
 
   };
   const getEntityById = async (id) => {
@@ -180,13 +185,23 @@ export const DataProvider = ({ children }) => {
     return entity; // Devuelve la persona encontrada
   }
   const getProductById = async (id) => {
-    const { data, etag } = await dataService.fetchAPIObjectById('products', id);
-    // Convierte el objeto en una instancia de Persona
-    const product = new Producto(data.product);
-    product.etag = etag; // Asigna el ETag al objeto
-    product.setType('product'); // Configura el tipo como 'person'
-    console.log(JSON.stringify(product))
-    return product; // Devuelve la persona encontrada
+    try {
+      setIsLoading(true); // Indica que los datos están siendo cargados
+      const { data, etag } = await dataService.fetchAPIObjectById('products', id);
+      // Convierte el objeto en una instancia de Persona
+      const product = new Producto(data.product);
+      product.etag = etag; // Asigna el ETag al objeto
+      product.setType('product'); // Configura el tipo como 'person'
+      console.log(JSON.stringify(product))
+      return product; // Devuelve la persona encontrada
+    } catch (error) {
+      console.error('Error al cargar el producto:', error);
+      showMessage('Error al cargar el producto', 'error');
+      setIsLoading(false); // Finaliza la carga en caso de error
+    }
+    finally {
+      setIsLoading(false); // Finaliza la carga en caso de error
+    }
   };
   const getAssociationById = async (id) => {
     const { data, etag } = await dataService.fetchAPIObjectById('associations', id);

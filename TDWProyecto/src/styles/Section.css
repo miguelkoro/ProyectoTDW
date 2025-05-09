@@ -1,22 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 .section-container {
-    width: 80%; /* Ocupa todo el ancho disponible */
-    max-width:  90vw; /* Ancho máximo de 90vw */;
-    overflow-x: auto; /* Habilita el scroll horizontal */
-    padding: 20px; /* Espaciado interno */
-    box-sizing: border-box; /* Incluye el padding en el tamaño total */
+    /*width: 80%; /* Ocupa todo el ancho disponible */
+    max-width:  70vw; /* Ancho máximo de 90vw */;
+    /*overflow-x: auto; /* Habilita el scroll horizontal */
+    padding-top: 1rem; /* Espaciado interno */
+    /*box-sizing: border-box; /* Incluye el padding en el tamaño total */
     margin: 0 auto; /* Centra el contenedor en la página */
 }
 
 .card-wrapper {
     display: flex; /* Usa flexbox para alinear las Cards horizontalmente */
-    gap: 20px; /* Espacio entre las Cards */
+    /*gap: 20px; /* Espacio entre las Cards */
     overflow-x: auto; /* Habilita el scroll horizontal */
     scrollbar-width: thin; /* Estilo del scroll en navegadores compatibles */
-    padding-bottom: 10px; /* Espaciado para evitar que el scroll tape las Cards */
-
-    width: 100%; /* Asegura que el contenedor ocupe todo el ancho */
-    white-space: nowrap;
+    padding-bottom: 0.5rem; /* Espaciado para evitar que el scroll tape las Cards */
+margin: 0 auto; 
+    /*width: 100%; /* Asegura que el contenedor ocupe todo el ancho */
+    /*white-space: nowrap;
 }
 
   
@@ -24,7 +24,7 @@
     display: inline-block;
     /*color: white;*/
     text-align: center;
-    padding: 14px;
+    /*padding: 14px;*/
     text-decoration: none;
   }
   
@@ -40,7 +40,13 @@
     padding: 10px 0; /* Espaciado superior e inferior */
     text-align: center; /* Centra el texto */
     width: 100%; /* Asegura que el título ocupe todo el ancho del contenedor */
+    cursor: pointer; /* Cambia el cursor a una mano para indicar que es clickeable */
+    transition: transform 0.2s ease-in-out; /* Suaviza la transición */
 }
+
+.section-title:hover {
+    transform: scale(1.1); /* Aumenta ligeramente el tamaño al pasar el ratón */
+  }
 
 .section-hr{
     width: 80%; /* Asegura que la línea ocupe todo el ancho del contenedor */
@@ -55,11 +61,12 @@
     color: white;
     border: none;
     border-radius: 4px;
-    padding: 10px 15px;
-    font-size: 0.9rem;
+    padding: 0.8rem 2rem;
+    font-size: 1.2rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
     transform: translateX(-50px); 
+    /*padding-left: 3rem;;*/
 }
 
 .new-button:hover {
@@ -69,5 +76,6 @@
     display: flex; /* Alinea el título y el botón en una fila */
     justify-content: space-between; /* Coloca el título a la izquierda y el botón a la derecha */
     align-items: center; /* Alinea verticalmente el título y el botón */
-    margin-bottom: 20px; /* Espaciado inferior para separar del contenido */
+    /*margin-bottom: 20px; /* Espaciado inferior para separar del contenido */
 }
+

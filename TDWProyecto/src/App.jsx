@@ -17,6 +17,7 @@ import ObjectEdit from './pages/ObjectEdit';
 import Register from './pages/Register';
 import UserEdit from './pages/UserEdit';
 import UserView from './pages/UserView';
+import Management from './pages/Management.jsx';
 
 
 function App() {  
@@ -55,6 +56,12 @@ function App() {
             <Route path="/edit/user/:id" element={<ProtectedRoute><UserEdit/></ProtectedRoute>} />
             <Route path="/new/:type" element={<ProtectedRoute><ObjectEdit/></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><UserEdit/></ProtectedRoute>} />
+            <Route path="/users" element={<Management/>} />
+            <Route path="/associations" element={<Management/>} />
+            <Route path="/products" element={<Management/>} />
+            <Route path="/persons" element={<Management/>} />
+            <Route path="/entities" element={<Management/>} />
+
             <Route path="*" element={<Home />} />
           </Routes>
     </>

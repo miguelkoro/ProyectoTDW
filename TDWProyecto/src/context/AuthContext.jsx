@@ -75,7 +75,8 @@ export const AuthProvider = ({ children }) => {
     //console.log("checkTokenExpiration", user); // Muestra el token decodificado en la consola
     if (user?.expiresIn) {
       const currentTime = new Date();
-      if (currentTime > user.expiresIn) {
+      const expirationTime = new Date(user.expiresIn); // Asegúrate de que sea un objeto Date
+      if (currentTime > expirationTime) {
         // Si el token ha expirado, cierra sesión
         logout();
         alert("Su sesión ha expirado. Por favor, inicie sesión nuevamente."); // Muestra un mensaje de error al usuario
