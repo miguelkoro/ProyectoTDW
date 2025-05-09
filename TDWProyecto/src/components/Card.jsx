@@ -23,13 +23,13 @@ const Card = ({object}) => {
     //console.log("editar objeto:", object);
   }
 
-  const handleDeleteClick = (e) => {
+  const handleDeleteClick = async (e) => {
     e.stopPropagation(); // Evita que el evento de clic se propague al contenedor del card
     const confirmDelete = window.confirm(
       `¿Estás seguro de que deseas eliminar el objeto "${object.name}"?`
     );
     if (confirmDelete) {
-      deleteObject(object.type,object.id); // Llama a la función de eliminación para personas
+      await deleteObject(object.type,object.id); // Llama a la función de eliminación para personas
     } else {
       console.log("Eliminación cancelada");
     }

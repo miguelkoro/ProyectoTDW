@@ -227,6 +227,24 @@ export const DataProvider = ({ children }) => {
     checkTokenExpiration(); // Verifica si el token ha expirado
     //!user && console.error("No hay usuario autenticado para crear el objeto."); // Verifica si hay un usuario autenticado
     const result = await dataService.createAPIObject(getPlural(object.type),object, user.token);
+    switch (object.type) {
+      case 'person':
+        await getPersons(); // Actualiza la lista de personas
+        break;
+      case 'entity':
+        await getEntities(); // Actualiza la lista de entidades
+        break;
+      case 'product':
+        await getProducts(); // Actualiza la lista de productos
+        break;
+      case 'association':
+        await getAssociations(); // Actualiza la lista de asociaciones
+        break;
+      default:
+        console.error("Tipo de objeto no válido para eliminar."); // Maneja el error si el tipo no es válido
+        break;
+    }
+    
   }
 
 

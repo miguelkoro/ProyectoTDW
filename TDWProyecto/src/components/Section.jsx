@@ -11,7 +11,7 @@ import loadingGif from '../assets/images/Loading.gif';
 const Section = (props) => {
   const { user } = useAuth(); // Obtén el usuario autenticado del contexto
   const navigate = useNavigate(); // Hook para redirigir
-  const {isLoading} = useContext(DataContext);
+  const {isLoading, entities, persons, products,associations, users} = useContext(DataContext);
 
    const [showNoData, setShowNoData] = useState(false); // Estado para controlar el retraso
 
@@ -35,7 +35,7 @@ const Section = (props) => {
     } else {
       setShowNoData(false); // Reinicia el estado si vuelve a cargarse
     }
-  }, [isLoading]);
+  }, [isLoading, props.objects]); // Observa los cambios en `isLoading` y los objetos relacionados
 
 
   const titleClick = () => {
