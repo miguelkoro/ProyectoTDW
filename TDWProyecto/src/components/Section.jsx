@@ -35,6 +35,7 @@ const Section = (props) => {
     } else {
       setShowNoData(false); // Reinicia el estado si vuelve a cargarse
     }
+
   }, [isLoading, props.objects]); // Observa los cambios en `isLoading` y los objetos relacionados
 
 

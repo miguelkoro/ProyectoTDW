@@ -86,6 +86,7 @@ export const DataProvider = ({ children }) => {
     } catch (error) {
       console.error('Error al cargar personas:', error);
       showMessage('Error al cargar personas', 'error');
+      setIsLoading(false); // Finaliza la carga en caso de error
     } finally {
       setIsLoading(false); // Indica que los datos han terminado de cargarse
     }
@@ -117,6 +118,7 @@ export const DataProvider = ({ children }) => {
     } catch (error) {
       console.error('Error al cargar entidades:', error);
       showMessage('Error al cargar entidades', 'error');
+      setIsLoading(false); // Finaliza la carga en caso de error
     } finally {
       setIsLoading(false); // Indica que los datos han terminado de cargarse
     }
@@ -148,6 +150,7 @@ export const DataProvider = ({ children }) => {
     } catch (error) {
       console.error('Error al cargar asociaciones:', error);
       showMessage('Error al cargar asociaciones', 'error');
+      setIsLoading(false); // Finaliza la carga en caso de error
     } finally {
       setIsLoading(false); // Indica que los datos han terminado de cargarse
     }
@@ -259,25 +262,38 @@ export const DataProvider = ({ children }) => {
 
 
   const deleteObject = async (type, id) => {
-    //!user && console.error("No hay usuario autenticado para eliminar el objeto."); // Verifica si hay un usuario autenticado
-    checkTokenExpiration(); // Verifica si el token ha expirado
-    const result = await dataService.deleteAPIObject(getPlural(type), id, user.token); // Llama al servicio para eliminar
-    switch (type) {
-      case 'person':
-        await getPersons(); // Actualiza la lista de personas
-        break;
-      case 'entity':
-        await getEntities(); // Actualiza la lista de entidades
-        break;
-      case 'product':
-        await getProducts(); // Actualiza la lista de productos
-        break;
-      case 'association':
-        await getAssociations(); // Actualiza la lista de asociaciones
-        break;
-      default:
-        console.error("Tipo de objeto no válido para eliminar."); // Maneja el error si el tipo no es válido
-        break;
+    try{
+      setIsLoading(true); // Indica que los datos están siendo cargados
+      //!user && console.error("No hay usuario autenticado para eliminar el objeto."); // Verifica si hay un usuario autenticado
+      checkTokenExpiration(); // Verifica si el token ha expirado
+      const result = await dataService.deleteAPIObject(getPlural(type), id, user.token); // Llama al servicio para eliminar
+      switch (type) {
+        case 'person':
+          await getPersons(); // Actualiza la lista de personas
+           setPersons((prev) => prev.filter((person) => person.id !== id));
+          break;
+        case 'entity':
+          await getEntities(); // Actualiza la lista de entidades
+           setEntities((prev) => prev.filter((entity) => entity.id !== id));
+          break;
+        case 'product':
+          await getProducts(); // Actualiza la lista de productos
+          setProducts((prev) => prev.filter((product) => product.id !== id));
+          break;
+        case 'association':
+          await getAssociations(); // Actualiza la lista de asociaciones
+           setAssociations((prev) => prev.filter((association) => association.id !== id));
+          break;
+        default:
+          console.error("Tipo de objeto no válido para eliminar."); // Maneja el error si el tipo no es válido
+          break;
+      }
+    }catch (error) {
+      console.error('Error al eliminar el objeto:', error);
+      showMessage('Error al eliminar el objeto', 'error');
+      setIsLoading(false); // Finaliza la carga en caso de error
+    }finally {
+      setIsLoading(false); // Indica que los datos han terminado de cargarse
     }
   }
 
@@ -325,10 +341,18 @@ const getUsers = async (name='', order='', ordering='') => {
 }
 
 const deleteUser = async (id) => {
-  checkTokenExpiration(); // Verifica si el token ha expirado
-  const response = await dataService.deleteAPIUser(id, user.token); // Llama al servicio de autenticación
-  await getUsers(); // Actualiza la lista de usuarios
-  return response; // Devuelve el resultado de la solicitud
+  try {
+    setIsLoading(true); // Indica que los datos están siendo cargados
+    checkTokenExpiration(); // Verifica si el token ha expirado
+    const response = await dataService.deleteAPIUser(id, user.token); // Llama al servicio de autenticación
+    await getUsers(); // Actualiza la lista de usuarios
+    return response; // Devuelve el resultado de la solicitud
+  }catch (error) {
+    console.error('Error al eliminar el usuario:', error);
+    showMessage('Error al eliminar el usuario', 'error');
+  }finally {
+    setIsLoading(false); // Indica que los datos han terminado de cargarse
+  }
 }
 
 
