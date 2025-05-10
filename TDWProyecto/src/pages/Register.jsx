@@ -10,6 +10,10 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [birthDate, setBirthDate] = useState(() => {
+    const today = new Date();
+    return today.toISOString().split('T')[0]; // Formato 'YYYY-MM-DD'
+  });
 
   const [nameChecked, setNameChecked] = useState(false); // Estado para verificar el nombre de usuario
 
@@ -84,7 +88,8 @@ const Register = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if ( !checkEmail() || !checkPasswords()) return; // Verifica los campos antes de enviar el formulario
-    register(userName, email, password); // Llama a la función de registro
+    console.log("Registro de usuario:", userName, email, password, birthDate); // Muestra los datos en la consola
+    register(userName, email, password, birthDate); // Llama a la función de registro
   };
 
   return (
@@ -122,7 +127,14 @@ const Register = () => {
           onChange={(e) => setConfirmPassword(e.target.value)}
           className={passwordError ? 'input-error' : ''}
           onBlur={checkPasswords} // Valida al deseleccionar el campo
-        /><button type="submit">Registrarse</button> </>} 
+        />
+        <input
+          type="date"
+          placeholder="Fecha de Nacimiento"
+          value={birthDate}
+          onChange={(e) => setBirthDate(e.target.value)}
+        />
+        <button type="submit">Registrarse</button> </>} 
       </form>
       <p className="login-redirect">
         ¿Ya tienes cuenta? <Link to="/login">Inicia sesión</Link>

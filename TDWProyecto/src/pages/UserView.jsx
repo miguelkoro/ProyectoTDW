@@ -67,6 +67,10 @@ const UserView = () => {
           <strong>Email:</strong>
           <span>{userObject.email}</span>
         </div>
+        <div className="object-detail-row">
+          <strong>Fecha de nacimiento:</strong>
+          <span>{userObject.birthDate || 'No disponible'}</span> {/* Muestra la fecha o un mensaje si no está disponible */}
+        </div>
         {user?.scope === "writer" && (
           <div className="object-detail-row">
             <strong>Rol:</strong>

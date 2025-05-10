@@ -41,12 +41,13 @@ export const checkAPIUserName = async (name) => {
   return response.ok; // Devuelve el resultado de la solicitud
 }
 
-export const createAPIUser = async (userName, email, password) => {
+export const createAPIUser = async (userName, email, password, birthDate) => {
   try{
     const payload = {
       username: userName,
       email: email,
-      password: password      
+      password: password, 
+      birthDate: birthDate,      
     };
     console.log("createAPIUser", payload); // Verifica el objeto recibido
     const response = await fetch(`${API_URL}${BASE_PATH}users`, {
@@ -67,6 +68,7 @@ export const updateAPIUser = async (userObject, password, role, token) => {
       username: userObject.userName,
       email: userObject.email,
       role: role,
+      birthDate: userObject.birthDate,
       ...(password && { password }), // Solo incluye la contraseña si no está vacía
 
     };

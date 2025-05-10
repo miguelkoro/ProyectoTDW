@@ -121,6 +121,7 @@ export const AuthProvider = ({ children }) => {
       expiresIn:''});
     userObject.setEtag(response.etag); // Guarda el ETag del usuario
     userObject.setEmail(response.data.user.email); // Guarda el correo electrónico del usuario
+    userObject.setBirthDate(response.data.user.birthDate); // Guarda la fecha de nacimiento del usuario
     return userObject; // Devuelve el objeto User 
   }
 
@@ -130,9 +131,9 @@ export const AuthProvider = ({ children }) => {
     return response; // Devuelve el resultado de la solicitud
   }
 
-  const register = async (userName, email, password) => {
+  const register = async (userName, email, password, birthDate) => {
     //console.log("register", userName, email, password); // Muestra el objeto en la consola
-    const response = await authService.createAPIUser(userName, email, password); // Llama al servicio de autenticación
+    const response = await authService.createAPIUser(userName, email, password, birthDate); // Llama al servicio de autenticación
     if (response) {
       alert("Usuario creado correctamente."); // Muestra un mensaje de éxito al usuario
       navigate("/login"); // Redirige al usuario a la página de inicio de sesión

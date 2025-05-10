@@ -28,6 +28,7 @@ const UserEdit = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [scope, setScope] = useState(''); // Rol del usuario (por defecto es READER)
+    const [birthDate, setBirthDate] = useState(''); // Estado para la fecha de nacimiento
 
     useEffect(() => {
       if(!user) return; // Si no hay usuario, no hace nada
@@ -47,6 +48,7 @@ const UserEdit = () => {
         setUsername(fetchedUser.userName || ''); // Establece el nombre de usuario
         setEmail(fetchedUser.email || ''); // Establece el email del usuario
         setScope(fetchedUser.scope || ''); // Establece el rol del usuario
+        setBirthDate(fetchedUser.birthDate || ''); // Establece la fecha de nacimiento del usuario
         //console.log("fetchedUser", fetchedUser); // Muestra el usuario en la consola
       }
     }
@@ -124,6 +126,7 @@ const UserEdit = () => {
     });
     userObj.setEtag(userObject.etag); // Establece el ETag del usuario
     userObj.setEmail(email); // Establece el email del usuario
+    userObj.setBirthDate(birthDate); // Establece la fecha de nacimiento del usuario
     console.log("userObj", userObj); // Muestra el objeto de usuario en la consola
     await updateUser(userObj, password, userObj.scope); // Llama a la función de actualización del usuario
     await fetchUser(userObject.id); // Vuelve a obtener el usuario actualizado
@@ -169,6 +172,16 @@ const UserEdit = () => {
               placeholder="Introduce tu email"
               className={emailError ? 'input-error' : ''}
               onBlur={checkEmail} // Valida al deseleccionar el campo
+            />
+          </div>
+          <div className="object-detail-row">
+            <strong>Fecha de nacimiento:</strong>
+            <input
+              type="date"
+              value={birthDate}
+              onChange={(e) => setBirthDate(e.target.value)} // Actualiza el estado al cambiar
+              placeholder="Introduce tu fecha de nacimiento"
+              className="birthdate-input"
             />
           </div>
           <div className="object-detail-row">

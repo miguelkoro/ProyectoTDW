@@ -7,6 +7,7 @@ export default class User {
     this.expiresIn = expiresIn; // Tiempo de expiración del token
     this.etag = null; // ETag del usuario (opcional)
     this.email= null; // Correo electrónico del usuario (opcional)
+    this.birthDate = null; // Fecha de nacimiento del usuario (opcional)
   }
 
   setEtag(etag) {
@@ -15,5 +16,9 @@ export default class User {
 
   setEmail(email) {
     this.email = email; // Establece el correo electrónico del usuario
+  }
+
+  setBirthDate(birthDate) {
+    this.birthDate = birthDate; // Establece la fecha de nacimiento del usuario
   }
 }
