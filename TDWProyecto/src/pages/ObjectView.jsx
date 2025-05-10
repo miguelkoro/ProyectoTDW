@@ -25,10 +25,14 @@ const ObjectView = (props) => {
   //console.log("Objeto recibido en ObjectView:", type);
   //console.log("getObjectById:", getObject);
 
+
+
   useEffect(() => {
     setIsLoading(true); // Inicia la carga
     async function fetchObject() {
       try {
+        setRelatedPersons([]);
+        setRelatedEntities([]);
         let fetchedObject = null;
         //console.log("fetchObject", type, id); // Verifica el tipo y el id
         // Realiza el fetch según el tipo
@@ -54,7 +58,7 @@ const ObjectView = (props) => {
     }
   
     fetchObject(); // Llama a la función para obtener el objeto
-  }, []);
+  }, [id,type]);
   
   useEffect(() => {
     const fetchRelatedObjects = async () => {

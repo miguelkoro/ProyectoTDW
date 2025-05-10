@@ -2,12 +2,14 @@ import React, { useContext, useState } from 'react';
 import '../styles/RelatedSection.css'; // Archivo CSS para estilos
 import { useAuth } from '../context/AuthContext'; // Importa el contexto de autenticación
 import { useLocation } from 'react-router-dom'; // Importa useLocation para obtener la ubicación actual
+import { useNavigate } from 'react-router-dom'; // Importa useNavigate para redirección
 
 const RowRelated = (props) => {
     //console.log("Objetos relacionados:", objects); // Verifica los objetos relacionados
     const { user } = useAuth(); // Obtén el usuario autenticado del contexto
     const location = useLocation(); // Obtén la ubicación actual
     const isView = location.state?.view || false;
+    const navigate = useNavigate(); // Hook para redirigir
 
     const handleDeleteClick = (e) => {
       e.stopPropagation();
@@ -19,9 +21,16 @@ const RowRelated = (props) => {
       }
     };
 
+    const handleClick = () => {
+      console.log("Objeto clickeado:", props.object); // Verifica el objeto clickeado
+      isView &&
+        navigate(`/view/${props.object.type}/${props.object.id}`, { state: { view: true } }); // Redirige al ObjectView con el objeto como estado
+      //console.log("Datos del objeto:", object);
+    };
+
   return (
     <>          
-            <div key={props.object.id} className="related-row">
+            <div key={props.object.id} className="related-row" onClick={handleClick} style={{ cursor: isView ? 'pointer' : 'default' }}>
                 <div className="related-column-id">{props.object.id}</div>
                 <div className="related-column-name">{props.object.name || 'Sin nombre'}</div>
                 {(user?.scope === "writer" && !isView) && ( // Solo muestra los botones si el usuario ha iniciado sesión
