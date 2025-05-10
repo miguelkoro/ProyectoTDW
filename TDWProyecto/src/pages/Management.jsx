@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext.jsx';
 import { useNavigate } from 'react-router-dom'; // Importa useNavigate para redirección
 import { useContext, useEffect, useState } from 'react';
 import { DataContext } from '../context/DataContext';
+import loadingGif from '../assets/images/Loading.gif';
 
 
 const Management = (props) => {
@@ -16,7 +17,7 @@ const Management = (props) => {
   const [title, setTitle] = useState(''); // Estado para el título
   const [type, setType] = useState(''); // Estado para el tipo
 
-  const { persons, entities, products, associations, users, 
+  const { persons, entities, products, associations, users, isLoading,
     getPersons, getEntities, getProducts, getAssociations, getUsers} = useContext(DataContext); 
 
   // Llama a las funciones de obtención al montar el componente
@@ -86,23 +87,48 @@ const Management = (props) => {
 
 
   return (
-    <div className="section-container-management">
-      <div className="section-header-management">
-        <h1 className="section-title">{title}</h1>
-        {(user?.scope === "writer" && typeFromState!=="users") && ( // Solo muestra el botón si el usuario ha iniciado sesión y es writer //user? se usa para que si es null, lo ponga como undefined en vez de dar error
-          <button className="new-button" onClick={handleNewClick}>
-            Nuevo
-          </button>
+  <div className="section-container-management">
+    <div className="section-header-management">
+      <h1 className="section-title">{title}</h1>
+      {(user?.scope === "writer" && typeFromState !== "users") && (
+        <button className="new-button-management" onClick={handleNewClick}>
+          Nuevo
+        </button>
+      )}
+    </div>
+
+    {isLoading ? (
+      <div className="centered-container">
+        <img
+          src={loadingGif}
+          alt="Cargando..."
+          className="loading-image"
+        />
+      </div>
+    ) : objects.length === 0 ? (
+      <div className="centered-container">
+        <div>
+          <p style={{ color: 'white' }}>No hay datos disponibles.</p>
+          <img
+            src="./assets/images/SinDatos.jpg"
+            style={{ maxWidth: '10rem', borderRadius: '1rem' }}
+            alt="No hay datos disponibles"
+            className="empty-image"
+          />
+        </div>
+      </div>
+    ) : (
+      <div className="card-management-wrapper">
+        {objects.map((object) =>
+          typeFromState !== "users" ? (
+            <Card key={object.id} object={object} />
+          ) : (
+            <CardUser key={object.id} object={object} />
+          )
         )}
       </div>
-      <div className="card-management-wrapper">
-        {objects.map((object) => (
-          typeFromState!== "users" ? <Card key={object.id} object={object} />
-          : <CardUser key={object.id} object={object} /> // Si no hay tipo, muestra el card sin importar el tipo
-        ))}
-        
-      </div>
-    </div>
+    )}
+  </div>
     
   );
 };

@@ -11,12 +11,14 @@ const Home =() =>{
       getPersons, getEntities, getProducts, getAssociations, getUsers} = useContext(DataContext); 
     //Aquí, los datos (persons, entities, products) se obtienen directamente del contexto.
     useEffect(() => {
-      if (!userLogin) return; // Si el usuario está cargando, no hace nada
-      getPersons(); // Llama a la función para obtener personas
-      getEntities(); // Llama a la función para obtener entidades
-      getProducts(); // Llama a la función para obtener productos
-      getAssociations(); // Llama a la función para obtener asociaciones
-      if (user && user?.scope === "writer") getUsers(); // Llama a la función para obtener usuarios
+      if (userLogin){  // Si el usuario está cargando, no hace nada
+        getPersons(); // Llama a la función para obtener personas
+        getEntities(); // Llama a la función para obtener entidades
+        getProducts(); // Llama a la función para obtener productos
+        getAssociations(); // Llama a la función para obtener asociaciones
+        if (user && user?.scope === "writer") getUsers(); // Llama a la función para obtener usuarios
+        console.log("useEffect normal", user); // Muestra el usuario en la consola
+      }
     }, [userLogin]);
 
     return (

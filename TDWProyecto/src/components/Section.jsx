@@ -82,7 +82,7 @@ const Section = (props) => {
             <p style={{ color: 'white' }}>No hay datos disponibles.</p>
             <img
               src="./assets/images/SinDatos.jpg"
-              style={{ maxWidth: '10rem' }}
+              style={{ maxWidth: '10rem', borderRadius: '1rem' }}
               alt="No hay datos disponibles"
               className="empty-image"
             />

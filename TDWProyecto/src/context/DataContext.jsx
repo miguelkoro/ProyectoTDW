@@ -292,40 +292,42 @@ export const DataProvider = ({ children }) => {
  }
 
 const getUsers = async (name='', order='', ordering='') => {
-    checkTokenExpiration(); // Verifica si el token ha expirado
-    setIsLoading(true); // Indica que los datos están siendo cargados
+    try{
+      checkTokenExpiration(); // Verifica si el token ha expirado
+      setIsLoading(true); // Indica que los datos están siendo cargados
+      
+      // Llama al servicio para cargar los productos
+      const response = await dataService.fetchAPIUsers(user.token,name, order, ordering );
+
+      /*if (response.type === 'error') {
+        console.error(`Error al cargar productos: ${response.data}`);
+        showMessage('Error al cargar productos', 'error');
+        setIsLoading(false);
+        return;
+      }  */
+      // Convierte cada producto del JSON en una instancia de Product
+      //console.log("getUsers", response); // Verifica el nuevo producto creado
+      const userCollection = response.users.map((userData) => {
+        const newUser= new User({
+          id: userData.user.id,
+          userName: userData.user.username,
+          scope: userData.user.role,
+          //email: userData.user.email,
+        });
+        newUser.setEmail(userData.user.email); // Guarda el correo electrónico del usuario
+        return newUser; // Devuelve el nuevo objeto User
+      }); 
+      console.log("userCollection", userCollection); // Verifica el nuevo producto creado
+
+      setUsers(userCollection); // Guarda los productos en el estado
     
-    // Llama al servicio para cargar los productos
-    const response = await dataService.fetchAPIUsers(user.token,name, order, ordering );
-
-    /*if (response.type === 'error') {
-      console.error(`Error al cargar productos: ${response.data}`);
-      showMessage('Error al cargar productos', 'error');
-      setIsLoading(false);
-      return;
-    }  */
-    // Convierte cada producto del JSON en una instancia de Product
-    //console.log("getUsers", response); // Verifica el nuevo producto creado
-    const userCollection = response.users.map((userData) => {
-      const newUser= new User({
-        id: userData.user.id,
-        userName: userData.user.username,
-        scope: userData.user.role,
-        //email: userData.user.email,
-      });
-      newUser.setEmail(userData.user.email); // Guarda el correo electrónico del usuario
-      return newUser; // Devuelve el nuevo objeto User
-    }); 
-    console.log("userCollection", userCollection); // Verifica el nuevo producto creado
-
-    setUsers(userCollection); // Guarda los productos en el estado
     //showMessage('Productos cargados correctamente', 'success');
-    /*} catch (error) {
+    } catch (error) {
       console.error('Error al cargar productos:', error);
       showMessage('Error al cargar productos', 'error');
     } finally {
       setIsLoading(false); // Indica que los datos han terminado de cargarse
-    }*/
+    }
 }
 
 const deleteUser = async (id) => {

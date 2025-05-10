@@ -22,7 +22,7 @@ import Management from './pages/Management.jsx';
 
 function App() {  
   const {getPersons, getEntities, getProducts, getAssociations, getUsers} = useContext(DataContext); 
-  const {user, getLocalUser} = useAuth(); // Obtiene el usuario autenticado del contexto
+  const {user, getLocalUser, userLogin} = useAuth(); // Obtiene el usuario autenticado del contexto
       //Aquí, los datos (persons, entities, products) se obtienen directamente del contexto.
       useEffect(() => {
         getLocalUser(); // Llama a la función para obtener el usuario local
@@ -32,17 +32,16 @@ function App() {
         getAssociations(); // Llama a la función para obtener asociaciones
         //console.log("user", user); // Muestra el usuario en la consola
         //user && getUsers(); // Llama a la función para obtener usuarios
-        
         //checkTokenExpiration(); // Llama a la función para verificar la expiración del token
-        console.log("useEffect normal", user); // Muestra el usuario en la consola
+        //console.log("useEffect normal", user); // Muestra el usuario en la consola
       }, []);
 
       useEffect(() => {
-        if (user && user?.scope === "writer") {
+        if (user?.scope === "writer" && !userLogin) {
           //console.log("user", user); // Muestra el usuario en la consola
           getUsers(); // Llama a la función para obtener usuarios          
         }
-      },[user]); // Se ejecuta cada vez que el usuario cambia
+      },[user]); // Se ejecuta cada vez que el usuario cambia*/
 
   return (
     <>

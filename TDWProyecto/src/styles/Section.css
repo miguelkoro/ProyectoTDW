@@ -25,10 +25,11 @@
 
 .section-header-management {
     display: flex; /* Usa Flexbox */
-    justify-content: space-between; /* Coloca el título a la izquierda y el botón a la derecha */
+    /*justify-content: space-between; /* Coloca el título a la izquierda y el botón a la derecha */
     align-items: center; /* Alinea verticalmente el título y el botón */
-    width: 100%; /* Asegura que ocupe todo el ancho del contenedor */
+    min-width: 100%; /* Asegura que ocupe todo el ancho del contenedor */
     margin-bottom: 20px; /* Espaciado inferior */
+    
 }
 
 
@@ -50,6 +51,7 @@
     grid-template-columns: repeat(5, 1fr);
     gap: 20px; /* Espacio entre las tarjetas */
     max-width: 100%; /* Asegura que el contenedor ocupe todo el ancho disponible */
+    min-width: 80%;
     max-height: calc(5 * 150rem); /* Altura máxima para 5 filas (ajusta 15rem según la altura de tus tarjetas) */
     overflow-y: auto; /* Habilita el scroll vertical si hay más de 5 filas */
     margin: 0 auto; /* Centra el contenedor horizontalmente */
@@ -70,6 +72,7 @@
     padding: 10px 0; /* Espaciado superior e inferior */
     text-align: center; /* Centra el texto */
     width: 100%; /* Asegura que el título ocupe todo el ancho del contenedor */
+    min-width: 80%;
     cursor: pointer; /* Cambia el cursor a una mano para indicar que es clickeable */
     transition: transform 0.2s ease-in-out; /* Suaviza la transición */
 }
@@ -99,6 +102,22 @@
     /*padding-left: 3rem;;*/
 }
 
+.new-button-management {
+    background-color: #4caf50; /* Color verde */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0.8rem 2rem;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    transform: translateX(-50%, -50%); 
+    /*padding-left: 3rem;;*/
+}
+.new-button-management:hover {
+    background-color: #2d6e30; /* Color verde más oscuro al pasar el cursor */
+}
+
 .new-button:hover {
     background-color: #2d6e30; /* Color verde más oscuro al pasar el cursor */
 }
@@ -107,5 +126,18 @@
     justify-content: space-between; /* Coloca el título a la izquierda y el botón a la derecha */
     align-items: center; /* Alinea verticalmente el título y el botón */
     /*margin-bottom: 20px; /* Espaciado inferior para separar del contenido */
+    min-width: 80%;
 }
 
+.centered-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center; /* Centra el texto dentro del contenedor */
+ 
+}
+
+.centered-container img {
+  max-width: 10rem;
+  border-radius: 1rem; /* Bordes redondeados */
+}
