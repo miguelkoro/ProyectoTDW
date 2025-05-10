@@ -18,9 +18,9 @@ const Login = () => { // Recibe la función como prop
       }
     }, [user, navigate]); // Se ejecuta cuando cambia el estado de user o navigate
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
       e.preventDefault();
-      login(userName, password); // Llama a la función de inicio de sesión
+      await login(userName, password); // Llama a la función de inicio de sesión
     };
     return (
         <div className="login-container">

@@ -19,7 +19,7 @@ export const DataProvider = ({ children }) => {
 
   const [isLoading, setIsLoading] = useState(true);
 
-  const {user, checkTokenExpiration} = useAuth(); // Obtiene el usuario autenticado del contexto
+  const {user, checkTokenExpiration, userLoading} = useAuth(); // Obtiene el usuario autenticado del contexto
 
 
   const [message, setMessage] = useState(null);
@@ -32,6 +32,14 @@ export const DataProvider = ({ children }) => {
       setMessage(null);
     }, 2000);
   };
+
+  const afertUserLogin = async () => {
+    await getAssociations(); // Llama a la función para obtener asociaciones
+    await getProducts(); // Llama a la función para obtener productos
+    await getPersons(); // Llama a la función para obtener personas
+    await getEntities(); // Llama a la función para obtener entidades
+    if(user?.scope==="writer") await getUsers(); // Llama a la función para obtener usuarios
+  }
 
 
 
@@ -67,26 +75,20 @@ export const DataProvider = ({ children }) => {
       // Llama al servicio para cargar los productos
       const response = await dataService.fetchAPIObjects('persons', name, order, ordering);
   
-      if (response.type === 'error') {
-        console.error(`Error al cargar personas: ${response.data}`);
-        showMessage('Error al cargar personas', 'error');
-        setIsLoading(false);
-        return;
-      }  
+
       // Convierte cada producto del JSON en una instancia de Product
       const personCollection = response.data.persons.map((personData) => {
         const person = new Persona(personData.person); // Crea una instancia de Product
         person.setType('person'); // Configura el tipo como 'product'
         //console.log('Producto cargado:', productData); // Verifica el producto cargado
         return person;
-      });
-  
+      });  
       setPersons(personCollection); // Guarda los productos en el estado
       //showMessage('Productos cargados correctamente', 'success');
     } catch (error) {
       console.error('Error al cargar personas:', error);
       showMessage('Error al cargar personas', 'error');
-      setIsLoading(false); // Finaliza la carga en caso de error
+      //setIsLoading(false); // Finaliza la carga en caso de error
     } finally {
       setIsLoading(false); // Indica que los datos han terminado de cargarse
     }
@@ -97,13 +99,6 @@ export const DataProvider = ({ children }) => {
   
       // Llama al servicio para cargar los productos
       const response = await dataService.fetchAPIObjects('entities', name, order, ordering);
-  
-      if (response.type === 'error') {
-        console.error(`Error al cargar entidades: ${response.data}`);
-        showMessage('Error al cargar entidades', 'error');
-        setIsLoading(false);
-        return;
-      }  
       // Convierte cada producto del JSON en una instancia de Product
       const entityCollection = response.data.entities.map((entityData) => {
         const entity = new Entidad(entityData.entity); // Crea una instancia de Product
@@ -118,7 +113,7 @@ export const DataProvider = ({ children }) => {
     } catch (error) {
       console.error('Error al cargar entidades:', error);
       showMessage('Error al cargar entidades', 'error');
-      setIsLoading(false); // Finaliza la carga en caso de error
+      //setIsLoading(false); // Finaliza la carga en caso de error
     } finally {
       setIsLoading(false); // Indica que los datos han terminado de cargarse
     }
@@ -129,13 +124,6 @@ export const DataProvider = ({ children }) => {
   
       // Llama al servicio para cargar los productos
       const response = await dataService.fetchAPIObjects('associations', name, order, ordering);
-  
-      if (response.type === 'error') {
-        console.error(`Error al cargar asociaciones: ${response.data}`);
-        showMessage('Error al cargar asociaciones', 'error');
-        setIsLoading(false);
-        return;
-      }  
       // Convierte cada producto del JSON en una instancia de Product
       const associationCollection = response.data.associations.map((associationData) => {
         const association = new Asociacion(associationData.association); // Crea una instancia de Product
@@ -150,7 +138,7 @@ export const DataProvider = ({ children }) => {
     } catch (error) {
       console.error('Error al cargar asociaciones:', error);
       showMessage('Error al cargar asociaciones', 'error');
-      setIsLoading(false); // Finaliza la carga en caso de error
+      //setIsLoading(false); // Finaliza la carga en caso de error
     } finally {
       setIsLoading(false); // Indica que los datos han terminado de cargarse
     }

@@ -17,6 +17,7 @@ function decodeJwt(token) {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
+  const [userLogin, setUserLogin] = useState(false); // Estado de carga (opcional)
 
   // Cargar usuario desde localStorage al iniciar
   // Cargar usuario desde localStorage al iniciar
@@ -29,16 +30,25 @@ export const AuthProvider = ({ children }) => {
   }, []);*/
 
   const getLocalUser = () => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser)); // Carga el usuario desde localStorage
-      checkTokenExpiration(); // Verifica si el token ha expirado
+    try {
+      //setUserLoading(true); // Inicia la carga
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        setUser(JSON.parse(storedUser)); // Carga el usuario desde localStorage
+        checkTokenExpiration(); // Verifica si el token ha expirado
+      }
+    } catch (error) {
+      console.error("Error al cargar el usuario desde localStorage:", error); // Maneja el error
+    }finally {
+      //setUserLoading(false); // Finaliza la carga
     }
   }
  
   // Función para iniciar sesión
   const login = async (userName, password) => {
     try {
+      //setUserLogin(true); // Inicia la carga
+      // Verifica si el nombre de usuario y la contraseña son válidos
        // Llama al servicio de autenticación
       const data = await authService.login(userName, password);
       // Verifica si la respuesta contiene el token
@@ -68,6 +78,8 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error("Error al iniciar sesión:", error.message);
       alert("Usuario o contraseña incorrectos."); // Muestra un mensaje de error al usuario
+    }finally {  
+      setUserLogin(true); // Finaliza la carga
     }
   };
 
@@ -88,6 +100,7 @@ export const AuthProvider = ({ children }) => {
   // Función para cerrar sesión
   const logout = () => {
     setUser(null);
+    setUserLogin(false); // Finaliza la carga
     localStorage.removeItem("user");
     navigate("/login"); // Redirigir al usuario a la pantalla de login
   };
@@ -134,7 +147,7 @@ export const AuthProvider = ({ children }) => {
   return (
     <AuthContext.Provider value={{ user, login, logout, getLocalUser,
                 checkTokenExpiration, checkUserName, 
-                getUserById, updateUser, register, }}>
+                getUserById, updateUser, register, userLogin}}>
       {children}
     </AuthContext.Provider>
   );

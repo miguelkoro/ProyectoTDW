@@ -13,6 +13,8 @@ const Management = (props) => {
   const navigate = useNavigate(); // Hook para redirigir
   const typeFromState =  location.state?.type || location.pathname.split('/')[2];
   const [objects, setObjects] = useState([]); 
+  const [title, setTitle] = useState(''); // Estado para el título
+  const [type, setType] = useState(''); // Estado para el tipo
 
   const { persons, entities, products, associations, users, 
     getPersons, getEntities, getProducts, getAssociations, getUsers} = useContext(DataContext); 
@@ -46,18 +48,28 @@ const Management = (props) => {
     switch (typeFromState) {
       case 'persons':
         setObjects(persons || []); // Actualiza el estado con las personas
+        setTitle('🪠 PERSONAS'); // Establece el título para personas
+        setType('person'); // Establece el tipo para personas
         break;
       case 'entities':
         setObjects(entities || []); // Actualiza el estado con las entidades
+        setTitle('🧸 ENTIDADES'); // Establece el título para entidades
+        setType('entity'); // Establece el tipo para entidades
         break;
       case 'products':
         setObjects(products || []); // Actualiza el estado con los productos
+        setTitle('💡 PRODUCTOS'); // Establece el título para productos
+        setType('product'); // Establece el tipo para productos
         break;
       case 'associations':
         setObjects(associations || []); // Actualiza el estado con las asociaciones
+        setTitle('🔥 ASOCIACIONES'); // Establece el título para asociaciones
+        setType('association'); // Establece el tipo para asociaciones
         break;
       case 'users':
         setObjects(users || []); // Actualiza el estado con los usuarios
+        setTitle('👥 USUARIOS'); // Establece el título para usuarios
+        setType('user'); // Establece el tipo para usuarios
         break;
       default:
         setObjects([]); // Si no hay tipo válido, establece un array vacío
@@ -67,14 +79,16 @@ const Management = (props) => {
 
   const handleNewClick = () => {
     // Aquí puedes implementar la lógica para crear un nuevo objeto
-    navigate(`/new/${typeFromState}`, {state:{new:true}}); // Redirige a la página de creación de nuevo objeto
+    navigate(`/new/${type}`, {state:{new:true}}); // Redirige a la página de creación de nuevo objeto
     //console.log("Crear nuevo objeto:", title);
   }
+
+
 
   return (
     <div className="section-container-management">
       <div className="section-header-management">
-        <h1 className="section-title">{typeFromState}</h1>
+        <h1 className="section-title">{title}</h1>
         {(user?.scope === "writer" && typeFromState!=="users") && ( // Solo muestra el botón si el usuario ha iniciado sesión y es writer //user? se usa para que si es null, lo ponga como undefined en vez de dar error
           <button className="new-button" onClick={handleNewClick}>
             Nuevo

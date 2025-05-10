@@ -34,12 +34,13 @@ function App() {
         //user && getUsers(); // Llama a la función para obtener usuarios
         
         //checkTokenExpiration(); // Llama a la función para verificar la expiración del token
+        console.log("useEffect normal", user); // Muestra el usuario en la consola
       }, []);
 
       useEffect(() => {
         if (user && user?.scope === "writer") {
           //console.log("user", user); // Muestra el usuario en la consola
-          getUsers(); // Llama a la función para obtener usuarios
+          getUsers(); // Llama a la función para obtener usuarios          
         }
       },[user]); // Se ejecuta cada vez que el usuario cambia
 
