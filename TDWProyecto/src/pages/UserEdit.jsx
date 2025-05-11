@@ -137,7 +137,7 @@ const UserEdit = () => {
   };
 
   return (
-    <div className="myaccount-panel">
+    <div className="object-panel">
         <div className="object-header">
         <h1 className="object-title"></h1>
         <span className="object-id">ID:{userObject.id}</span>

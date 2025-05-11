@@ -193,7 +193,7 @@ const ObjectEdit = () => {
   };
 
   return (
-    <div className="object-view-panel">
+    <div className="object-panel">
       {/* Fila principal: Título centrado y ID a la derecha */}
       <div className="object-header">
         <h1 className="object-title">{isNew ? `${newTitle()}` : `Editar ${type || 'Objeto:'}: ${object?.name}`}</h1>

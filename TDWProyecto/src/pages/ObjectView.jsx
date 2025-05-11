@@ -102,7 +102,7 @@ const ObjectView = (props) => {
  
   return (
     <>
-    <div className="object-view-panel">
+    <div className="object-panel">
     {/* Fila principal: Título centrado y ID a la derecha */}
     <div className="object-header">
       <h1 className="object-title">{object.name}</h1>

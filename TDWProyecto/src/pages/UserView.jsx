@@ -47,7 +47,7 @@ const UserView = () => {
 
 
   return (
-    <div className="object-view-panel">
+    <div className="object-panel" >
     {/* Fila principal: Título centrado y ID a la derecha */}
     <div className="object-header">
       <h1 className="object-title">{userObject.userName}</h1>
