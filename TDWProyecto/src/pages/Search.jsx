@@ -71,44 +71,70 @@ const Search = (props) => {
       <h1 className="section-title-management">🔍 Busqueda</h1>     
     </div>
     <div className="search-panel">
-       {/* Columna izquierda: Input y botón */}
-      <div className="search-column-left">
-        <input
-          type="text"
-          placeholder="Buscar nombre"
-          className="search-input"
-        />
-        <button className="search-button">
-          <svg
-            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20px" height="20px" >
-            <path d="M10 2a8 8 0 105.293 14.293l5.707 5.707 1.414-1.414-5.707-5.707A8 8 0 0010 2zm0 2a6 6 0 110 12 6 6 0 010-12z" />
-          </svg>
-        </button>
-      </div>
+      {/* Primera fila */}
+      <div className="search-row">
+        <div className="search-column-left">
+          <input
+            type="text"
+            placeholder="Buscar nombre"
+            className="search-input"
+          />
+          <button className="search-button-filter">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF"><path d="M440-160q-17 0-28.5-11.5T400-200v-240L163.33-742q-14.33-18-4.16-38 10.16-20 32.83-20h576q22.67 0 32.83 20 10.17 20-4.16 38L560-440v240q0 17-11.5 28.5T520-160h-80Zm40-286.67 226-286.66H254l226 286.66Zm0 0Z"/></svg> Filtrar
+          </button>
+          <button className="search-button-clean">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF"><path d="M426.67-520h106.66v-280q0-22.33-15.33-37.83t-38-15.5q-22.67 0-38 15.33-15.33 15.33-15.33 38v280Zm-240 173.33h586.66v-106.66H186.67v106.66Zm-62 240h122v-86.66q0-14.17 9.61-23.75 9.62-9.59 23.84-9.59 14.21 0 23.71 9.59 9.5 9.58 9.5 23.75v86.66h133.34v-86.66q0-14.17 9.61-23.75 9.62-9.59 23.84-9.59 14.21 0 23.71 9.59 9.5 9.58 9.5 23.75v86.66h133.34v-86.66q0-14.17 9.61-23.75 9.62-9.59 23.84-9.59 14.21 0 23.71 9.59 9.5 9.58 9.5 23.75v86.66h122l-46.66-186.66H171.33l-46.66 186.66ZM818-40H142q-39 0-63-31t-14-69l55-220v-80q0-33 23.5-56.5T200-520h160v-280q0-50 35-85t85-35q50 0 85 35t35 85v280h160q33 0 56.5 23.5T840-440v80l55 220q11 38-13.17 69Q857.67-40 818-40Zm-44.67-413.33H186.67h586.66Zm-240-66.67H426.67h106.66Z"/></svg> Limpiar
+          </button>
+        </div>
 
-      {/* Columna derecha: Checkboxes */}
-      <div className="search-column-right">
-        <span className="search-type-label">Tipos:</span>
-        <div className="checkbox-container">
-          <label>
-            <input type="checkbox" value="person" onChange={handleTypeChange}/>
-            Personas
-          </label>
-          <label>
-            <input type="checkbox" value="entity" onChange={handleTypeChange}/>
-            Entidades
-          </label>
-          <label>
-            <input type="checkbox" value="product" onChange={handleTypeChange}/>
-            Productos
-          </label>
-          <label>
-            <input type="checkbox" value="association" onChange={handleTypeChange}/>
-            Asociaciones
-          </label>
+        <div className="search-column-right">
+          <span className="search-type-label">Tipos:</span>
+          <div className="checkbox-container">
+            <label>
+              <input type="checkbox" value="person" onChange={handleTypeChange} />
+              Personas
+            </label>
+            <label>
+              <input type="checkbox" value="entity" onChange={handleTypeChange} />
+              Entidades
+            </label>
+            <label>
+              <input type="checkbox" value="product" onChange={handleTypeChange} />
+              Productos
+            </label>
+            <label>
+              <input type="checkbox" value="association" onChange={handleTypeChange} />
+              Asociaciones
+            </label>
+          </div>
         </div>
       </div>
 
+      {/* Segunda fila (puedes añadir más contenido aquí) */}
+      <div className="search-row">
+          {/* Primera columna */}
+        <div className="search-column-left">
+          <label htmlFor="start-date">Desde</label>
+          <input type="date" id="start-date" className="date-input" />
+          <label htmlFor="end-date">Hasta</label>
+          <input type="date" id="end-date" className="date-input" />
+        </div>
+
+        {/* Segunda columna */}
+        <div className="search-column-right">
+          <label className="search-type-label">Ordenar:</label>
+          <div className="checkbox-container">
+            <label>
+              <input type="radio" name='sort' value="id" />
+              ID
+            </label>
+            <label>
+              <input type="radio" name='sort' value="name" />
+              Nombre
+            </label>
+          </div>
+        </div>
+      </div>
     </div>
     <div className="card-management-wrapper">
       {objects.map((object) =>          

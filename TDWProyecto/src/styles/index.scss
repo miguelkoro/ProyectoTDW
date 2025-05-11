@@ -386,27 +386,6 @@ input {
   text-overflow: ellipsis; /* Agrega "..." si el texto es demasiado largo */
   white-space: nowrap; /* Asegura que el texto esté en una sola línea */
 }
-/** MENSAJE ERRORES */
-.message-container {
-  position: fixed;
-  top: 70px; /* Ajusta según la altura del navbar */
-  right: 20px;
-  background-color: #f8d7da; /* Color de fondo para errores */
-  color: #721c24; /* Color del texto para errores */
-  padding: 10px 20px;
-  border-radius: 5px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-  animation: fadeOut 3s forwards; /* Animación para desaparecer */
-}
-.message-container.success {
-  background-color: #d4edda; /* Color de fondo para éxito */
-  color: #155724; /* Color del texto para éxito */
-}
-@keyframes fadeOut {
-  0% {opacity: 1;}
-  100% { opacity: 0; transform: translateY(-10px); }
-}
 /* Contenedor del menú desplegable */
 .dropdown {
   position: relative;
@@ -666,24 +645,28 @@ input {
 .search-panel {
   display: flex;
   padding: 1rem;
+  background-color: rgba(255, 255, 255, 0.185); /* Fondo blanco translúcido */
+  border-radius: 0.4rem; /* Bordes redondeados */
+  flex-direction: column;
 }
 .search-column-left {
   display: flex;
   padding-left: 3rem;
   gap: 0.5rem; /* Espaciado entre el input y el botón */
-  flex: 1; /* Ocupa el espacio disponible */
+  flex: 1.6; /* Ocupa el espacio disponible */
+  align-items: center;
 }
 .search-input {
   border: 0.1rem solid #cccccc77;
   font-size: 1.2rem;
   background-color: rgba(136, 128, 255, 0.11);    
-  max-width: 18rem;
+  max-width: 16rem;
 }
 .search-column-right {
   align-items: left;
   display: flex;
   flex: 2;/**/
-  gap: 1rem; /* Espaciado entre el label y los checkboxes */
+  gap: 0.5rem; /* Espaciado entre el label y los checkboxes */
   align-items: center;
 }
 .checkbox-container {
@@ -698,15 +681,42 @@ input {
   align-items: center; /* Centra el checkbox y el texto verticalmente */
   font-size: 1.1rem;
   cursor: pointer;
-  padding-left: 1.7rem;
+  padding-left: 1.1rem;
 }
 .checkbox-container input {
   margin-right: 0.6rem; /* Espaciado entre el checkbox y el texto */  
 }
-.search-panel{
-  background-color: rgba(255, 255, 255, 0.185); /* Fondo blanco translúcido */
-  border-radius: 0.4rem; /* Bordes redondeados */
-  box-shadow: $common-box-shadow; /* Sombra para darle profundidad */
+.search-row {
+  display: flex; /* Activa Flexbox */
+  padding-bottom: 1rem;
+}
+.date-input {
+  max-width: 10rem; /* Limita el ancho de los inputs de fecha */
+  border: 0.1rem solid #cccccc77;  
+  background-color: rgba(255, 255, 255, 0.432);    
+}
+
+
+/** MENSAJE ERRORES */
+.message-container {
+  position: fixed;
+  top: 70px; /* Ajusta según la altura del navbar */
+  right: 20px;
+  background-color: #f8d7da; /* Color de fondo para errores */
+  color: #721c24; /* Color del texto para errores */
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  animation: fadeOut 3s forwards; /* Animación para desaparecer */
+}
+.message-container.success {
+  background-color: #d4edda; /* Color de fondo para éxito */
+  color: #155724; /* Color del texto para éxito */
+}
+@keyframes fadeOut {
+  0% {opacity: 1;}
+  100% { opacity: 0; transform: translateY(-10px); }
 }
 
 /** ELIMINAR */
