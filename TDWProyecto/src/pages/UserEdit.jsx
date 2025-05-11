@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, use } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
-import '../styles/index.css'; // Reutilizamos los estilos de ObjectView
+import '../styles/index.scss'; // Reutilizamos los estilos de ObjectView
 import { DataContext } from '../context/DataContext'; // Contexto para guardar datos
 import { useAuth } from '../context/AuthContext';
 import User from '../models/User';

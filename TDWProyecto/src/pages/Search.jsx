@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'; // Importa useNavigate para redi
 import { useContext, useEffect, useState } from 'react';
 import { DataContext } from '../context/DataContext';
 import loadingGif from '../assets/images/Loading.gif';
-import '../styles/index.css';
+import '../styles/index.scss';
 
 
 const Search = (props) => {

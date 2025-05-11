@@ -2,7 +2,7 @@ import { useAuth } from "../context/AuthContext";
 import { DataContext } from '../context/DataContext';
 import { Link } from "react-router-dom";
 import React, {useContext, useState} from 'react';
-import "../styles/index.css";
+import "../styles/index.scss";
 import { useNavigate } from 'react-router-dom'; // Importa useNavigate para redirección
 
 const NavBar = () => {

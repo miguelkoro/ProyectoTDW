@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/index.css'; // Archivo CSS para estilos
+import '../styles/index.scss'; // Archivo CSS para estilos
 import Card from './Card.jsx'; // Importa el componente de sección pequeña
 import CardUser from './CardUser.jsx'; // Importa el componente de sección pequeña
 import { useAuth } from '../context/AuthContext';

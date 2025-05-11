@@ -1,6 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
+$common-box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, 0.041);
+
 body {
   margin: 0;
   padding-top: 5rem;
@@ -448,110 +450,183 @@ input {
   width: 2.5rem; /* Tamaño inicial del ícono */
   transition: transform 0.5s ease; /* Transición suave */
   cursor: pointer; /* Cambia el puntero a clicable */
+}  
+/* Efecto al pasar el ratón */
+.dropdown.active .config {
+  transform: rotate(360deg); /* Gira el ícono */
 }
-  
-  /* Efecto al pasar el ratón */
-  .dropdown.active .config {
-    /*width: 2.7rem; /* Aumenta el tamaño del ícono */
-    transform: rotate(360deg); /* Gira el ícono */
-  }
-
-  /* Estilo para el buscador */
+/* Estilo para el buscador */
 .navbar-search {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    width: 20%;
-  }
-  
-  .search-input {
-    /*padding: 8px;*/
-    border: 1px solid #cccccc77;
-    border-radius: 4px;
-    font-size: 1.2rem;
-    width: 70%;
-    background-color: rgba(136, 128, 255, 0.11);
-    color: #ffffff;
-    padding: 6px 8px; /* Reduce el padding para ajustar el contenido */
-  }
-  /* Cambiar el color del placeholder */
-.search-input::placeholder {
-    color: rgba(255, 255, 255, 0.63); /* Cambia el color del texto del placeholder */
-    font-style: italic; /* Opcional: estilo en cursiva */
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 20%;
+}  
+.search-input {
+  width: 70%;
 }
-  
-  .search-button {
-    background-color: #3171c5;
-    border: none;
-    color: white;
-    /*padding: 8px 12px;*/
-    border-radius: 50%;
-    cursor: pointer;
-    padding: 4px 8px; /* Reduce el padding para ajustar el contenido */
-    
-  }
-  
-  .search-button:hover {
-    background-color: #0c4ea5;
-    transform: scale(1.1); /* Aumenta ligeramente el tamaño al pasar el ratón */
-  }
-  
+/* Cambiar el color del placeholder */
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.63); /* Cambia el color del texto del placeholder */
+  font-style: italic; /* Opcional: estilo en cursiva */
+}  
+.search-button {
+  border-radius: 50%;
+}  
+.search-button:hover {
+  transform: scale(1.1); /* Aumenta ligeramente el tamaño al pasar el ratón */
+}  
 /* Estilo para el menú de gestión */
 .navbar-manage {
-    position: relative;
-    cursor: pointer;
-    width: 20%;
-    text-align: center;
-    max-width: 300px; /* Ancho máximo para evitar que se expanda demasiado */
-    
-  }
+  position: relative;
+  cursor: pointer;
+  width: 20%;
+  text-align: center;
+  max-width: 18rem; /* Ancho máximo para evitar que se expanda demasiado */    
+}
 .navbar-manage:hover {
-    transform: scale(1.05); /* Aumenta ligeramente el tamaño al pasar el ratón */
-    background-color: rgba(56, 58, 77, 0.404);
-  }
-  
-  .manage-title {
-    font-size: 1rem;
-    color: white;
-    font-family: "Rubik", sans-serif;
-    font-size: 1.8rem; /* Tamaño de la fuente */
-    background-color: rgba(46, 46, 46, 0.068);
-  }
-
- 
-  
-  .dropdown-menu-manage {
-    position: absolute;
-    top: 100%; /* Aparece justo debajo del contenedor */
-    left: 0; /* Alineado con el contenedor */
-    width: 100%; /* Ocupa el mismo ancho que el contenedor */
-    background-color: rgba(40, 44, 52, 0.966); /* Color semitransparente */
-    border: 1px solid #0706065e; /* Borde similar al de configuración */
-    border-radius: 4px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para destacar */
-    z-index: 1000; /* Asegura que esté por encima de otros elementos */
-    padding: 8px 0; /* Espaciado interno */
-    color: white;
-  }
-  
-  .dropdown-item-manage {
-    display: block;
-  padding: 8px 16px;
+  transform: scale(1.1); /* Aumenta ligeramente el tamaño al pasar el ratón */  
+}  
+.manage-title {
+  font-size: 1.8rem; /* Tamaño de la fuente */
+}  
+.dropdown-menu-manage {
+  position: absolute;
+  background-color: rgba(40, 44, 52, 0.8); /* Color semitransparente */
+  border: 0.1rem solid #00000044;
+  border-radius: 0.5rem; 
+  width: 100%; /* Ocupa el mismo ancho que el contenedor */
+  box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, 0.041);
+  z-index: 1000; /* Asegura que esté por encima de otros elementos */
+}  
+.dropdown-item-manage {
+  display: block;
   text-decoration: none;
   cursor: pointer;
   color: white;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra para destacar */
   box-sizing: border-box; /* Asegura que el padding no desborde */
-  font-size: 1.3rem; /* Tamaño de la fuente */
-  }
-  
-  .dropdown-item-manage:hover {
-    background-color: #05001a75; /* Fondo al pasar el ratón */
-    font-size: 1.2rem; /* Aumenta ligeramente el tamaño */
+  font-size: 1.2rem; /* Tamaño de la fuente */
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.8rem;
+  box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, 0.041);
+}  
+.dropdown-item-manage:hover {
+  background-color: #003ec575; /* Fondo al pasar el ratón */
+  font-size: 1.4rem; /* Aumenta ligeramente el tamaño */
+  transition: transform 0.3s ease; /* Transición suave */
+}
+.vertical-divider {
+  width: 0.1rem;
+  height: 60%; /* 60% del alto del navbar */
+  background-color: #BFA181;
+}
+
+/** CARD */
+.card {
+    border: 1px solid #bbbbbba2;
+    border-radius: 8px;
+    box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, 0.041);
+    position: relative;
+    background-color: rgba(255, 255, 255, 0.12); /* Color de fondo claro */
+    color: #fff;
+    margin: 10px;
+    text-align: center;
+    max-width: 14rem;
+    width: 100%;
+    height: auto;
+
+    align-items: center;
+    backdrop-filter: blur(10px); /* Desenfoque de fondo */
+
+    word-wrap: break-word; /* Ajusta el texto que excede el ancho */
+    overflow-wrap: break-word; /* Ajusta el texto que excede el ancho */
+    white-space: normal; /* Permite que el texto se divida en varias líneas */
+
+    display: flex;
+    flex-direction: column; /* Asegura que el contenido esté en columna */
+    justify-content: flex-start; /* Alinea el contenido al inicio */
+    flex: 0 0 auto; /* Asegura que las Cards no se reduzcan ni se expandan automáticamente */
+    cursor: pointer /* Cambia el cursor al pasar sobre la barra */
+}
+
+.card-type {
+  position: absolute;
+  pointer-events: none; /* Evita que el mouse interactúe con este elemento */
+  top: 0;
+  left: 0;
+  width: 100%;
+  /*margin-bottom: 5rem;*/
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: white;
+  padding: 0.4rem 0;
+  z-index: 1;
+  border-radius: 8px 8px 0 0; /* Bordes redondeados en la parte superior */
+}
+
+.card .card-image{
+    max-width: 50%;
+    height: auto;
+    /*margin-bottom: 10px;*/
+    padding: 10px;
+    border-radius: 15px;
+}
+
+.card .card-title {
+    font-family: Montserrat, sans-serif;
+    font-size: clamp(0.8rem, 2.5vw, 1rem); /* Tamaño dinámico de la fuente */
+    color: white;
+    margin: 0;
+    padding: 10px 0; /* Espaciado superior e inferior */
+
+    margin-top: auto;
+}
+
+.card .card-username {
+    font-family: Montserrat, sans-serif;
+    font-size: clamp(0.8rem, 2.5vw, 1rem); /* Tamaño dinámico de la fuente */
+    color: white;
+    margin: 0;
+    padding: 1.5rem ; /* Espaciado superior e inferior */
+
+    margin-top: auto;
+}
+
+.card .card-email {
+    font-family: Montserrat, sans-serif;
+    font-size: clamp(0.5rem, 2vw, 0.8rem); /* Tamaño dinámico de la fuente */
+    color: white;
+    margin: 0;
+    padding: 1rem ; /* Espaciado superior e inferior */
+    /*display: block;*/
+    /*height: auto;*/
+    /*min-height: 5rem;;
+    /*margin-top: auto; */
+}
+
+.card .card-description {
+    font-family: Montserrat, sans-serif;
+    font-size: clamp(0.5rem, 2vw, 0.8rem); /* Tamaño dinámico de la fuente */
+    color: #c0c0c0;
+    margin: 0;
+    padding: 10px 0; /* Espaciado superior e inferior */
+}
+
+.card:hover{
+    transform: scale(1.05); /* Aumenta el tamaño al pasar el ratón */
     transition: transform 0.3s ease; /* Transición suave */
-  }
+}
 
 
+.card-buttons {
+    position: absolute; /* Posiciona los botones dentro de la tarjeta */
+    top: 10px; /* Espaciado desde la parte superior */
+    right: 10px; /* Espaciado desde la parte derecha */
+    display: flex;
+    flex-direction: column; /* Coloca los botones en columna */
+    gap: 5px; /* Espaciado entre los botones */
+}
 
 
 
@@ -847,125 +922,4 @@ input {
   margin-right: 0.5rem; /* Espaciado entre el checkbox y el texto */
 }
 
-/** CARD */
 
-.card {
-    border: 1px solid #bbbbbba2;
-    border-radius: 8px;
-    box-shadow: 5px 5px 10px rgba(161, 161, 161, 0.1);
-    position: relative;
-    background-color: rgba(255, 255, 255, 0.12); /* Color de fondo claro */
-    color: #fff;
-    margin: 10px;
-    text-align: center;
-    max-width: 14rem;
-    width: 100%;
-    height: auto;
-
-    align-items: center;
-    backdrop-filter: blur(10px); /* Desenfoque de fondo */
-
-    word-wrap: break-word; /* Ajusta el texto que excede el ancho */
-    overflow-wrap: break-word; /* Ajusta el texto que excede el ancho */
-    white-space: normal; /* Permite que el texto se divida en varias líneas */
-
-    display: flex;
-    flex-direction: column; /* Asegura que el contenido esté en columna */
-    justify-content: flex-start; /* Alinea el contenido al inicio */
-    flex: 0 0 auto; /* Asegura que las Cards no se reduzcan ni se expandan automáticamente */
-    cursor: pointer /* Cambia el cursor al pasar sobre la barra */
-}
-
-.card-type {
-  position: absolute;
-  pointer-events: none; /* Evita que el mouse interactúe con este elemento */
-  top: 0;
-  left: 0;
-  width: 100%;
-  /*margin-bottom: 5rem;*/
-  text-align: center;
-  font-size: 0.9rem;
-  font-weight: bold;
-  color: white;
-  padding: 0.4rem 0;
-  z-index: 1;
-  border-radius: 8px 8px 0 0; /* Bordes redondeados en la parte superior */
-}
-
-.card .card-image{
-    max-width: 50%;
-    height: auto;
-    /*margin-bottom: 10px;*/
-    padding: 10px;
-    border-radius: 15px;
-}
-
-.card .card-title {
-    font-family: Montserrat, sans-serif;
-    font-size: clamp(0.8rem, 2.5vw, 1rem); /* Tamaño dinámico de la fuente */
-    color: white;
-    margin: 0;
-    padding: 10px 0; /* Espaciado superior e inferior */
-
-    margin-top: auto;
-}
-
-.card .card-username {
-    font-family: Montserrat, sans-serif;
-    font-size: clamp(0.8rem, 2.5vw, 1rem); /* Tamaño dinámico de la fuente */
-    color: white;
-    margin: 0;
-    padding: 1.5rem ; /* Espaciado superior e inferior */
-
-    margin-top: auto;
-}
-
-.card .card-email {
-    font-family: Montserrat, sans-serif;
-    font-size: clamp(0.5rem, 2vw, 0.8rem); /* Tamaño dinámico de la fuente */
-    color: white;
-    margin: 0;
-    padding: 1rem ; /* Espaciado superior e inferior */
-    /*display: block;*/
-    /*height: auto;*/
-    /*min-height: 5rem;;
-    /*margin-top: auto; */
-}
-
-.card .card-description {
-    font-family: Montserrat, sans-serif;
-    font-size: clamp(0.5rem, 2vw, 0.8rem); /* Tamaño dinámico de la fuente */
-    color: #c0c0c0;
-    margin: 0;
-    padding: 10px 0; /* Espaciado superior e inferior */
-}
-
-.card:hover{
-    transform: scale(1.05); /* Aumenta el tamaño al pasar el ratón */
-    transition: transform 0.3s ease; /* Transición suave */
-}
-
-
-.card-buttons {
-    position: absolute; /* Posiciona los botones dentro de la tarjeta */
-    top: 10px; /* Espaciado desde la parte superior */
-    right: 10px; /* Espaciado desde la parte derecha */
-    display: flex;
-    flex-direction: column; /* Coloca los botones en columna */
-    gap: 5px; /* Espaciado entre los botones */
-}
-
-
-
-
-
-
-  
-  /* Barra vertical */
-.vertical-divider {
-  width: 0.1rem;
-  height: 60%; /* 60% del alto del navbar */
-  background-color: #BFA181;
-}
-
-/*Colores utilizados: azul oscuro clásico (#0A1828), turquesa (#178582), dorado (#BFA181)*/ 

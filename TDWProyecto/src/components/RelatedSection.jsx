@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import '../styles/index.css'; // Archivo CSS para estilos
+import '../styles/index.scss'; // Archivo CSS para estilos
 import { useAuth } from '../context/AuthContext'; // Importa el contexto de autenticación
 import { DataContext } from '../context/DataContext'; // Importa el DataContext
 //import { RowRelated} from './RowRelated';
