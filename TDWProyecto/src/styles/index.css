@@ -3,7 +3,7 @@
 
 body {
   margin: 0;
-  margin-top: 5rem;
+  padding-top: 5rem;
   width: 100%;
   font-family: 'Rubik', "Montserrat", sans-serif;
   place-items: center;
@@ -13,10 +13,32 @@ body {
   background: rgb(37,15,119);
   background: radial-gradient(circle, rgba(37,15,119,1) 0%, rgba(10,24,40,1) 73%, rgba(10,24,40,1) 100%);
 }
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}    
+button {  
+  padding-top: 0.4rem;
+  padding-bottom: 0.3rem;
+  background-color: #007bff;
+  font-size: 1.2rem;
+  color: white;
+  border: none;
+  border-radius: 0.4rem;
+  cursor: pointer;
+  font-family: "Montserrat",
+}  
+button:hover {
+  background-color: #0056b3;
+}
+
+
+
 
 /* ObjectView ObjectEdit useredit userview*/
 /* Contenedor principal */
-.object-panel {
+.object-panel{
   display: flex;
   flex-direction: column;
   position: absolute; /* Posiciona el contenedor en relación a la página */
@@ -25,12 +47,13 @@ body {
   background-color: rgba(255, 255, 255, 0.185); /* Fondo blanco translúcido */
   border-radius: 0.5rem; /* Bordes redondeados */
   box-shadow: 0.1rem 0.2rem 0.8rem rgba(54, 54, 54, 0.575); /* Sombra para darle profundidad */
-  margin-bottom: 15rem;
-
-  min-width: 20rem;
+  min-width: 40%;
   max-width: 80%;
   width: auto;
   word-wrap: break-word; /* Ajusta el texto que excede el ancho */
+}
+.object-panel-user{
+  min-width: 25%;
 }
 /* Contenedor del header*/
 .object-header {
@@ -48,27 +71,29 @@ body {
 }
 .object-divider {
   border: none; /* Elimina el estilo predeterminado del borde */
-  border-top: 0.15rem solid rgba(191, 161, 129, 0.8); /* Línea blanca translúcida */
-  width: 100%; /* Asegura que ocupe todo el ancho */
+  border-top: 0.1rem solid rgba(191, 161, 129, 0.8); /* Línea blanca translúcida */
+  width: 90%; /* Asegura que ocupe todo el ancho */
 }
 /* Columna derecha: Detalles */
 .object-details-column {
   flex: 2;
   display: flex;
+  padding-left: 1rem;
   flex-direction: column;
   gap: 1.5rem;
-  /*justify-content: center;*/
+  justify-content: center;
 }
 /* Fila de detalles: Justificación de label y contenido */
 .object-detail-row {
   display: flex;
   font-size: 1rem;  
   gap: 1rem; /* Espaciado entre el label y el contenido */
+  white-space: nowrap;
 }
 .object-detail-row strong { /*Para los strong a la derecha del contenido*/
   font-weight: bold;
   text-align: left;
-  flex: 0 0 10rem;
+  flex: 0 0 12rem; /* Ancho fijo para el label */
   text-decoration: underline; 
 }
 .object-detail-row span {
@@ -78,28 +103,468 @@ body {
 .object-detail-row span a {
   color: #51affc; /* Cambia el color del enlace */
   text-decoration: none; /* Elimina el subrayado */
+  max-width: 10rem; 
+  display: inline-block; /* Asegura que las propiedades de tamaño funcionen */
+  overflow: hidden; /* Oculta el contenido que desborda */
+  text-overflow: ellipsis; /* Muestra puntos suspensivos si el texto es demasiado largo */
+  white-space: nowrap;
+  
 }
 .object-detail-row span a:hover {
   text-decoration: underline; /* Subraya el enlace al pasar el cursor */
 }
 /* Columna izquierda: Imagen centrada */
-.image-url-input {
-  max-width: 80%;
-}
+
 .object-image {
   max-width: 80%;
   border-radius: 0.2rem;
+  max-height: 15rem;
 }
-.object-image-column {
-  flex: 1;
+.object-image-column { 
   display: flex;
+  max-width: 40%;
   align-items: center;
   flex-direction: column; /* Apila los elementos verticalmente */
 }
 .object-content {
-  display: flex;
-  align-items: flex-end;
+  display: flex;  
 }
+/* Contenedor de columnas relacionadas */
+.related-columns {
+  display: flex;
+  gap: 1rem; /* Espaciado entre columnas */
+}
+/* Cada columna relacionada */
+.related-column {
+  flex: 1 1 50%; /* Ocupa el 50% del ancho disponible */
+  background-color: rgba(8, 3, 3, 0.158);
+  border-radius: 0.5rem;
+  box-shadow: 0 0.4rem 0.3rem rgba(0, 0, 0, 0.041);
+}
+.related-header {
+  text-align: center;
+}  
+.related-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+/* Encabezado de las columnas */
+.related-columns-header {
+  display: flex;
+  font-weight: bold;
+  font-size: 1rem;
+  color: #d4bba0; /* Color dorado para los encabezados */
+}
+.related-column-id {
+  flex: 1; /* Columna estrecha para el ID */
+  text-align: center;
+  padding-bottom: 0.2rem;
+}
+.related-column-name {
+  flex: 3; /* Columna más amplia para el nombre */
+  text-align: left;
+}
+/* Lista de objetos relacionados */
+.related-list {
+  display: flex;
+  flex-direction: column;
+}
+/* Fila de cada objeto relacionado */
+.related-row {
+  display: flex;
+  border-top: 0.1rem solid rgba(255, 255, 255, 0.2); /* Línea divisoria */
+  padding-top: 0.2rem;
+  padding-bottom: 0.2rem;
+  align-items: center;
+}
+.related-row .related-column-id {
+  flex: 1; /* Columna estrecha para el ID */
+}
+.related-row .related-column-name {
+  flex: 3; /* Columna más amplia para el nombre */
+}
+/* Botones de acción */
+.object-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-bottom: 0.6rem;
+  margin-right: 1rem;
+}
+.cancel-button {
+  background-color: #f44336;
+}
+.cancel-button:hover {
+  background-color: #d32f2f;
+}
+.save-button {
+  background-color: #4caf50;
+}
+.save-button:hover {
+  background-color: #388e3c;
+}
+/* Campos de entrada */
+input {
+  max-width: 11rem; /* Asegura que el texto no desborde el contenedor */
+  padding: 0.4rem;
+  border: 0.1rem solid #00000044;
+  border-radius: 0.3rem;
+  font-size: 1rem;
+}
+.object-detail-row input{
+  margin-right: 5rem;
+}
+/* Campo de entrada para la URL de la imagen */
+.image-url-input {
+  max-width: 80%;    
+}
+.input-error {
+  background-color: rgb(255, 196, 196); /* Texto rojo */
+  transition: background-color 0.3s ease, border-color 0.3s ease; /* Transición suave */
+  border: 0.1rem solid rgba(153, 0, 0, 0.774) !important;
+}
+.role-selector {
+  max-width: 15rem;
+  padding: 0.4rem;
+  font-size: 1rem;
+  border: 0.1rem solid #00000044;
+  border-radius: 0.3rem;
+  margin-right: 5rem;
+}
+.related-column-action {
+  padding-right: 0.5rem;
+}
+.related-add {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.4rem;
+  margin-left: 1rem;
+}
+.related-select {
+  margin-right: 0.4rem;  
+  padding: 0.4rem;
+  font-size: 1rem;
+  border: 0.1rem solid #00000044;
+  border-radius: 0.3rem;
+}  
+.related-add-button { 
+  background-color: #007bff;    
+  display: flex;    
+}  
+.edit-button,
+.delete-button {
+    background-color: rgba(0, 0, 0, 0.7); /* Fondo semitransparente */
+    padding: 0.4rem 0.5rem;    
+    transition: background-color 0.3s ease;
+}
+.edit-button:hover {
+    background-color: #3171c5; /* Verde para el botón de editar */
+}
+.delete-button:hover {
+    background-color: #f44336; /* Rojo para el botón de eliminar */
+}
+
+/* LOGIN REGISTER */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute; /* Posiciona el contenedor en relación a la página */
+  top: 50%; /* Centra verticalmente */
+  left: 50%; /* Centra horizontalmente */
+  transform: translate(-50%, -50%); /* Ajusta el contenedor al centro exacto */
+  padding: 1.5rem;
+  background-color: rgba(255, 255, 255, 0.185); /* Fondo blanco translúcido */
+  border-radius: 0.5rem; /* Bordes redondeados */
+  box-shadow: 0.1rem 0.2rem 0.8rem rgba(54, 54, 54, 0.575); /* Sombra para darle profundidad */
+  min-width: 20%;
+  max-width: 50%;
+}  
+.login-title {
+  font-size: 1.9rem;
+  text-align: center;
+}
+.login-redirect {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
+.login-redirect a {
+  color: #3a98fd;
+  text-decoration: none;
+}
+.login-redirect a:hover {
+  text-decoration: underline;
+}
+
+/** NAVBAR */
+
+.navbar {
+  position: fixed; /* Fija la barra en la parte superior */
+  top: 0;
+  left: 0;
+  width: 100%; /* Ocupa todo el ancho */
+  height: 4rem; /* Altura fija de la barra de navegación */
+  background-color: rgba(40, 44, 52, 0.8); /* Color semitransparente */
+  display: flex;
+  justify-content: space-between; /* Distribuye los elementos a los extremos */
+  align-items: center; /* Centra verticalmente los elementos */
+  padding: 0.2rem 0.8rem;
+  z-index: 1000; /* Asegura que esté por encima de otros elementos */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra para destacar */
+  box-sizing: border-box; /* Asegura que el padding no desborde */
+}
+.navbar-left {
+  display: flex;
+  align-items: center;
+  cursor: pointer; /* Cambia el cursor al pasar sobre la barra */
+  transition: transform 0.3s ease; /* Transición suave para el efecto de escala */
+  text-decoration: none; /* Elimina el subrayado del enlace */
+  color: inherit; /* Mantiene el color del texto original */
+  font-size: 2.1rem;
+  font-family: "Pixelify Sans", sans-serif;
+  width: 35%;
+  max-width: min-content;
+}
+.navbar-left:hover {
+  transform: scale(1.05); /* Aumenta ligeramente el tamaño al pasar el ratón */
+}
+.navbar-button:hover {
+    background-color: #2d7431; /* Color verde más oscuro al pasar el cursor */
+}
+.navbar-button { /*Es un a*/
+    background-color: #4caf50; /* Color azul */
+    color: white; /* Color del texto */
+    border: none; /* Sin borde */
+    border-radius: 5px; /* Bordes redondeados */
+    padding: 10px 15px; /* Espaciado interno */
+    font-size: 1rem; /* Tamaño de la fuente */
+    cursor: pointer; /* Cambia el puntero a clicable */
+    transition: background-color 0.3s ease; /* Transición suave para el color de fondo */
+    display: inline-block;
+    width: auto;
+    text-decoration: none;
+}
+.navbar-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+    font-family: "Rubik", sans-serif;
+    font-size: 1.4rem; /* Tamaño de la fuente */
+    min-width: 25%;
+    justify-content: flex-end;
+}
+.navbar-logo {
+    height: 3rem;
+    margin-right: 0.5rem; /* Espacio entre el logo y el título */
+}
+/* Estilo TypeWriter */
+.typewriter {
+  display: flex;
+  justify-content: center;
+  min-width: 60%;
+}  
+.typewriter p {
+  margin-inline: auto;
+  overflow: hidden;
+  white-space: nowrap;
+  animation: typing 3s steps(20) forwards, blink 1s step-end infinite;
+}
+@keyframes typing {
+    from { width: 0;}
+    to { width: 100%; }
+}
+@keyframes blink {
+    50% {border-color: transparent;}
+}
+.navbar-profile span {
+  overflow: hidden; /* Evita desbordamientos */
+  text-overflow: ellipsis; /* Agrega "..." si el texto es demasiado largo */
+  white-space: nowrap; /* Asegura que el texto esté en una sola línea */
+}
+/** MENSAJE ERRORES */
+.message-container {
+  position: fixed;
+  top: 70px; /* Ajusta según la altura del navbar */
+  right: 20px;
+  background-color: #f8d7da; /* Color de fondo para errores */
+  color: #721c24; /* Color del texto para errores */
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  animation: fadeOut 3s forwards; /* Animación para desaparecer */
+}
+.message-container.success {
+  background-color: #d4edda; /* Color de fondo para éxito */
+  color: #155724; /* Color del texto para éxito */
+}
+@keyframes fadeOut {
+  0% {opacity: 1;}
+  100% { opacity: 0; transform: translateY(-10px); }
+}
+/* Contenedor del menú desplegable */
+.dropdown {
+  position: relative;
+}  /* Menú desplegable */
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  background-color: rgba(40, 44, 52, 0.8); /* Color semitransparente */
+  border: 0.1rem solid #00000044;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, 0.041);
+  z-index: 1000;
+  min-width: 10rem;
+}  
+/* Elementos del menú */
+.dropdown-item {
+  border-radius: 0.5rem;
+  display: block;
+  padding: 0.5rem 0.8rem;
+  text-decoration: none;
+  cursor: pointer;
+  color: white;
+  box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, 0.041);
+  box-sizing: border-box; /* Asegura que el padding no desborde */
+  font-size: 1rem; /* Tamaño de la fuente */
+}  
+.dropdown-item:hover {
+  background-color: #0056f575;
+  font-size: 1.2rem; /* Aumenta el tamaño al pasar el ratón */
+  transition: transform 0.3s ease; /* Transición suave para el efecto de escala */
+}  
+/* Estilo específico para "Cerrar Sesión" */
+.dropdown-item.logout:hover {
+  background-color: rgba(161, 7, 7, 0.562); /* Cambia el texto a rojo */
+}
+/* Ocultar el menú cuando no está abierto */
+.dropdown-menu.hidden {
+  display: none;
+}
+/* Estilo base para el ícono */
+.config {
+  width: 2.5rem; /* Tamaño inicial del ícono */
+  transition: transform 0.5s ease; /* Transición suave */
+  cursor: pointer; /* Cambia el puntero a clicable */
+}
+  
+  /* Efecto al pasar el ratón */
+  .dropdown.active .config {
+    /*width: 2.7rem; /* Aumenta el tamaño del ícono */
+    transform: rotate(360deg); /* Gira el ícono */
+  }
+
+  /* Estilo para el buscador */
+.navbar-search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 20%;
+  }
+  
+  .search-input {
+    /*padding: 8px;*/
+    border: 1px solid #cccccc77;
+    border-radius: 4px;
+    font-size: 1.2rem;
+    width: 70%;
+    background-color: rgba(136, 128, 255, 0.11);
+    color: #ffffff;
+    padding: 6px 8px; /* Reduce el padding para ajustar el contenido */
+  }
+  /* Cambiar el color del placeholder */
+.search-input::placeholder {
+    color: rgba(255, 255, 255, 0.63); /* Cambia el color del texto del placeholder */
+    font-style: italic; /* Opcional: estilo en cursiva */
+}
+  
+  .search-button {
+    background-color: #3171c5;
+    border: none;
+    color: white;
+    /*padding: 8px 12px;*/
+    border-radius: 50%;
+    cursor: pointer;
+    padding: 4px 8px; /* Reduce el padding para ajustar el contenido */
+    
+  }
+  
+  .search-button:hover {
+    background-color: #0c4ea5;
+    transform: scale(1.1); /* Aumenta ligeramente el tamaño al pasar el ratón */
+  }
+  
+/* Estilo para el menú de gestión */
+.navbar-manage {
+    position: relative;
+    cursor: pointer;
+    width: 20%;
+    text-align: center;
+    max-width: 300px; /* Ancho máximo para evitar que se expanda demasiado */
+    
+  }
+.navbar-manage:hover {
+    transform: scale(1.05); /* Aumenta ligeramente el tamaño al pasar el ratón */
+    background-color: rgba(56, 58, 77, 0.404);
+  }
+  
+  .manage-title {
+    font-size: 1rem;
+    color: white;
+    font-family: "Rubik", sans-serif;
+    font-size: 1.8rem; /* Tamaño de la fuente */
+    background-color: rgba(46, 46, 46, 0.068);
+  }
+
+ 
+  
+  .dropdown-menu-manage {
+    position: absolute;
+    top: 100%; /* Aparece justo debajo del contenedor */
+    left: 0; /* Alineado con el contenedor */
+    width: 100%; /* Ocupa el mismo ancho que el contenedor */
+    background-color: rgba(40, 44, 52, 0.966); /* Color semitransparente */
+    border: 1px solid #0706065e; /* Borde similar al de configuración */
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para destacar */
+    z-index: 1000; /* Asegura que esté por encima de otros elementos */
+    padding: 8px 0; /* Espaciado interno */
+    color: white;
+  }
+  
+  .dropdown-item-manage {
+    display: block;
+  padding: 8px 16px;
+  text-decoration: none;
+  cursor: pointer;
+  color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra para destacar */
+  box-sizing: border-box; /* Asegura que el padding no desborde */
+  font-size: 1.3rem; /* Tamaño de la fuente */
+  }
+  
+  .dropdown-item-manage:hover {
+    background-color: #05001a75; /* Fondo al pasar el ratón */
+    font-size: 1.2rem; /* Aumenta ligeramente el tamaño */
+    transition: transform 0.3s ease; /* Transición suave */
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -148,111 +613,9 @@ body {
 
 
 
-/* Contenedor de columnas relacionadas */
-.related-columns {
-  display: flex;
-  gap: 20px;
-  margin-top: 20px;
-}
 
-/* Cada columna relacionada */
-.related-column {
-  flex: 1; /* Ocupa la mitad del espacio si hay dos columnas */
-  background-color: rgba(255, 255, 255, 0.1);
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
 
-/* Si solo hay una columna, ocupa todo el ancho */
-.related-column.single-column {
-  flex: 2; /* Ocupa todo el espacio disponible */
-}
 
-/* Botones de acción */
-.object-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.cancel-button,
-.save-button {
-  padding: 10px 20px;
-  font-size: 1rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.cancel-button {
-  background-color: #f44336;
-  color: white;
-}
-
-.save-button {
-  background-color: #4caf50;
-  color: white;
-}
-
-.cancel-button:hover {
-  background-color: #d32f2f;
-}
-
-.save-button:hover {
-  background-color: #388e3c;
-}
-
-/* Campos de entrada */
-.object-detail-row input {
-  flex: 2;
-  padding: 5px;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  max-width: 15rem; /* Asegura que el texto no desborde el contenedor */
-  margin-right: 5rem;
-}
-/* Campo de entrada para la URL de la imagen */
-.image-url-input {
-  margin-top: 10px;
-  width: 100%;
-  padding: 5px;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-.related-columns {
-  display: flex; /* Usar flexbox para alinear las columnas */
-  justify-content: space-between; /* Espaciado entre columnas */
-  gap: 1rem; /* Espaciado entre columnas */
-}
-
-.related-column {
-  flex: 1 1 50%; /* Ocupa el 50% del ancho disponible */
-  max-width: 50%; /* Limita el ancho máximo al 50% */
-  box-sizing: border-box; /* Incluye padding y borde en el ancho */
-}
-
-.input-error {
-  /*border: 2px solid red; /* Borde rojo */
-  /*background-color: rgba(255, 0, 0, 0.1); /* Relleno rojo claro */
-  background-color: rgb(255, 196, 196); /* Texto rojo */
-  border-radius: 5px; /* Bordes redondeados */
-  transition: background-color 0.3s ease, border-color 0.3s ease; /* Transición suave */
-  border: 2px solid rgba(153, 0, 0, 0.774) !important;
-}
-
-.role-selector {
-  max-width: 15rem;
-  padding: 0.5rem;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  margin-right: 5rem;
-  /*align-content: left;*/
-}
 
 /* Section */
 
@@ -592,547 +955,17 @@ body {
     gap: 5px; /* Espaciado entre los botones */
 }
 
-.edit-button,
-.delete-button {
-    background-color: rgba(0, 0, 0, 0.7); /* Fondo semitransparente */
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 5px 10px;
-    font-size: 0.8rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.edit-button:hover {
-    background-color: #3171c5; /* Verde para el botón de editar */
-}
-
-.delete-button:hover {
-    background-color: #f44336; /* Rojo para el botón de eliminar */
-}
-
-/* LOGIN REGISTER */
-.login-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: absolute; /* Posiciona el contenedor en relación a la página */
-    top: 50%; /* Centra verticalmente */
-    left: 50%; /* Centra horizontalmente */
-    transform: translate(-50%, -50%); /* Ajusta el contenedor al centro exacto */
-    padding: 30px;
-    background-color: rgba(209, 209, 209, 0.171); /* Fondo blanco translúcido */
-    border-radius: 10px; /* Bordes redondeados */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra para darle profundidad */
-    width: 90%; /* Ancho responsivo */
-    max-width: 300px; /* Ancho máximo */
-  }
-  
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  input {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  button {
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-
-  .login-title {
-    color: white;
-    font-size: 1.5rem;
-    margin-bottom: 20px;
-    text-align: center;
-  }
-
-  .login-error {
-    color: rgb(255, 52, 52);
-    font-size: 0.9rem;
-    margin-top: 10px;
-    text-align: center;
-  }
-
-  .login-redirect {
-    margin-top: 1rem;
-    font-size: 0.9rem;
-    text-align: center;
-    color: white;
-  }
-  
-  .login-redirect a {
-    color: #3a98fd;
-    text-decoration: none;
-  }
-  
-  .login-redirect a:hover {
-    text-decoration: underline;
-  }
-
-  .input-error {
-    /*border: 2px solid red; /* Borde rojo */
-    /*background-color: rgba(255, 0, 0, 0.1); /* Relleno rojo claro */
-    background-color: rgb(255, 196, 196); /* Texto rojo */
-    border-radius: 5px; /* Bordes redondeados */
-    transition: background-color 0.3s ease, border-color 0.3s ease; /* Transición suave */
-    border: 2px solid rgba(153, 0, 0, 0.774) !important;
-  }
-
-  /** RELATED SECTION */
-
-  /* Contenedor principal */
-.related-object {
-    border-radius: 8px;
-  }
-  
-  /* Título centrado */
-  .related-header {
-    text-align: center;
-  }
-  
-  .related-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #ffffff;
-  }
-  
-  /* Encabezado de las columnas */
-  .related-columns-header {
-    display: flex;
-    justify-content: space-between;
-    font-weight: bold;
-    font-size: 1rem;
-    margin-bottom: 5px;
-    color: #bfa181; /* Color dorado para los encabezados */
-  }
-  
-  .related-column-id {
-    flex: 1; /* Columna estrecha para el ID */
-    text-align: center;
-  }
-  
-  .related-column-name {
-    flex: 3; /* Columna más amplia para el nombre */
-    text-align: center;
-  }
-  
-  /* Lista de objetos relacionados */
-  .related-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px; /* Espaciado entre filas */
-  }
-  
-  /* Fila de cada objeto relacionado */
-  .related-row {
-    display: flex;
-    justify-content: space-between;
-    font-size: 1rem;
-    /*padding: 5px 0;*/
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Línea divisoria */
-  }
-  
-  .related-row .related-column-id {
-    flex: 1; /* Columna estrecha para el ID */
-    color: white; /* Color del texto */
-  }
-  
-  .related-row .related-column-name {
-    flex: 3; /* Columna más amplia para el nombre */
-    color: white; /* Color del texto */
-  }
-  .delete-button {
-    background-color: rgba(0, 0, 0, 0.7); /* Fondo semitransparente */
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 5px 10px;
-    font-size: 0.8rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.related-column-action {
-    text-align: center;
-    width: 50px; /* Ajusta el ancho según sea necesario */
-  }
-  
-  /* Botón de papelera */
- /* .delete-button {
-    background: none;
-    border: none;
-    color: red;
-    font-size: 1.2rem;
-    cursor: pointer;
-  }
-  
-  .delete-button:hover {
-    color: darkred;
-  }*/
-
-  .related-add {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  
-  .related-select {
-    margin-right: 10px;
-    padding: 5px;
-  }
-  
-  .related-add-button {
-    padding: 5px 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-  }
-  
-  .related-add-button:hover {
-    background-color: #0056b3;
-  }
-
-  /** NAVBAR */
-
-  .navbar {
-    position: fixed; /* Fija la barra en la parte superior */
-    top: 0;
-    left: 0;
-    width: 100%; /* Ocupa todo el ancho */
-    height: 4rem; /* Altura fija de la barra de navegación */
-    background-color: rgba(40, 44, 52, 0.8); /* Color semitransparente */
-    color: white;
-    display: flex;
-    justify-content: space-between; /* Distribuye los elementos a los extremos */
-    align-items: center;
-    padding: 15px 25px;
-    z-index: 1000; /* Asegura que esté por encima de otros elementos */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra para destacar */
-    box-sizing: border-box; /* Asegura que el padding no desborde */
-}
-
-.navbar-left {
-    display: flex;
-    align-items: center;
-    /*justify-content: flex-start; /* Alinea el contenido completamente a la izquierda */
-    /*flex: 0; /* No ocupa espacio adicional */
-    cursor: pointer; /* Cambia el cursor al pasar sobre la barra */
-    transition: transform 0.3s ease; /* Transición suave para el efecto de escala */
-    text-decoration: none; /* Elimina el subrayado del enlace */
-    color: inherit; /* Mantiene el color del texto original */
-    margin: 0;
-    font-size: 2.1rem;
-    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
-    font-family: "Pixelify Sans", sans-serif;
-    width: 35%;
-    max-width: min-content;
-}
-
-.navbar-left:hover {
-    transform: scale(1.05); /* Aumenta ligeramente el tamaño al pasar el ratón */
-}
 
 
 
 
-.navbar-button:hover {
-    background-color: #2d7431; /* Color verde más oscuro al pasar el cursor */
-}
 
-.navbar-button {
-    background-color: #4caf50; /* Color azul */
-    color: white; /* Color del texto */
-    border: none; /* Sin borde */
-    border-radius: 5px; /* Bordes redondeados */
-    padding: 10px 15px; /* Espaciado interno */
-    font-size: 1rem; /* Tamaño de la fuente */
-    cursor: pointer; /* Cambia el puntero a clicable */
-    transition: background-color 0.3s ease; /* Transición suave para el color de fondo */
-    display: inline-block;;
-    width: auto;;
-    text-decoration: none;;
-}
-
-.navbar-profile {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
-    font-family: "Rubik", sans-serif;
-    font-size: 1.4rem; /* Tamaño de la fuente */
-    min-width: 25%;
-    /*align-items: right; /* Alinea el contenido a la derecha */
-    /*text-align: right; /* Alinea el texto a la derecha */
-    /*margin-left: auto;*/
-    justify-content: flex-end;
-}
-
-
-
-.navbar-logo {
-    /*width: 40px; /* Ajusta el tamaño del logo */
-    height: 40px;
-    width: auto; /* Mantiene la proporción de la imagen */
-    margin-right: 10px; /* Espacio entre el logo y el título */
-    object-fit: contain; /* Asegura que la imagen se ajuste correctamente */
-}
-
-/* Estilo TypeWriter */
-.typewriter {
-    display: flex;
-    justify-content: center;
-    min-width: 60%;
-  }
-  
-.typewriter p {
-/*font-family: monospace;*
-font-size: 1.5rem;*/
-margin-inline: auto;
-overflow: hidden;
-/* Keeps on a single line */
-white-space: nowrap;
-/* The cursor */
-border-right: 1px solid;
-/* steps = number of characters */
-animation: typing 3s steps(20) forwards, blink 1s step-end infinite;
-}
-
-@keyframes typing {
-    from {
-        width: 0;
-    }
-
-    to {
-        width: 100%;
-    }
-}
-
-@keyframes blink {
-    50% {
-        border-color: transparent;
-    }
-}
-
-.navbar-profile span {
-    overflow: hidden; /* Evita desbordamientos */
-    text-overflow: ellipsis; /* Agrega "..." si el texto es demasiado largo */
-    white-space: nowrap; /* Asegura que el texto esté en una sola línea */
-}
-
-.message-container {
-    position: fixed;
-    top: 70px; /* Ajusta según la altura del navbar */
-    right: 20px;
-    background-color: #f8d7da; /* Color de fondo para errores */
-    color: #721c24; /* Color del texto para errores */
-    padding: 10px 20px;
-    border-radius: 5px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    animation: fadeOut 3s forwards; /* Animación para desaparecer */
-  }
-  
-  .message-container.success {
-    background-color: #d4edda; /* Color de fondo para éxito */
-    color: #155724; /* Color del texto para éxito */
-  }
-  
-  @keyframes fadeOut {
-    0% {
-      opacity: 1;
-    }
-    100% {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-  }
-
-
-
-  
-  /* Contenedor del menú desplegable */
-  .dropdown {
-    position: relative;
-    display: inline-block;
-  }
-  
-  /* Menú desplegable */
-  .dropdown-menu {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background-color: rgba(40, 44, 52, 0.8); /* Color semitransparente */
-    border: 1px solid #0706065e;
-    border-radius: 4px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    min-width: 150px;
-    padding: 8px 0;
-    color: white;
-  }
-  
-  /* Elementos del menú */
-  .dropdown-item {
-    display: block;
-    padding: 8px 16px;
-    text-decoration: none;
-    cursor: pointer;
-    color: white;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra para destacar */
-    box-sizing: border-box; /* Asegura que el padding no desborde */
-    font-size: 1rem; /* Tamaño de la fuente */
-  }
-  
-  .dropdown-item:hover {
-    background-color: #05001a75;
-    font-size: 1.2rem; /* Aumenta el tamaño al pasar el ratón */
-    transition: transform 0.3s ease; /* Transición suave para el efecto de escala */
-  }
-  
-/* Estilo específico para "Cerrar Sesión" */
-.dropdown-item.logout:hover {
-    background-color: rgba(105, 2, 2, 0.562); /* Cambia el texto a rojo */
-    /*background-color: transparent; /* Mantén el fondo transparente */
-  }
-
-  /* Ocultar el menú cuando no está abierto */
-  .dropdown-menu.hidden {
-    display: none;
-  }
-
-
-/* Estilo base para el ícono */
-.config {
-    width: 2.5rem; /* Tamaño inicial del ícono */
-    transition: transform 0.5s ease; /* Transición suave */
-    cursor: pointer; /* Cambia el puntero a clicable */
-  }
-  
-  /* Efecto al pasar el ratón */
-  .dropdown.active .config {
-    /*width: 2.7rem; /* Aumenta el tamaño del ícono */
-    transform: rotate(360deg); /* Gira el ícono */
-  }
-
-  /* Estilo para el buscador */
-.navbar-search {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    width: 20%;
-  }
-  
-  .search-input {
-    /*padding: 8px;*/
-    border: 1px solid #cccccc77;
-    border-radius: 4px;
-    font-size: 1.2rem;
-    width: 70%;
-    background-color: rgba(136, 128, 255, 0.11);
-    color: #ffffff;
-    padding: 6px 8px; /* Reduce el padding para ajustar el contenido */
-  }
-  /* Cambiar el color del placeholder */
-.search-input::placeholder {
-    color: rgba(255, 255, 255, 0.63); /* Cambia el color del texto del placeholder */
-    font-style: italic; /* Opcional: estilo en cursiva */
-}
-  
-  .search-button {
-    background-color: #3171c5;
-    border: none;
-    color: white;
-    /*padding: 8px 12px;*/
-    border-radius: 50%;
-    cursor: pointer;
-    padding: 4px 8px; /* Reduce el padding para ajustar el contenido */
-    
-  }
-  
-  .search-button:hover {
-    background-color: #0c4ea5;
-    transform: scale(1.1); /* Aumenta ligeramente el tamaño al pasar el ratón */
-  }
-  
-/* Estilo para el menú de gestión */
-.navbar-manage {
-    position: relative;
-    cursor: pointer;
-    width: 20%;
-    text-align: center;
-    max-width: 300px; /* Ancho máximo para evitar que se expanda demasiado */
-    
-  }
-.navbar-manage:hover {
-    transform: scale(1.05); /* Aumenta ligeramente el tamaño al pasar el ratón */
-    background-color: rgba(56, 58, 77, 0.404);
-  }
-  
-  .manage-title {
-    font-size: 1rem;
-    color: white;
-    font-family: "Rubik", sans-serif;
-    font-size: 1.8rem; /* Tamaño de la fuente */
-    background-color: rgba(46, 46, 46, 0.068);
-  }
-
- 
-  
-  .dropdown-menu-manage {
-    position: absolute;
-    top: 100%; /* Aparece justo debajo del contenedor */
-    left: 0; /* Alineado con el contenedor */
-    width: 100%; /* Ocupa el mismo ancho que el contenedor */
-    background-color: rgba(40, 44, 52, 0.966); /* Color semitransparente */
-    border: 1px solid #0706065e; /* Borde similar al de configuración */
-    border-radius: 4px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para destacar */
-    z-index: 1000; /* Asegura que esté por encima de otros elementos */
-    padding: 8px 0; /* Espaciado interno */
-    color: white;
-  }
-  
-  .dropdown-item-manage {
-    display: block;
-  padding: 8px 16px;
-  text-decoration: none;
-  cursor: pointer;
-  color: white;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra para destacar */
-  box-sizing: border-box; /* Asegura que el padding no desborde */
-  font-size: 1.3rem; /* Tamaño de la fuente */
-  }
-  
-  .dropdown-item-manage:hover {
-    background-color: #05001a75; /* Fondo al pasar el ratón */
-    font-size: 1.2rem; /* Aumenta ligeramente el tamaño */
-    transition: transform 0.3s ease; /* Transición suave */
-  }
   
   /* Barra vertical */
-  .vertical-divider {
-    width: 1px;
-    height: 60%; /* 60% del alto del navbar */
-    background-color: #BFA181;
-    /*margin: 0 16px;*/
-  }
+.vertical-divider {
+  width: 0.1rem;
+  height: 60%; /* 60% del alto del navbar */
+  background-color: #BFA181;
+}
 
 /*Colores utilizados: azul oscuro clásico (#0A1828), turquesa (#178582), dorado (#BFA181)*/ 
