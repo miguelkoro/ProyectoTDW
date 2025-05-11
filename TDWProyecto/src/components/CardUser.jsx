@@ -40,7 +40,7 @@ const CardUser = ({object}) => {
   
 
   return (
-    <div className="card" onClick={handleCardClick}>   
+    <div className="card user-card" onClick={handleCardClick}>   
         <div className="card-buttons">
           <button
             className="edit-button"

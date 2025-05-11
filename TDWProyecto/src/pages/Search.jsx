@@ -68,7 +68,7 @@ const Search = (props) => {
   return (
   <div className="section-container-management">
     <div className="section-header-management">
-      <h1 className="section-title">🔍 Busqueda</h1>     
+      <h1 className="section-title-management">🔍 Busqueda</h1>     
     </div>
     <div className="search-panel">
        {/* Columna izquierda: Input y botón */}

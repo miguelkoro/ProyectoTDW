@@ -88,10 +88,10 @@ const Management = (props) => {
 
   return (
   <div className="section-container-management">
-    <div className="section-header-management">
-      <h1 className="section-title">{title}</h1>
+    <div className="section-header">
+      <h1 className="section-title-management">{title}</h1>
       {(user?.scope === "writer" && typeFromState !== "users") && (
-        <button className="new-button-management" onClick={handleNewClick}>
+        <button className="new-button" onClick={handleNewClick}>
           Nuevo
         </button>
       )}

@@ -258,6 +258,7 @@ input {
     background-color: rgba(0, 0, 0, 0.7); /* Fondo semitransparente */
     padding: 0.4rem 0.5rem;    
     transition: background-color 0.3s ease;
+    z-index: 2;
 }
 .edit-button:hover {
     background-color: #3171c5; /* Verde para el botón de editar */
@@ -472,6 +473,10 @@ input {
 }  
 .search-button {
   border-radius: 50%;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  transition: background-color 0.3s ease;
 }  
 .search-button:hover {
   transform: scale(1.1); /* Aumenta ligeramente el tamaño al pasar el ratón */
@@ -515,12 +520,6 @@ input {
   font-size: 1.4rem; /* Aumenta ligeramente el tamaño */
   transition: transform 0.3s ease; /* Transición suave */
 }
-.vertical-divider {
-  width: 0.1rem;
-  height: 60%; /* 60% del alto del navbar */
-  background-color: #BFA181;
-}
-
 /** CARD */
 .card {
   border: 0.1rem solid #bbbbbb41;
@@ -530,11 +529,15 @@ input {
   background-color: rgba(255, 255, 255, 0.12); /* Color de fondo claro */
   text-align: center;
   width: 14rem;
+  height: 12rem;
   align-items: center;
   display: flex;
   flex-direction: column; /* Asegura que el contenido esté en columna */
   flex: 0 0 auto; /* Asegura que las Cards no se reduzcan ni se expandan automáticamente */
   cursor: pointer; /* Cambia el cursor al pasar sobre la barra */
+}
+.user-card{
+  height: 7rem;
 }
 .card-type {
   position: absolute;
@@ -551,267 +554,120 @@ input {
   border-radius: 8px 8px 0 0; /* Bordes redondeados en la parte superior */
 }
 .card .card-image{
-    max-width: 50%;
-    padding-top: 0.3rem;
-    padding-bottom: 0.4rem;
-    border-radius: 0.5rem;
+  max-width: 50%;
+  padding-top: 0.3rem;
+  padding-bottom: 0.4rem;
+  border-radius: 0.5rem;
 }
 .card-title {
-    font-family: 'Montserrat', sans-serif;
-    font-size: clamp(0.8rem, 2.5vw, 1rem); /* Tamaño dinámico de la fuente */
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    margin-top: auto;
-    width: 80%; /* Asegura que el título ocupe todo el ancho del contenedor */
-    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
-    overflow: hidden; /* Oculta el contenido que desborda */
-    text-overflow: ellipsis;
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(0.8rem, 2.5vw, 1rem); /* Tamaño dinámico de la fuente */
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  margin-top: auto;
+  width: 80%; /* Asegura que el título ocupe todo el ancho del contenedor */
+  white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+  overflow: hidden; /* Oculta el contenido que desborda */
+  text-overflow: ellipsis;
 }
 .card .card-username {
-    font-family: Montserrat, sans-serif;
-    font-size: clamp(0.8rem, 2.5vw, 1rem); /* Tamaño dinámico de la fuente */
-    padding-top: 1rem ; /* Espaciado superior e inferior */
-    margin-top: auto;
-    width: 80%; /* Asegura que el título ocupe todo el ancho del contenedor */
-    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
-    overflow: hidden; /* Oculta el contenido que desborda */
-    text-overflow: ellipsis;
+  font-family: Montserrat, sans-serif;
+  font-size: clamp(0.8rem, 2.5vw, 1rem); /* Tamaño dinámico de la fuente */
+  padding-top: 1rem ; /* Espaciado superior e inferior */
+  margin-top: auto;
+  width: 80%; /* Asegura que el título ocupe todo el ancho del contenedor */
+  white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+  overflow: hidden; /* Oculta el contenido que desborda */
+  text-overflow: ellipsis;
 }
 .card .card-email {
-    font-family: Montserrat, sans-serif;
-    font-size: clamp(0.5rem, 2vw, 0.8rem); /* Tamaño dinámico de la fuente */
-    color: white;
-    margin: 0;
-    padding: 1rem ; 
-    width: 80%; /* Asegura que el título ocupe todo el ancho del contenedor */
-    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
-    overflow: hidden; /* Oculta el contenido que desborda */
-    text-overflow: ellipsis;
+  font-family: Montserrat, sans-serif;
+  font-size: clamp(0.5rem, 2vw, 0.8rem); /* Tamaño dinámico de la fuente */
+  color: white;
+  margin: 0;
+  padding: 1rem ; 
+  width: 80%; /* Asegura que el título ocupe todo el ancho del contenedor */
+  white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+  overflow: hidden; /* Oculta el contenido que desborda */
+  text-overflow: ellipsis;
 }
 .card:hover{
-    transform: scale(1.05); /* Aumenta el tamaño al pasar el ratón */
-    transition: transform 0.3s ease; /* Transición suave */
+  transform: scale(1.05); /* Aumenta el tamaño al pasar el ratón */
+  transition: transform 0.3s ease; /* Transición suave */
 }
 .card-buttons {
-    position: absolute; /* Posiciona los botones dentro de la tarjeta */
-    top: 0.4rem; /* Espaciado desde la parte superior */
-    right: 0.4rem; /* Espaciado desde la parte derecha */
-    display: flex;
-    flex-direction: column; /* Coloca los botones en columna */
-    gap: 0.2rem; /* Espaciado entre los botones */
+  position: absolute; /* Posiciona los botones dentro de la tarjeta */
+  top: 0.4rem; /* Espaciado desde la parte superior */
+  right: 0.4rem; /* Espaciado desde la parte derecha */
+  display: flex;
+  flex-direction: column; /* Coloca los botones en columna */
+  gap: 0.2rem; /* Espaciado entre los botones */
 }
 /* SECTION */
 .section-container {
-  max-width:  80vw; /* Ancho máximo de 90vw */;
+  width:  80vw; /* Ancho máximo de 90vw */;
 }
-
-.section-container-management {
-  /*margin: 0 ; /* Centra el contenedor horizontalmente */
-  /*box-sizing: border-box; /* Incluye el padding en el tamaño total */
-  margin-top: 5rem;
-
-}
-
-.section-header-management {
-    display: flex; /* Usa Flexbox */
-    /*justify-content: space-between; /* Coloca el título a la izquierda y el botón a la derecha */
-    align-items: center; /* Alinea verticalmente el título y el botón */
-    min-width: 100%; /* Asegura que ocupe todo el ancho del contenedor */
-    margin-bottom: 20px; /* Espaciado inferior */
-    
-}
-
-
 .card-wrapper {
-    display: flex; /* Usa flexbox para alinear las Cards horizontalmente */
-    gap: 0.8rem; /* Espacio entre las Cards */
-    overflow-x: auto; /* Habilita el scroll horizontal */
-    scrollbar-width: thin; /* Estilo del scroll en navegadores compatibles */
-    /*padding-bottom: 1rem; /* Espaciado para evitar que el scroll tape las Cards */
-    padding: 1rem; /* Espaciado para evitar que el scroll tape las Cards */
-    margin: 0 auto; 
-    min-width: 25%;
-    max-width: 100%; /* Asegura que el contenedor ocupe todo el ancho disponible */
-    text-align: center;
-    text-decoration: none;
-  }
-
-  .card-management-wrapper{
-    display: grid; /* Cambia a Grid Layout */
-    grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
-    gap: 5rem; /* Espacio entre las tarjetas */
-    width: 100%; /* Asegura que el contenedor ocupe todo el ancho disponible */
-    
-    /*max-height: calc(5 * 150rem); /* Altura máxima para 5 filas (ajusta 15rem según la altura de tus tarjetas) */
-    /*overflow-y: auto; /* Habilita el scroll vertical si hay más de 5 filas */
-    margin: 0 auto; /* Centra el contenedor horizontalmente */
-    /*padding: 10px; /* Espaciado interno */
-    text-align: center; /* Centra el texto dentro de las tarjetas */
-    /*scrollbar-width: thin;*/
-    box-sizing: border-box; /* Incluye el padding en el tamaño total */
-    padding: 1rem;
-  }
-  
-.card-wrapper a:hover {
-    background-color: #77777727;
-  }
-
+  display: flex; /* Usa flexbox para alinear las Cards horizontalmente */
+  gap: 0.8rem; /* Espacio entre las Cards */
+  overflow-x: auto; /* Habilita el scroll horizontal */
+  scrollbar-width: thin; /* Estilo del scroll en navegadores compatibles */
+  padding: 1rem; /* Espaciado para evitar que el scroll tape las Cards */
+}
 .section-title {
-    font-family: Montserrat, Rubik, sans-serif; /* Fuente personalizada */
-    font-size: clamp(1.5rem, 2.5vw, 2rem); /* Tamaño dinámico de la fuente */
-    color: white;
-    margin: 0; /* Elimina el margen predeterminado */
-    padding: 10px 0; /* Espaciado superior e inferior */
-    text-align: center; /* Centra el texto */
-    width: 100%; /* Asegura que el título ocupe todo el ancho del contenedor */
-    min-width: 80%;
-    cursor: pointer; /* Cambia el cursor a una mano para indicar que es clickeable */
-    transition: transform 0.2s ease-in-out; /* Suaviza la transición */
+  font-family: Montserrat, Rubik, sans-serif; /* Fuente personalizada */
+  font-size: clamp(1.5rem, 2.5vw, 2rem); /* Tamaño dinámico de la fuente */
+  text-align: center; /* Centra el texto */
+  width: 100%; /* Asegura que el título ocupe todo el ancho del contenedor */
+  cursor: pointer; /* Cambia el cursor a una mano para indicar que es clickeable */
+  transition: transform 0.2s ease-in-out; /* Suaviza la transición */
 }
-
 .section-title:hover {
-    transform: scale(1.1); /* Aumenta ligeramente el tamaño al pasar el ratón */
-  }
-
+  transform: scale(1.1); /* Aumenta ligeramente el tamaño al pasar el ratón */
+}
+.section-title-management {
+  font-family: Montserrat, Rubik, sans-serif; /* Fuente personalizada */
+  font-size: clamp(1.5rem, 2.5vw, 2rem); /* Tamaño dinámico de la fuente */
+  text-align: center; /* Centra el texto */
+  width: 100%; /* Asegura que el título ocupe todo el ancho del contenedor */
+}
 .section-hr{
-    width: 80%; /* Asegura que la línea ocupe todo el ancho del contenedor */
-    border: 1px; /* Elimina el borde predeterminado */
-    height: 1px; /* Altura de la línea */
-    background-color: #BFA181; /* Color de la línea */
-    margin: 30px auto; /* Espaciado superior e inferior y centra la línea */
+  width: 80%; /* Asegura que la línea ocupe todo el ancho del contenedor */
+  border: 0.1rem; /* Elimina el borde predeterminado */
+  height: 0.01rem; /* Altura de la línea */
+  background-color: #BFA181; /* Color de la línea */
+  margin-top: 1.5rem ; /* Espaciado superior e inferior y centra la línea */
 }
-
 .new-button {
-    background-color: #4caf50; /* Color verde */
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 0.8rem 2rem;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    transform: translateX(-50px); 
-    /*padding-left: 3rem;;*/
+  background-color: #29a02d; /* Color verde */
+  transition: background-color 0.3s ease;
+  transform: translate(-100%);
 }
-
-.new-button-management {
-    background-color: #4caf50; /* Color verde */
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 0.8rem 2rem;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    transform: translateX(-50%, -50%); 
-    /*padding-left: 3rem;;*/
-}
-.new-button-management:hover {
-    background-color: #2d6e30; /* Color verde más oscuro al pasar el cursor */
-}
-
 .new-button:hover {
-    background-color: #2d6e30; /* Color verde más oscuro al pasar el cursor */
+  background-color: #1d5220; /* Color verde más oscuro al pasar el cursor */
 }
 .section-header {
-    display: flex; /* Alinea el título y el botón en una fila */
-    justify-content: space-between; /* Coloca el título a la izquierda y el botón a la derecha */
-    align-items: center; /* Alinea verticalmente el título y el botón */
-    /*margin-bottom: 20px; /* Espaciado inferior para separar del contenido */
-    min-width: 80%;
+  display: flex; /* Alinea el título y el botón en una fila */
+  align-items: center; /* Alinea verticalmente el título y el botón */
 }
-
-.centered-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center; /* Centra el texto dentro del contenedor */
- 
+.section-container-management {
+  width: 80vw; /* Ancho máximo de 90vw */
 }
-
-.centered-container img {
-  max-width: 10rem;
-  border-radius: 1rem; /* Bordes redondeados */
+.card-management-wrapper{
+  display: grid; /* Cambia a Grid Layout */
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); /* Máximo 5 columnas */
+  row-gap: 1rem; /* Espaciado entre las tarjetas */  
+  justify-items: start; /* Alinea las tarjetas a la izquierda */ 
+  padding: 1rem; /* Espaciado interno */
+  box-sizing: border-box; /* Incluye el padding en el tamaño total */
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.search-panel{
-  /*display: flex;
-  /*flex-direction: column;*/
- /* position: absolute; /* Posiciona el contenedor en relación a la página */
-  /*top: 2rem; /* Margen desde la parte superior (ajusta según la altura del navbar) */
-  /*left: 50%; /* Centra horizontalmente */
-  /*transform: translateX(-50%, -50%); /* Ajusta el contenedor al centro exacto horizontalmente */
-  padding-top: 2rem;
-  /*justify-content: center;*/
-  /*align-items: center;*/
-  background-color: rgba(255, 255, 255, 0.185); /* Fondo blanco translúcido */
-  border-radius: 10px; /* Bordes redondeados */
-  box-shadow: 0 4px 10px rgba(54, 54, 54, 0.575); /* Sombra para darle profundidad */
-  width: 100%; /* Ancho responsivo */
-
-}
-
-/** ELIMINAR */
-.myaccount-panel{
-  display: flex;
-  flex-direction: column;
-  position: absolute; /* Posiciona el contenedor en relación a la página */
-  top: 80px; /* Margen desde la parte superior (ajusta según la altura del navbar) */
-  left: 50%; /* Centra horizontalmente */
-  transform: translateX(-50%); /* Ajusta el contenedor al centro exacto horizontalmente */
-  padding: 30px;
-  background-color: rgba(255, 255, 255, 0.185); /* Fondo blanco translúcido */
-  border-radius: 10px; /* Bordes redondeados */
-  box-shadow: 0 4px 10px rgba(54, 54, 54, 0.575); /* Sombra para darle profundidad */
-  width: 50%; /* Ancho responsivo */
-  max-width: 40%; /* Ancho máximo */
-  overflow-y: auto; /* Agrega scroll si el contenido es demasiado alto */
-}
-
-
-
-/* Contenedor de columnas */
-
-
-
-
-
-
-
-
-
-
-
-
 /* Search */
 .search-panel {
   display: flex;
   justify-content: space-between; /* Espaciado entre las columnas */
-  align-items: center; /* Alinea las columnas al inicio */
-  
+  align-items: center; /* Alinea las columnas al inicio */  
   padding: 1rem;
-  gap: 1rem; /* Espaciado entre las columnas */
 }
-
 .search-column-left {
   display: flex;
   align-items: center; /* Centra el input y el botón verticalmente */
@@ -819,7 +675,6 @@ input {
   flex: 1; /* Ocupa el espacio disponible */
   max-width: 35%; /* Limita el ancho máximo */
 }
-
 .search-input {
     border: 1px solid #cccccc77;
     border-radius: 4px;
@@ -827,61 +682,60 @@ input {
     width: 90%;
     background-color: rgba(136, 128, 255, 0.11);
     color: #ffffff;
-    /*padding: 6px 8px; /* Reduce el padding para ajustar el contenido */
 }
-
-.search-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 50%; /* Botón redondo */
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.search-button:hover {
-  background-color: #0056b3; /* Color más oscuro al pasar el cursor */
-}
-
 .search-column-right {
- /* display: flex;
-  /*flex-direction: column;*/
   align-items: left;
   width: 60%; /* Ancho de la columna derecha */
-  /*gap: 0.5rem; /* Espaciado entre los elementos */
-  /*padding: 1rem;*/
- /* gap: 1rem; */
   display: flex; /* Usa Flexbox para alinear los elementos en una fila */
   align-items: center;
 }
-
 .checkbox-container {
-  /*display: flex; /* Usa Flexbox para alinear los elementos en una fila */
   align-items: center; /* Alinea verticalmente los elementos */
   gap: 1rem; /* Espaciado entre el label y los checkboxes */
 }
-
 .search-type-label {
   font-size: 1rem; /* Tamaño del texto del label */
   font-weight: bold; /* Opcional: hace que el texto sea más destacado */
   margin-right: 1rem; /* Espaciado entre el label y los checkboxes */
 }
-
 .checkbox-container label {
- /* display: flex;*/
   align-items: center; /* Centra el checkbox y el texto verticalmente */
   font-size: 0.9rem;
   cursor: pointer;
   gap: 0.5rem; /* Espaciado entre el checkbox y el texto */
 }
-
 .checkbox-container input {
   margin-right: 0.5rem; /* Espaciado entre el checkbox y el texto */
 }
+.search-panel{
+  background-color: rgba(255, 255, 255, 0.185); /* Fondo blanco translúcido */
+  border-radius: 0.4rem; /* Bordes redondeados */
+  box-shadow: $common-box-shadow; /* Sombra para darle profundidad */
+}
 
-
+/** ELIMINAR */
+/*.myaccount-panel{
+  display: flex;
+  flex-direction: column;
+  position: absolute; 
+  top: 80px; 
+  left: 50%; 
+  transform: translateX(-50%); 
+  padding: 30px;
+  background-color: rgba(255, 255, 255, 0.185); 
+  border-radius: 10px; 
+  box-shadow: 0 4px 10px rgba(54, 54, 54, 0.575); 
+  width: 50%; 
+  max-width: 40%; 
+  overflow-y: auto; 
+}*/
+/*.centered-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;  
+}*/
+/*.centered-container img {
+  max-width: 10rem;
+  border-radius: 1rem; 
+}*/
