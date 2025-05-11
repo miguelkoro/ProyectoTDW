@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
-$common-box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, 0.041);
+$common-box-shadow: 0.1rem 0.2rem 0.8rem rgba(54, 54, 54, 0.575);
 
 body {
   margin: 0;
@@ -48,7 +48,7 @@ button:hover {
   padding: 1.5rem;
   background-color: rgba(255, 255, 255, 0.185); /* Fondo blanco translúcido */
   border-radius: 0.5rem; /* Bordes redondeados */
-  box-shadow: 0.1rem 0.2rem 0.8rem rgba(54, 54, 54, 0.575); /* Sombra para darle profundidad */
+  box-shadow: $common-box-shadow; /* Sombra para darle profundidad */
   min-width: 40%;
   max-width: 80%;
   width: auto;
@@ -278,7 +278,7 @@ input {
   padding: 1.5rem;
   background-color: rgba(255, 255, 255, 0.185); /* Fondo blanco translúcido */
   border-radius: 0.5rem; /* Bordes redondeados */
-  box-shadow: 0.1rem 0.2rem 0.8rem rgba(54, 54, 54, 0.575); /* Sombra para darle profundidad */
+  box-shadow: $common-box-shadow; /* Sombra para darle profundidad */
   min-width: 20%;
   max-width: 50%;
 }  
@@ -523,39 +523,25 @@ input {
 
 /** CARD */
 .card {
-    border: 1px solid #bbbbbba2;
-    border-radius: 8px;
-    box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, 0.041);
-    position: relative;
-    background-color: rgba(255, 255, 255, 0.12); /* Color de fondo claro */
-    color: #fff;
-    margin: 10px;
-    text-align: center;
-    max-width: 14rem;
-    width: 100%;
-    height: auto;
-
-    align-items: center;
-    backdrop-filter: blur(10px); /* Desenfoque de fondo */
-
-    word-wrap: break-word; /* Ajusta el texto que excede el ancho */
-    overflow-wrap: break-word; /* Ajusta el texto que excede el ancho */
-    white-space: normal; /* Permite que el texto se divida en varias líneas */
-
-    display: flex;
-    flex-direction: column; /* Asegura que el contenido esté en columna */
-    justify-content: flex-start; /* Alinea el contenido al inicio */
-    flex: 0 0 auto; /* Asegura que las Cards no se reduzcan ni se expandan automáticamente */
-    cursor: pointer /* Cambia el cursor al pasar sobre la barra */
+  border: 0.1rem solid #bbbbbb41;
+  border-radius: 0.4rem;
+  box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, 0.041);
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.12); /* Color de fondo claro */
+  text-align: center;
+  width: 14rem;
+  align-items: center;
+  display: flex;
+  flex-direction: column; /* Asegura que el contenido esté en columna */
+  flex: 0 0 auto; /* Asegura que las Cards no se reduzcan ni se expandan automáticamente */
+  cursor: pointer; /* Cambia el cursor al pasar sobre la barra */
 }
-
 .card-type {
   position: absolute;
   pointer-events: none; /* Evita que el mouse interactúe con este elemento */
   top: 0;
   left: 0;
   width: 100%;
-  /*margin-bottom: 5rem;*/
   text-align: center;
   font-size: 0.9rem;
   font-weight: bold;
@@ -564,157 +550,65 @@ input {
   z-index: 1;
   border-radius: 8px 8px 0 0; /* Bordes redondeados en la parte superior */
 }
-
 .card .card-image{
     max-width: 50%;
-    height: auto;
-    /*margin-bottom: 10px;*/
-    padding: 10px;
-    border-radius: 15px;
+    padding-top: 0.3rem;
+    padding-bottom: 0.4rem;
+    border-radius: 0.5rem;
 }
-
-.card .card-title {
-    font-family: Montserrat, sans-serif;
+.card-title {
+    font-family: 'Montserrat', sans-serif;
     font-size: clamp(0.8rem, 2.5vw, 1rem); /* Tamaño dinámico de la fuente */
-    color: white;
-    margin: 0;
-    padding: 10px 0; /* Espaciado superior e inferior */
-
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
     margin-top: auto;
+    width: 80%; /* Asegura que el título ocupe todo el ancho del contenedor */
+    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+    overflow: hidden; /* Oculta el contenido que desborda */
+    text-overflow: ellipsis;
 }
-
 .card .card-username {
     font-family: Montserrat, sans-serif;
     font-size: clamp(0.8rem, 2.5vw, 1rem); /* Tamaño dinámico de la fuente */
-    color: white;
-    margin: 0;
-    padding: 1.5rem ; /* Espaciado superior e inferior */
-
+    padding-top: 1rem ; /* Espaciado superior e inferior */
     margin-top: auto;
+    width: 80%; /* Asegura que el título ocupe todo el ancho del contenedor */
+    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+    overflow: hidden; /* Oculta el contenido que desborda */
+    text-overflow: ellipsis;
 }
-
 .card .card-email {
     font-family: Montserrat, sans-serif;
     font-size: clamp(0.5rem, 2vw, 0.8rem); /* Tamaño dinámico de la fuente */
     color: white;
     margin: 0;
-    padding: 1rem ; /* Espaciado superior e inferior */
-    /*display: block;*/
-    /*height: auto;*/
-    /*min-height: 5rem;;
-    /*margin-top: auto; */
+    padding: 1rem ; 
+    width: 80%; /* Asegura que el título ocupe todo el ancho del contenedor */
+    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+    overflow: hidden; /* Oculta el contenido que desborda */
+    text-overflow: ellipsis;
 }
-
-.card .card-description {
-    font-family: Montserrat, sans-serif;
-    font-size: clamp(0.5rem, 2vw, 0.8rem); /* Tamaño dinámico de la fuente */
-    color: #c0c0c0;
-    margin: 0;
-    padding: 10px 0; /* Espaciado superior e inferior */
-}
-
 .card:hover{
     transform: scale(1.05); /* Aumenta el tamaño al pasar el ratón */
     transition: transform 0.3s ease; /* Transición suave */
 }
-
-
 .card-buttons {
     position: absolute; /* Posiciona los botones dentro de la tarjeta */
-    top: 10px; /* Espaciado desde la parte superior */
-    right: 10px; /* Espaciado desde la parte derecha */
+    top: 0.4rem; /* Espaciado desde la parte superior */
+    right: 0.4rem; /* Espaciado desde la parte derecha */
     display: flex;
     flex-direction: column; /* Coloca los botones en columna */
-    gap: 5px; /* Espaciado entre los botones */
+    gap: 0.2rem; /* Espaciado entre los botones */
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.search-panel{
-  /*display: flex;
-  /*flex-direction: column;*/
- /* position: absolute; /* Posiciona el contenedor en relación a la página */
-  /*top: 2rem; /* Margen desde la parte superior (ajusta según la altura del navbar) */
-  /*left: 50%; /* Centra horizontalmente */
-  /*transform: translateX(-50%, -50%); /* Ajusta el contenedor al centro exacto horizontalmente */
-  padding-top: 2rem;
-  /*justify-content: center;*/
-  /*align-items: center;*/
-  background-color: rgba(255, 255, 255, 0.185); /* Fondo blanco translúcido */
-  border-radius: 10px; /* Bordes redondeados */
-  box-shadow: 0 4px 10px rgba(54, 54, 54, 0.575); /* Sombra para darle profundidad */
-  width: 100%; /* Ancho responsivo */
-
-}
-
-/** ELIMINAR */
-.myaccount-panel{
-  display: flex;
-  flex-direction: column;
-  position: absolute; /* Posiciona el contenedor en relación a la página */
-  top: 80px; /* Margen desde la parte superior (ajusta según la altura del navbar) */
-  left: 50%; /* Centra horizontalmente */
-  transform: translateX(-50%); /* Ajusta el contenedor al centro exacto horizontalmente */
-  padding: 30px;
-  background-color: rgba(255, 255, 255, 0.185); /* Fondo blanco translúcido */
-  border-radius: 10px; /* Bordes redondeados */
-  box-shadow: 0 4px 10px rgba(54, 54, 54, 0.575); /* Sombra para darle profundidad */
-  width: 50%; /* Ancho responsivo */
-  max-width: 40%; /* Ancho máximo */
-  overflow-y: auto; /* Agrega scroll si el contenido es demasiado alto */
-}
-
-
-
-/* Contenedor de columnas */
-
-
-
-
-
-
-
-
-
-
-
-/* Section */
-
+/* SECTION */
 .section-container {
-    /*width: 80%; /* Ocupa todo el ancho disponible */
-    max-width:  80vw; /* Ancho máximo de 90vw */;
-    /*overflow-x: auto; /* Habilita el scroll horizontal */
-    padding-top: 1rem; /* Espaciado interno */
-    /*box-sizing: border-box; /* Incluye el padding en el tamaño total */
-    margin: 0 auto; /* Centra el contenedor en la página */
+  max-width:  80vw; /* Ancho máximo de 90vw */;
 }
 
 .section-container-management {
-    /*display: flex; /* Usa Flexbox */
-    /*justify-content: center; /* Centra horizontalmente */
-    /*align-items: flex-start; /* Alinea el contenido al inicio verticalmente */
-    /*flex-direction: column; /* Asegura que los elementos internos se apilen verticalmente */
-    width: 100%; /* Asegura que ocupe todo el ancho disponible */
-    max-width: 100%;
-    /*height: 100vh; /* Ocupa toda la altura de la ventana */
-    margin: 0 ; /* Centra el contenedor horizontalmente */
-    /*padding: 1rem; /* Espaciado interno */
-    box-sizing: border-box; /* Incluye el padding en el tamaño total */
-    margin-top: 5rem;
+  /*margin: 0 ; /* Centra el contenedor horizontalmente */
+  /*box-sizing: border-box; /* Incluye el padding en el tamaño total */
+  margin-top: 5rem;
 
 }
 
@@ -730,22 +624,22 @@ input {
 
 .card-wrapper {
     display: flex; /* Usa flexbox para alinear las Cards horizontalmente */
-    /*gap: 20px; /* Espacio entre las Cards */
+    gap: 0.8rem; /* Espacio entre las Cards */
     overflow-x: auto; /* Habilita el scroll horizontal */
     scrollbar-width: thin; /* Estilo del scroll en navegadores compatibles */
-    padding-bottom: 0.5rem; /* Espaciado para evitar que el scroll tape las Cards */
+    /*padding-bottom: 1rem; /* Espaciado para evitar que el scroll tape las Cards */
+    padding: 1rem; /* Espaciado para evitar que el scroll tape las Cards */
     margin: 0 auto; 
     min-width: 25%;
     max-width: 100%; /* Asegura que el contenedor ocupe todo el ancho disponible */
     text-align: center;
-    /*padding: 14px;*/
     text-decoration: none;
   }
 
   .card-management-wrapper{
     display: grid; /* Cambia a Grid Layout */
     grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
-    gap: 1rem; /* Espacio entre las tarjetas */
+    gap: 5rem; /* Espacio entre las tarjetas */
     width: 100%; /* Asegura que el contenedor ocupe todo el ancho disponible */
     
     /*max-height: calc(5 * 150rem); /* Altura máxima para 5 filas (ajusta 15rem según la altura de tus tarjetas) */
@@ -839,6 +733,74 @@ input {
   max-width: 10rem;
   border-radius: 1rem; /* Bordes redondeados */
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.search-panel{
+  /*display: flex;
+  /*flex-direction: column;*/
+ /* position: absolute; /* Posiciona el contenedor en relación a la página */
+  /*top: 2rem; /* Margen desde la parte superior (ajusta según la altura del navbar) */
+  /*left: 50%; /* Centra horizontalmente */
+  /*transform: translateX(-50%, -50%); /* Ajusta el contenedor al centro exacto horizontalmente */
+  padding-top: 2rem;
+  /*justify-content: center;*/
+  /*align-items: center;*/
+  background-color: rgba(255, 255, 255, 0.185); /* Fondo blanco translúcido */
+  border-radius: 10px; /* Bordes redondeados */
+  box-shadow: 0 4px 10px rgba(54, 54, 54, 0.575); /* Sombra para darle profundidad */
+  width: 100%; /* Ancho responsivo */
+
+}
+
+/** ELIMINAR */
+.myaccount-panel{
+  display: flex;
+  flex-direction: column;
+  position: absolute; /* Posiciona el contenedor en relación a la página */
+  top: 80px; /* Margen desde la parte superior (ajusta según la altura del navbar) */
+  left: 50%; /* Centra horizontalmente */
+  transform: translateX(-50%); /* Ajusta el contenedor al centro exacto horizontalmente */
+  padding: 30px;
+  background-color: rgba(255, 255, 255, 0.185); /* Fondo blanco translúcido */
+  border-radius: 10px; /* Bordes redondeados */
+  box-shadow: 0 4px 10px rgba(54, 54, 54, 0.575); /* Sombra para darle profundidad */
+  width: 50%; /* Ancho responsivo */
+  max-width: 40%; /* Ancho máximo */
+  overflow-y: auto; /* Agrega scroll si el contenido es demasiado alto */
+}
+
+
+
+/* Contenedor de columnas */
+
+
+
+
+
+
+
+
+
+
+
 
 /* Search */
 .search-panel {
