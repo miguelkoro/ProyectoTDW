@@ -555,16 +555,17 @@ input {
 }
 .card .card-image{
   max-width: 50%;
+  max-height: 8.5rem;
   padding-top: 0.3rem;
   padding-bottom: 0.4rem;
   border-radius: 0.5rem;
+  margin: auto 0;
 }
 .card-title {
   font-family: 'Montserrat', sans-serif;
   font-size: clamp(0.8rem, 2.5vw, 1rem); /* Tamaño dinámico de la fuente */
   padding-left: 0.5rem;
   padding-right: 0.5rem;
-  margin-top: auto;
   width: 80%; /* Asegura que el título ocupe todo el ancho del contenedor */
   white-space: nowrap; /* Evita que el texto se divida en varias líneas */
   overflow: hidden; /* Oculta el contenido que desborda */
@@ -661,51 +662,46 @@ input {
   padding: 1rem; /* Espaciado interno */
   box-sizing: border-box; /* Incluye el padding en el tamaño total */
 }
-/* Search */
+/* SEARCH */
 .search-panel {
   display: flex;
-  justify-content: space-between; /* Espaciado entre las columnas */
-  align-items: center; /* Alinea las columnas al inicio */  
   padding: 1rem;
 }
 .search-column-left {
   display: flex;
-  align-items: center; /* Centra el input y el botón verticalmente */
+  padding-left: 3rem;
   gap: 0.5rem; /* Espaciado entre el input y el botón */
   flex: 1; /* Ocupa el espacio disponible */
-  max-width: 35%; /* Limita el ancho máximo */
 }
 .search-input {
-    border: 1px solid #cccccc77;
-    border-radius: 4px;
-    font-size: 1.2rem;
-    width: 90%;
-    background-color: rgba(136, 128, 255, 0.11);
-    color: #ffffff;
+  border: 0.1rem solid #cccccc77;
+  font-size: 1.2rem;
+  background-color: rgba(136, 128, 255, 0.11);    
+  max-width: 18rem;
 }
 .search-column-right {
   align-items: left;
-  width: 60%; /* Ancho de la columna derecha */
-  display: flex; /* Usa Flexbox para alinear los elementos en una fila */
+  display: flex;
+  flex: 2;/**/
+  gap: 1rem; /* Espaciado entre el label y los checkboxes */
   align-items: center;
 }
 .checkbox-container {
   align-items: center; /* Alinea verticalmente los elementos */
-  gap: 1rem; /* Espaciado entre el label y los checkboxes */
+  gap: 1rem; /* Espaciado entre el label y los checkboxes */  
 }
 .search-type-label {
-  font-size: 1rem; /* Tamaño del texto del label */
+  font-size: 1.3rem; /* Tamaño del texto del label */
   font-weight: bold; /* Opcional: hace que el texto sea más destacado */
-  margin-right: 1rem; /* Espaciado entre el label y los checkboxes */
 }
 .checkbox-container label {
   align-items: center; /* Centra el checkbox y el texto verticalmente */
-  font-size: 0.9rem;
+  font-size: 1.1rem;
   cursor: pointer;
-  gap: 0.5rem; /* Espaciado entre el checkbox y el texto */
+  padding-left: 1.7rem;
 }
 .checkbox-container input {
-  margin-right: 0.5rem; /* Espaciado entre el checkbox y el texto */
+  margin-right: 0.6rem; /* Espaciado entre el checkbox y el texto */  
 }
 .search-panel{
   background-color: rgba(255, 255, 255, 0.185); /* Fondo blanco translúcido */
