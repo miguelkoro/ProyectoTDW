@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, } from 'react';
 import { useAuth } from "../context/AuthContext";
-import '../styles/Login.css'; // Archivo CSS para estilos
+import '../styles/index.css'; // Archivo CSS para estilos
 import { useNavigate, Link } from "react-router-dom"; // Importa useNavigate y Link para redirección
 import { DataContext } from '../context/DataContext'; // Contexto para guardar datos
 
@@ -92,6 +92,17 @@ const Register = () => {
     register(userName, email, password, birthDate); // Llama a la función de registro
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault(); // Evita el comportamiento predeterminado del Enter
+      if (!nameChecked) {
+        checkName(); // Llama a la función para comprobar el nombre
+      } else {
+        handleSubmit(e); // Llama a la función para registrar al usuario
+      }
+    }
+  };
+
   return (
     <div className="login-container">
       <h1 className="login-title">{!nameChecked ? "Registro de nuevo Usuario" : `Termina de registrate, ${userName}`}</h1>
@@ -102,7 +113,8 @@ const Register = () => {
           value={userName}
           onChange={(e) => setUserName(e.target.value)}
           className={nameError ? 'input-error' : ''}
-          onBlur={checkNameLength}/>
+          onBlur={checkNameLength}
+          onKeyDown={handleKeyDown} />
           <button type="button" onClick={checkName}>Comprobar nombre</button> </>}
         {nameChecked && <><input
           type="email"
@@ -111,6 +123,7 @@ const Register = () => {
           onChange={(e) => setEmail(e.target.value)}
           className={emailError ? 'input-error' : ''}
           onBlur={checkEmail} // Valida al deseleccionar el campo
+          onKeyDown={handleKeyDown} 
         />
         <input
           type="password"

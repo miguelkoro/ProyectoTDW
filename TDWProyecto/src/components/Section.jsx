@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/Section.css'; // Archivo CSS para estilos
+import '../styles/index.css'; // Archivo CSS para estilos
 import Card from './Card.jsx'; // Importa el componente de sección pequeña
 import CardUser from './CardUser.jsx'; // Importa el componente de sección pequeña
 import { useAuth } from '../context/AuthContext';
@@ -90,7 +90,7 @@ const Section = (props) => {
         ) : (
           props.objects.map((object) =>
             props.type !== 'user' ? (
-              <Card key={object.id} object={object} />
+              <Card key={object.id} object={object} showType={false}/>
             ) : (
               <CardUser key={object.id} object={object} />
             )

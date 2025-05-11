@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import '../styles/Card.css'; // Archivo CSS para estilos
+import '../styles/index.css'; // Archivo CSS para estilos
 import { useAuth } from '../context/AuthContext'; // Importa el contexto de autenticación
 import { useNavigate } from 'react-router-dom'; // Importa useNavigate para redirección
 import { DataContext } from '../context/DataContext'; // Importa el DataContext

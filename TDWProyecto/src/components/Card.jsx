@@ -1,44 +1,78 @@
-import React, {useContext} from 'react';
-import '../styles/Card.css'; // Archivo CSS para estilos
+import React, {use, useContext, useEffect, useState} from 'react';
+import '../styles/index.css'; // Archivo CSS para estilos
 import { useAuth } from '../context/AuthContext'; // Importa el contexto de autenticación
 import { useNavigate } from 'react-router-dom'; // Importa useNavigate para redirección
 import { DataContext } from '../context/DataContext'; // Importa el DataContext
 //import { deletePerson, deleteEntity, deleteProduct } from '../services/dataService';
 
 
-const Card = ({object}) => {
+const Card = (props) => {
   const { user } = useAuth(); // Obtén el usuario autenticado del contexto
   const navigate = useNavigate(); // Hook para redirigir
   const { deleteObject } = useContext(DataContext); // Obtén el método deletePerson del DataContext
+  const [color , setColor] = useState("rgba(255, 255, 255, 0.14)"); // Estado para el color del card
+  const [titleType , setTitleType] = useState("Tipo"); // Estado para el color del card
 
   const handleCardClick = () => {
-    //console.log("Objeto clickeado:", object); // Verifica el objeto clickeado
-    navigate(`/view/${object.type}/${object.id}`, { state: { view: true } }); // Redirige al ObjectView con el objeto como estado
-    //console.log("Datos del objeto:", object);
+    //console.log("Objeto clickeado:", props.object); // Verifica el objeto clickeado
+    navigate(`/view/${props.object.type}/${props.object.id}`, { state: { view: true } }); // Redirige al props.objectView con el objeto como estado
+    //console.log("Datos del objeto:", props.object);
   };
 
   const handleEditClick = (e)=> {
     e.stopPropagation(); // Evita que el evento de clic se propague al contenedor del card
-    navigate(`/edit/${object.type}/${object.id}`, { state: { object } }); // Redirige al ObjectView con el objeto como estado
-    //console.log("editar objeto:", object);
+    navigate(`/edit/${props.object.type}/${props.object.id}`, { state: { object: props.object } }); // Redirige al props.objectView con el objeto como estado
+    //console.log("editar objeto:", props.object);
   }
 
   const handleDeleteClick = async (e) => {
     e.stopPropagation(); // Evita que el evento de clic se propague al contenedor del card
     const confirmDelete = window.confirm(
-      `¿Estás seguro de que deseas eliminar el objeto "${object.name}"?`
+      `¿Estás seguro de que deseas eliminar el objeto "${props.object.name}"?`
     );
     if (confirmDelete) {
-      await deleteObject(object.type,object.id); // Llama a la función de eliminación para personas
+      await deleteObject(props.object.type,props.object.id); // Llama a la función de eliminación para personas
     } else {
       console.log("Eliminación cancelada");
     }
   }
-  //console.log("", object.getType()); // Verifica el tipo de objeto
+  //console.log("", props.object.getType()); // Verifica el tipo de objeto
   
+  const cardColor = () => {
+    switch (props.object.type) {
+      case 'person':
+        setColor("rgba(255, 7, 7, 0.23)"); // Color para personas
+        setTitleType("🪠 PERSONA"); // Título para personas
+        break;
+      case 'entity':
+        setColor("rgba(21, 255, 0, 0.24)"); // Color para entidades
+        setTitleType("🧸 ENTIDAD"); // Título para entidades
+        break;
+      case 'product':
+        setColor("rgba(179, 0, 255, 0.23)"); // Color para productos
+        setTitleType("💡 PRODUCTO"); // Título para productos
+        break;
+      case 'association':
+        setColor("rgba(0, 179, 255, 0.14)"); // Color para asociaciones
+        setTitleType("🔥 ASOCIACIÓN"); // Título para asociaciones
+        break;
+      default:
+        setColor("rgba(255, 255, 255, 0.14)"); // Color por defecto
+        setTitleType("Tipo"); // Título por defecto
+        break;
+    }
+  }
+
+  useEffect(() => {
+    cardColor(); // Llama a la función para establecer el color y el título
+  },[props.object.type]); // Dependencia para que se ejecute cuando cambie el tipo de objeto
+
 
   return (
     <div className="card" onClick={handleCardClick}>
+      {props.showType && <div className={`card-type`} style={{ backgroundColor: color }}>
+        {titleType}
+      </div>}
       {user?.scope === "writer" && ( // Solo muestra los botones si el usuario ha iniciado sesión
         <div className="card-buttons">
           <button
@@ -59,8 +93,9 @@ const Card = ({object}) => {
           </button>
         </div>
       )}
-      <img className="card-image" src={object.imageUrl} alt={object.name}></img>
-      <h2 className='card-title' >{object.name}</h2>
+
+      <img className="card-image" src={props.object.imageUrl} alt={props.object.name}></img>
+      <h2 className='card-title' >{props.object.name}</h2>
       
     </div>
   );

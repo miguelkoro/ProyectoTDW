@@ -1,4 +1,4 @@
-import "../styles/Home.css";
+import "../styles/index.css";
 import { useContext, useEffect } from 'react';
 import Section from '../components/Section';
 import { DataContext } from '../context/DataContext';

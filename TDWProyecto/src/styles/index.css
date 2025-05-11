@@ -1,12 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
 body {
   margin: 0;
+  margin-top: 4rem;
+  width: 100%;
+  font-family: 'Rubik', 'Lucida Sans', sans-serif;
   /*display: flex;*/
   place-items: center;
   /*min-width: 320px;*/
   height: 100vh;
+  box-sizing: border-box;
   background: rgb(37,15,119);
   background: radial-gradient(circle, rgba(37,15,119,1) 0%, rgba(10,24,40,1) 73%, rgba(10,24,40,1) 100%);
 }
@@ -27,6 +31,23 @@ body {
   width: 90%; /* Ancho responsivo */
   max-width: 50%; /* Ancho máximo */
   overflow-y: auto; /* Agrega scroll si el contenido es demasiado alto */
+}
+
+.search-panel{
+  /*display: flex;
+  /*flex-direction: column;*/
+ /* position: absolute; /* Posiciona el contenedor en relación a la página */
+  /*top: 2rem; /* Margen desde la parte superior (ajusta según la altura del navbar) */
+  /*left: 50%; /* Centra horizontalmente */
+  /*transform: translateX(-50%, -50%); /* Ajusta el contenedor al centro exacto horizontalmente */
+  padding-top: 2rem;
+  /*justify-content: center;*/
+  /*align-items: center;*/
+  background-color: rgba(255, 255, 255, 0.185); /* Fondo blanco translúcido */
+  border-radius: 10px; /* Bordes redondeados */
+  box-shadow: 0 4px 10px rgba(54, 54, 54, 0.575); /* Sombra para darle profundidad */
+  width: 100%; /* Ancho responsivo */
+
 }
 
 .myaccount-panel{
@@ -277,3 +298,886 @@ body {
   margin-right: 5rem;
   /*align-content: left;*/
 }
+
+/* Section */
+
+.section-container {
+    /*width: 80%; /* Ocupa todo el ancho disponible */
+    max-width:  80vw; /* Ancho máximo de 90vw */;
+    /*overflow-x: auto; /* Habilita el scroll horizontal */
+    padding-top: 1rem; /* Espaciado interno */
+    /*box-sizing: border-box; /* Incluye el padding en el tamaño total */
+    margin: 0 auto; /* Centra el contenedor en la página */
+}
+
+.section-container-management {
+    /*display: flex; /* Usa Flexbox */
+    /*justify-content: center; /* Centra horizontalmente */
+    /*align-items: flex-start; /* Alinea el contenido al inicio verticalmente */
+    /*flex-direction: column; /* Asegura que los elementos internos se apilen verticalmente */
+    width: 100%; /* Asegura que ocupe todo el ancho disponible */
+    max-width: 100%;
+    /*height: 100vh; /* Ocupa toda la altura de la ventana */
+    margin: 0 ; /* Centra el contenedor horizontalmente */
+    /*padding: 1rem; /* Espaciado interno */
+    box-sizing: border-box; /* Incluye el padding en el tamaño total */
+    margin-top: 5rem;
+
+}
+
+.section-header-management {
+    display: flex; /* Usa Flexbox */
+    /*justify-content: space-between; /* Coloca el título a la izquierda y el botón a la derecha */
+    align-items: center; /* Alinea verticalmente el título y el botón */
+    min-width: 100%; /* Asegura que ocupe todo el ancho del contenedor */
+    margin-bottom: 20px; /* Espaciado inferior */
+    
+}
+
+
+.card-wrapper {
+    display: flex; /* Usa flexbox para alinear las Cards horizontalmente */
+    /*gap: 20px; /* Espacio entre las Cards */
+    overflow-x: auto; /* Habilita el scroll horizontal */
+    scrollbar-width: thin; /* Estilo del scroll en navegadores compatibles */
+    padding-bottom: 0.5rem; /* Espaciado para evitar que el scroll tape las Cards */
+    margin: 0 auto; 
+    min-width: 25%;
+    max-width: 100%; /* Asegura que el contenedor ocupe todo el ancho disponible */
+    text-align: center;
+    /*padding: 14px;*/
+    text-decoration: none;
+  }
+
+  .card-management-wrapper{
+    display: grid; /* Cambia a Grid Layout */
+    grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+    gap: 1rem; /* Espacio entre las tarjetas */
+    width: 100%; /* Asegura que el contenedor ocupe todo el ancho disponible */
+    
+    /*max-height: calc(5 * 150rem); /* Altura máxima para 5 filas (ajusta 15rem según la altura de tus tarjetas) */
+    /*overflow-y: auto; /* Habilita el scroll vertical si hay más de 5 filas */
+    margin: 0 auto; /* Centra el contenedor horizontalmente */
+    /*padding: 10px; /* Espaciado interno */
+    text-align: center; /* Centra el texto dentro de las tarjetas */
+    /*scrollbar-width: thin;*/
+    box-sizing: border-box; /* Incluye el padding en el tamaño total */
+    padding: 1rem;
+  }
+  
+.card-wrapper a:hover {
+    background-color: #77777727;
+  }
+
+.section-title {
+    font-family: Montserrat, Rubik, sans-serif; /* Fuente personalizada */
+    font-size: clamp(1.5rem, 2.5vw, 2rem); /* Tamaño dinámico de la fuente */
+    color: white;
+    margin: 0; /* Elimina el margen predeterminado */
+    padding: 10px 0; /* Espaciado superior e inferior */
+    text-align: center; /* Centra el texto */
+    width: 100%; /* Asegura que el título ocupe todo el ancho del contenedor */
+    min-width: 80%;
+    cursor: pointer; /* Cambia el cursor a una mano para indicar que es clickeable */
+    transition: transform 0.2s ease-in-out; /* Suaviza la transición */
+}
+
+.section-title:hover {
+    transform: scale(1.1); /* Aumenta ligeramente el tamaño al pasar el ratón */
+  }
+
+.section-hr{
+    width: 80%; /* Asegura que la línea ocupe todo el ancho del contenedor */
+    border: 1px; /* Elimina el borde predeterminado */
+    height: 1px; /* Altura de la línea */
+    background-color: #BFA181; /* Color de la línea */
+    margin: 30px auto; /* Espaciado superior e inferior y centra la línea */
+}
+
+.new-button {
+    background-color: #4caf50; /* Color verde */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0.8rem 2rem;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    transform: translateX(-50px); 
+    /*padding-left: 3rem;;*/
+}
+
+.new-button-management {
+    background-color: #4caf50; /* Color verde */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0.8rem 2rem;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    transform: translateX(-50%, -50%); 
+    /*padding-left: 3rem;;*/
+}
+.new-button-management:hover {
+    background-color: #2d6e30; /* Color verde más oscuro al pasar el cursor */
+}
+
+.new-button:hover {
+    background-color: #2d6e30; /* Color verde más oscuro al pasar el cursor */
+}
+.section-header {
+    display: flex; /* Alinea el título y el botón en una fila */
+    justify-content: space-between; /* Coloca el título a la izquierda y el botón a la derecha */
+    align-items: center; /* Alinea verticalmente el título y el botón */
+    /*margin-bottom: 20px; /* Espaciado inferior para separar del contenido */
+    min-width: 80%;
+}
+
+.centered-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center; /* Centra el texto dentro del contenedor */
+ 
+}
+
+.centered-container img {
+  max-width: 10rem;
+  border-radius: 1rem; /* Bordes redondeados */
+}
+
+/* Search */
+.search-panel {
+  display: flex;
+  justify-content: space-between; /* Espaciado entre las columnas */
+  align-items: center; /* Alinea las columnas al inicio */
+  
+  padding: 1rem;
+  gap: 1rem; /* Espaciado entre las columnas */
+}
+
+.search-column-left {
+  display: flex;
+  align-items: center; /* Centra el input y el botón verticalmente */
+  gap: 0.5rem; /* Espaciado entre el input y el botón */
+  flex: 1; /* Ocupa el espacio disponible */
+  max-width: 35%; /* Limita el ancho máximo */
+}
+
+.search-input {
+    border: 1px solid #cccccc77;
+    border-radius: 4px;
+    font-size: 1.2rem;
+    width: 90%;
+    background-color: rgba(136, 128, 255, 0.11);
+    color: #ffffff;
+    /*padding: 6px 8px; /* Reduce el padding para ajustar el contenido */
+}
+
+.search-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%; /* Botón redondo */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+  background-color: #0056b3; /* Color más oscuro al pasar el cursor */
+}
+
+.search-column-right {
+ /* display: flex;
+  /*flex-direction: column;*/
+  align-items: left;
+  width: 60%; /* Ancho de la columna derecha */
+  /*gap: 0.5rem; /* Espaciado entre los elementos */
+  /*padding: 1rem;*/
+ /* gap: 1rem; */
+  display: flex; /* Usa Flexbox para alinear los elementos en una fila */
+  align-items: center;
+}
+
+.checkbox-container {
+  /*display: flex; /* Usa Flexbox para alinear los elementos en una fila */
+  align-items: center; /* Alinea verticalmente los elementos */
+  gap: 1rem; /* Espaciado entre el label y los checkboxes */
+}
+
+.search-type-label {
+  font-size: 1rem; /* Tamaño del texto del label */
+  font-weight: bold; /* Opcional: hace que el texto sea más destacado */
+  margin-right: 1rem; /* Espaciado entre el label y los checkboxes */
+}
+
+.checkbox-container label {
+ /* display: flex;*/
+  align-items: center; /* Centra el checkbox y el texto verticalmente */
+  font-size: 0.9rem;
+  cursor: pointer;
+  gap: 0.5rem; /* Espaciado entre el checkbox y el texto */
+}
+
+.checkbox-container input {
+  margin-right: 0.5rem; /* Espaciado entre el checkbox y el texto */
+}
+
+/** CARD */
+
+.card {
+    border: 1px solid #bbbbbba2;
+    border-radius: 8px;
+    box-shadow: 5px 5px 10px rgba(161, 161, 161, 0.1);
+    position: relative;
+    background-color: rgba(255, 255, 255, 0.12); /* Color de fondo claro */
+    color: #fff;
+    margin: 10px;
+    text-align: center;
+    max-width: 14rem;
+    width: 100%;
+    height: auto;
+
+    align-items: center;
+    backdrop-filter: blur(10px); /* Desenfoque de fondo */
+
+    word-wrap: break-word; /* Ajusta el texto que excede el ancho */
+    overflow-wrap: break-word; /* Ajusta el texto que excede el ancho */
+    white-space: normal; /* Permite que el texto se divida en varias líneas */
+
+    display: flex;
+    flex-direction: column; /* Asegura que el contenido esté en columna */
+    justify-content: flex-start; /* Alinea el contenido al inicio */
+    flex: 0 0 auto; /* Asegura que las Cards no se reduzcan ni se expandan automáticamente */
+    cursor: pointer /* Cambia el cursor al pasar sobre la barra */
+}
+
+.card-type {
+  position: absolute;
+  pointer-events: none; /* Evita que el mouse interactúe con este elemento */
+  top: 0;
+  left: 0;
+  width: 100%;
+  /*margin-bottom: 5rem;*/
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: white;
+  padding: 0.4rem 0;
+  z-index: 1;
+  border-radius: 8px 8px 0 0; /* Bordes redondeados en la parte superior */
+}
+
+.card .card-image{
+    max-width: 50%;
+    height: auto;
+    /*margin-bottom: 10px;*/
+    padding: 10px;
+    border-radius: 15px;
+}
+
+.card .card-title {
+    font-family: Montserrat, sans-serif;
+    font-size: clamp(0.8rem, 2.5vw, 1rem); /* Tamaño dinámico de la fuente */
+    color: white;
+    margin: 0;
+    padding: 10px 0; /* Espaciado superior e inferior */
+
+    margin-top: auto;
+}
+
+.card .card-username {
+    font-family: Montserrat, sans-serif;
+    font-size: clamp(0.8rem, 2.5vw, 1rem); /* Tamaño dinámico de la fuente */
+    color: white;
+    margin: 0;
+    padding: 1.5rem ; /* Espaciado superior e inferior */
+
+    margin-top: auto;
+}
+
+.card .card-email {
+    font-family: Montserrat, sans-serif;
+    font-size: clamp(0.5rem, 2vw, 0.8rem); /* Tamaño dinámico de la fuente */
+    color: white;
+    margin: 0;
+    padding: 1rem ; /* Espaciado superior e inferior */
+    /*display: block;*/
+    /*height: auto;*/
+    /*min-height: 5rem;;
+    /*margin-top: auto; */
+}
+
+.card .card-description {
+    font-family: Montserrat, sans-serif;
+    font-size: clamp(0.5rem, 2vw, 0.8rem); /* Tamaño dinámico de la fuente */
+    color: #c0c0c0;
+    margin: 0;
+    padding: 10px 0; /* Espaciado superior e inferior */
+}
+
+.card:hover{
+    transform: scale(1.05); /* Aumenta el tamaño al pasar el ratón */
+    transition: transform 0.3s ease; /* Transición suave */
+}
+
+
+.card-buttons {
+    position: absolute; /* Posiciona los botones dentro de la tarjeta */
+    top: 10px; /* Espaciado desde la parte superior */
+    right: 10px; /* Espaciado desde la parte derecha */
+    display: flex;
+    flex-direction: column; /* Coloca los botones en columna */
+    gap: 5px; /* Espaciado entre los botones */
+}
+
+.edit-button,
+.delete-button {
+    background-color: rgba(0, 0, 0, 0.7); /* Fondo semitransparente */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.edit-button:hover {
+    background-color: #3171c5; /* Verde para el botón de editar */
+}
+
+.delete-button:hover {
+    background-color: #f44336; /* Rojo para el botón de eliminar */
+}
+
+/* LOGIN REGISTER */
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute; /* Posiciona el contenedor en relación a la página */
+    top: 50%; /* Centra verticalmente */
+    left: 50%; /* Centra horizontalmente */
+    transform: translate(-50%, -50%); /* Ajusta el contenedor al centro exacto */
+    padding: 30px;
+    background-color: rgba(209, 209, 209, 0.171); /* Fondo blanco translúcido */
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra para darle profundidad */
+    width: 90%; /* Ancho responsivo */
+    max-width: 300px; /* Ancho máximo */
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  button {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+
+  .login-title {
+    color: white;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .login-error {
+    color: rgb(255, 52, 52);
+    font-size: 0.9rem;
+    margin-top: 10px;
+    text-align: center;
+  }
+
+  .login-redirect {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    text-align: center;
+    color: white;
+  }
+  
+  .login-redirect a {
+    color: #3a98fd;
+    text-decoration: none;
+  }
+  
+  .login-redirect a:hover {
+    text-decoration: underline;
+  }
+
+  .input-error {
+    /*border: 2px solid red; /* Borde rojo */
+    /*background-color: rgba(255, 0, 0, 0.1); /* Relleno rojo claro */
+    background-color: rgb(255, 196, 196); /* Texto rojo */
+    border-radius: 5px; /* Bordes redondeados */
+    transition: background-color 0.3s ease, border-color 0.3s ease; /* Transición suave */
+    border: 2px solid rgba(153, 0, 0, 0.774) !important;
+  }
+
+  /** RELATED SECTION */
+
+  /* Contenedor principal */
+.related-object {
+    border-radius: 8px;
+  }
+  
+  /* Título centrado */
+  .related-header {
+    text-align: center;
+  }
+  
+  .related-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ffffff;
+  }
+  
+  /* Encabezado de las columnas */
+  .related-columns-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    font-size: 1rem;
+    margin-bottom: 5px;
+    color: #bfa181; /* Color dorado para los encabezados */
+  }
+  
+  .related-column-id {
+    flex: 1; /* Columna estrecha para el ID */
+    text-align: center;
+  }
+  
+  .related-column-name {
+    flex: 3; /* Columna más amplia para el nombre */
+    text-align: center;
+  }
+  
+  /* Lista de objetos relacionados */
+  .related-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espaciado entre filas */
+  }
+  
+  /* Fila de cada objeto relacionado */
+  .related-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1rem;
+    /*padding: 5px 0;*/
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Línea divisoria */
+  }
+  
+  .related-row .related-column-id {
+    flex: 1; /* Columna estrecha para el ID */
+    color: white; /* Color del texto */
+  }
+  
+  .related-row .related-column-name {
+    flex: 3; /* Columna más amplia para el nombre */
+    color: white; /* Color del texto */
+  }
+  .delete-button {
+    background-color: rgba(0, 0, 0, 0.7); /* Fondo semitransparente */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.related-column-action {
+    text-align: center;
+    width: 50px; /* Ajusta el ancho según sea necesario */
+  }
+  
+  /* Botón de papelera */
+ /* .delete-button {
+    background: none;
+    border: none;
+    color: red;
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+  
+  .delete-button:hover {
+    color: darkred;
+  }*/
+
+  .related-add {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .related-select {
+    margin-right: 10px;
+    padding: 5px;
+  }
+  
+  .related-add-button {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  .related-add-button:hover {
+    background-color: #0056b3;
+  }
+
+  /** NAVBAR */
+
+  .navbar {
+    position: fixed; /* Fija la barra en la parte superior */
+    top: 0;
+    left: 0;
+    width: 100%; /* Ocupa todo el ancho */
+    height: 4rem; /* Altura fija de la barra de navegación */
+    background-color: rgba(40, 44, 52, 0.8); /* Color semitransparente */
+    color: white;
+    display: flex;
+    justify-content: space-between; /* Distribuye los elementos a los extremos */
+    align-items: center;
+    padding: 15px 25px;
+    z-index: 1000; /* Asegura que esté por encima de otros elementos */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra para destacar */
+    box-sizing: border-box; /* Asegura que el padding no desborde */
+}
+
+.navbar-left {
+    display: flex;
+    align-items: center;
+    /*justify-content: flex-start; /* Alinea el contenido completamente a la izquierda */
+    /*flex: 0; /* No ocupa espacio adicional */
+    cursor: pointer; /* Cambia el cursor al pasar sobre la barra */
+    transition: transform 0.3s ease; /* Transición suave para el efecto de escala */
+    text-decoration: none; /* Elimina el subrayado del enlace */
+    color: inherit; /* Mantiene el color del texto original */
+    margin: 0;
+    font-size: 2.1rem;
+    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+    font-family: "Pixelify Sans", sans-serif;
+    width: 35%;
+    max-width: min-content;
+}
+
+.navbar-left:hover {
+    transform: scale(1.05); /* Aumenta ligeramente el tamaño al pasar el ratón */
+}
+
+
+
+
+.navbar-button:hover {
+    background-color: #2d7431; /* Color verde más oscuro al pasar el cursor */
+}
+
+.navbar-button {
+    background-color: #4caf50; /* Color azul */
+    color: white; /* Color del texto */
+    border: none; /* Sin borde */
+    border-radius: 5px; /* Bordes redondeados */
+    padding: 10px 15px; /* Espaciado interno */
+    font-size: 1rem; /* Tamaño de la fuente */
+    cursor: pointer; /* Cambia el puntero a clicable */
+    transition: background-color 0.3s ease; /* Transición suave para el color de fondo */
+    display: inline-block;;
+    width: auto;;
+    text-decoration: none;;
+}
+
+.navbar-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+    font-family: "Rubik", sans-serif;
+    font-size: 1.4rem; /* Tamaño de la fuente */
+    min-width: 25%;
+    /*align-items: right; /* Alinea el contenido a la derecha */
+    /*text-align: right; /* Alinea el texto a la derecha */
+    /*margin-left: auto;*/
+    justify-content: flex-end;
+}
+
+
+
+.navbar-logo {
+    /*width: 40px; /* Ajusta el tamaño del logo */
+    height: 40px;
+    width: auto; /* Mantiene la proporción de la imagen */
+    margin-right: 10px; /* Espacio entre el logo y el título */
+    object-fit: contain; /* Asegura que la imagen se ajuste correctamente */
+}
+
+/* Estilo TypeWriter */
+.typewriter {
+    display: flex;
+    justify-content: center;
+    min-width: 60%;
+  }
+  
+.typewriter p {
+/*font-family: monospace;*
+font-size: 1.5rem;*/
+margin-inline: auto;
+overflow: hidden;
+/* Keeps on a single line */
+white-space: nowrap;
+/* The cursor */
+border-right: 1px solid;
+/* steps = number of characters */
+animation: typing 3s steps(20) forwards, blink 1s step-end infinite;
+}
+
+@keyframes typing {
+    from {
+        width: 0;
+    }
+
+    to {
+        width: 100%;
+    }
+}
+
+@keyframes blink {
+    50% {
+        border-color: transparent;
+    }
+}
+
+.navbar-profile span {
+    overflow: hidden; /* Evita desbordamientos */
+    text-overflow: ellipsis; /* Agrega "..." si el texto es demasiado largo */
+    white-space: nowrap; /* Asegura que el texto esté en una sola línea */
+}
+
+.message-container {
+    position: fixed;
+    top: 70px; /* Ajusta según la altura del navbar */
+    right: 20px;
+    background-color: #f8d7da; /* Color de fondo para errores */
+    color: #721c24; /* Color del texto para errores */
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    animation: fadeOut 3s forwards; /* Animación para desaparecer */
+  }
+  
+  .message-container.success {
+    background-color: #d4edda; /* Color de fondo para éxito */
+    color: #155724; /* Color del texto para éxito */
+  }
+  
+  @keyframes fadeOut {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+  }
+
+
+
+  
+  /* Contenedor del menú desplegable */
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  /* Menú desplegable */
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: rgba(40, 44, 52, 0.8); /* Color semitransparente */
+    border: 1px solid #0706065e;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    min-width: 150px;
+    padding: 8px 0;
+    color: white;
+  }
+  
+  /* Elementos del menú */
+  .dropdown-item {
+    display: block;
+    padding: 8px 16px;
+    text-decoration: none;
+    cursor: pointer;
+    color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra para destacar */
+    box-sizing: border-box; /* Asegura que el padding no desborde */
+    font-size: 1rem; /* Tamaño de la fuente */
+  }
+  
+  .dropdown-item:hover {
+    background-color: #05001a75;
+    font-size: 1.2rem; /* Aumenta el tamaño al pasar el ratón */
+    transition: transform 0.3s ease; /* Transición suave para el efecto de escala */
+  }
+  
+/* Estilo específico para "Cerrar Sesión" */
+.dropdown-item.logout:hover {
+    background-color: rgba(105, 2, 2, 0.562); /* Cambia el texto a rojo */
+    /*background-color: transparent; /* Mantén el fondo transparente */
+  }
+
+  /* Ocultar el menú cuando no está abierto */
+  .dropdown-menu.hidden {
+    display: none;
+  }
+
+
+/* Estilo base para el ícono */
+.config {
+    width: 2.5rem; /* Tamaño inicial del ícono */
+    transition: transform 0.5s ease; /* Transición suave */
+    cursor: pointer; /* Cambia el puntero a clicable */
+  }
+  
+  /* Efecto al pasar el ratón */
+  .dropdown.active .config {
+    /*width: 2.7rem; /* Aumenta el tamaño del ícono */
+    transform: rotate(360deg); /* Gira el ícono */
+  }
+
+  /* Estilo para el buscador */
+.navbar-search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 20%;
+  }
+  
+  .search-input {
+    /*padding: 8px;*/
+    border: 1px solid #cccccc77;
+    border-radius: 4px;
+    font-size: 1.2rem;
+    width: 70%;
+    background-color: rgba(136, 128, 255, 0.11);
+    color: #ffffff;
+    padding: 6px 8px; /* Reduce el padding para ajustar el contenido */
+  }
+  /* Cambiar el color del placeholder */
+.search-input::placeholder {
+    color: rgba(255, 255, 255, 0.63); /* Cambia el color del texto del placeholder */
+    font-style: italic; /* Opcional: estilo en cursiva */
+}
+  
+  .search-button {
+    background-color: #3171c5;
+    border: none;
+    color: white;
+    /*padding: 8px 12px;*/
+    border-radius: 50%;
+    cursor: pointer;
+    padding: 4px 8px; /* Reduce el padding para ajustar el contenido */
+    
+  }
+  
+  .search-button:hover {
+    background-color: #0c4ea5;
+    transform: scale(1.1); /* Aumenta ligeramente el tamaño al pasar el ratón */
+  }
+  
+/* Estilo para el menú de gestión */
+.navbar-manage {
+    position: relative;
+    cursor: pointer;
+    width: 20%;
+    text-align: center;
+    max-width: 300px; /* Ancho máximo para evitar que se expanda demasiado */
+    
+  }
+.navbar-manage:hover {
+    transform: scale(1.05); /* Aumenta ligeramente el tamaño al pasar el ratón */
+    background-color: rgba(56, 58, 77, 0.404);
+  }
+  
+  .manage-title {
+    font-size: 1rem;
+    color: white;
+    font-family: "Rubik", sans-serif;
+    font-size: 1.8rem; /* Tamaño de la fuente */
+    background-color: rgba(46, 46, 46, 0.068);
+  }
+
+ 
+  
+  .dropdown-menu-manage {
+    position: absolute;
+    top: 100%; /* Aparece justo debajo del contenedor */
+    left: 0; /* Alineado con el contenedor */
+    width: 100%; /* Ocupa el mismo ancho que el contenedor */
+    background-color: rgba(40, 44, 52, 0.966); /* Color semitransparente */
+    border: 1px solid #0706065e; /* Borde similar al de configuración */
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para destacar */
+    z-index: 1000; /* Asegura que esté por encima de otros elementos */
+    padding: 8px 0; /* Espaciado interno */
+    color: white;
+  }
+  
+  .dropdown-item-manage {
+    display: block;
+  padding: 8px 16px;
+  text-decoration: none;
+  cursor: pointer;
+  color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra para destacar */
+  box-sizing: border-box; /* Asegura que el padding no desborde */
+  font-size: 1.3rem; /* Tamaño de la fuente */
+  }
+  
+  .dropdown-item-manage:hover {
+    background-color: #05001a75; /* Fondo al pasar el ratón */
+    font-size: 1.2rem; /* Aumenta ligeramente el tamaño */
+    transition: transform 0.3s ease; /* Transición suave */
+  }
+  
+  /* Barra vertical */
+  .vertical-divider {
+    width: 1px;
+    height: 60%; /* 60% del alto del navbar */
+    background-color: #BFA181;
+    /*margin: 0 16px;*/
+  }
+
+/*Colores utilizados: azul oscuro clásico (#0A1828), turquesa (#178582), dorado (#BFA181)*/ 

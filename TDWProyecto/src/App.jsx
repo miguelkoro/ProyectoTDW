@@ -7,8 +7,6 @@ import { useAuth } from './context/AuthContext';
 
 
 
-import './styles/App.css'
-
 import Home from './pages/Home';
 import Login from './pages/Login';
 import NavBar from './components/NavBar';
@@ -18,6 +16,7 @@ import Register from './pages/Register';
 import UserEdit from './pages/UserEdit';
 import UserView from './pages/UserView';
 import Management from './pages/Management.jsx';
+import Search from './pages/Search.jsx';
 
 
 function App() {  
@@ -61,6 +60,7 @@ function App() {
             <Route path="/products" element={<Management/>} />
             <Route path="/persons" element={<Management/>} />
             <Route path="/entities" element={<Management/>} />
+            <Route path="/search/" element={<Search/>} />
 
             <Route path="*" element={<Home />} />
           </Routes>
