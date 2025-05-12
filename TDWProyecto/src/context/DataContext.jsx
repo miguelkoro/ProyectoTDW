@@ -1,6 +1,6 @@
-import React, { createContext, useState, useEffect } from 'react';
+import { createContext, useState } from 'react';
 import * as dataService from '../services/dataService'; // Importa todos los servicios de dataService
-import { Navigate } from 'react-router-dom';
+
 import { useAuth } from './AuthContext';
 import Persona from '../models/Persona.js'; 
 import Entidad from '../models/Entidad.js'; 
@@ -13,47 +13,28 @@ export const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
   const navigate = useNavigate();
+
   const [persons, setPersons] = useState([]);
   const [entities, setEntities] = useState([]);
   const [products, setProducts] = useState([]);
   const [associations, setAssociations] = useState([]); // Estado para las asociaciones 
   const [users, setUsers] = useState([]); // Estado para los usuarios
+
   const [searchName, setSearchName] = useState(''); // Estado para el nombre de búsqueda
 
   const [isLoading, setIsLoading] = useState(true);
+  const {user, checkTokenExpiration, showMessage} = useAuth(); // Obtiene el usuario autenticado del contexto
 
-  const {user, checkTokenExpiration, userLoading} = useAuth(); // Obtiene el usuario autenticado del contexto
 
 
-  const [message, setMessage] = useState(null);
-  const [messageType, setMessageType] = useState("");
-  const [timeoutId, setTimeoutId] = useState(null);
 
-  const showMessage = (text, type) => {
-    // Cancela el temporizador anterior si existe
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-    // Establece el nuevo mensaje y tipo
-    setMessage(text);
-    setMessageType(type);
-    // Configura un nuevo temporizador para limpiar el mensaje
-    const newTimeoutId = setTimeout(() => {
-      setMessage(null);
-      setMessageType("");
-    }, 2000);
-
-    // Almacena el identificador del nuevo temporizador
-    setTimeoutId(newTimeoutId);
-  };
-
-  const afertUserLogin = async () => {
+ /* const afertUserLogin = async () => {
     await getAssociations(); // Llama a la función para obtener asociaciones
     await getProducts(); // Llama a la función para obtener productos
     await getPersons(); // Llama a la función para obtener personas
     await getEntities(); // Llama a la función para obtener entidades
     if(user?.scope==="writer") await getUsers(); // Llama a la función para obtener usuarios
-  }
+  }*/
 
 
 
@@ -77,7 +58,7 @@ export const DataProvider = ({ children }) => {
       //showMessage('Productos cargados correctamente', 'success');
     } catch (error) {
       console.error('Error al cargar productos:', error);
-      showMessage('Error al cargar productos', 'error');
+      //showMessage('Error al cargar productos', 'error');
     } finally {
       setIsLoading(false); // Indica que los datos han terminado de cargarse
     }
@@ -101,7 +82,7 @@ export const DataProvider = ({ children }) => {
       //showMessage('Productos cargados correctamente', 'success');
     } catch (error) {
       console.error('Error al cargar personas:', error);
-      showMessage('Error al cargar personas', 'error');
+      //showMessage('Error al cargar personas', 'error');
       //setIsLoading(false); // Finaliza la carga en caso de error
     } finally {
       setIsLoading(false); // Indica que los datos han terminado de cargarse
@@ -126,7 +107,7 @@ export const DataProvider = ({ children }) => {
       //console.log("loadEntities", entityCollection); // Verifica el nuevo producto creado
     } catch (error) {
       console.error('Error al cargar entidades:', error);
-      showMessage('Error al cargar entidades', 'error');
+      //showMessage('Error al cargar entidades', 'error');
       //setIsLoading(false); // Finaliza la carga en caso de error
     } finally {
       setIsLoading(false); // Indica que los datos han terminado de cargarse
@@ -151,7 +132,7 @@ export const DataProvider = ({ children }) => {
       //showMessage('Productos cargados correctamente', 'success');
     } catch (error) {
       console.error('Error al cargar asociaciones:', error);
-      showMessage('Error al cargar asociaciones', 'error');
+      //showMessage('Error al cargar asociaciones', 'error');
       //setIsLoading(false); // Finaliza la carga en caso de error
     } finally {
       setIsLoading(false); // Indica que los datos han terminado de cargarse
@@ -195,8 +176,8 @@ export const DataProvider = ({ children }) => {
       return product; // Devuelve la persona encontrada
     } catch (error) {
       console.error('Error al cargar el producto:', error);
-      showMessage('Error al cargar el producto', 'error');
-      setIsLoading(false); // Finaliza la carga en caso de error
+      //showMessage('Error al cargar el producto', 'error');
+      //setIsLoading(false); // Finaliza la carga en caso de error
     }
     finally {
       setIsLoading(false); // Finaliza la carga en caso de error
@@ -297,8 +278,8 @@ export const DataProvider = ({ children }) => {
       }
     }catch (error) {
       console.error('Error al eliminar el objeto:', error);
-      showMessage('Error al eliminar el objeto', 'error');
-      setIsLoading(false); // Finaliza la carga en caso de error
+      //showMessage('Error al eliminar el objeto', 'error');
+      //setIsLoading(false); // Finaliza la carga en caso de error
     }finally {
       setIsLoading(false); // Indica que los datos han terminado de cargarse
     }
@@ -343,7 +324,7 @@ const getUsers = async (name='', order='', ordering='') => {
     //showMessage('Productos cargados correctamente', 'success');
     } catch (error) {
       console.error('Error al cargar productos:', error);
-      showMessage('Error al cargar productos', 'error');
+      //showMessage('Error al cargar productos', 'error');
     } finally {
       setIsLoading(false); // Indica que los datos han terminado de cargarse
     }
@@ -358,7 +339,7 @@ const deleteUser = async (id) => {
     return response; // Devuelve el resultado de la solicitud
   }catch (error) {
     console.error('Error al eliminar el usuario:', error);
-    showMessage('Error al eliminar el usuario', 'error');
+    //showMessage('Error al eliminar el usuario', 'error');
   }finally {
     setIsLoading(false); // Indica que los datos han terminado de cargarse
   }
@@ -375,10 +356,12 @@ const deleteUser = async (id) => {
     //console.log("register", userName, email, password); // Muestra el objeto en la consola
     const response = await dataService.createAPIUser(userName, email, password, birthDate); // Llama al servicio de autenticación
     if (response) {
-      alert("Usuario creado correctamente."); // Muestra un mensaje de éxito al usuario
+      //alert("Usuario creado correctamente."); // Muestra un mensaje de éxito al usuario
+      showMessage("Usuario creado correctamente.", "success"); // Muestra un mensaje de éxito al usuario
       navigate("/login"); // Redirige al usuario a la página de inicio de sesión
     } else {
-      alert("Error al crear el usuario."); // Muestra un mensaje de error al usuario
+      //alert("Error al crear el usuario."); // Muestra un mensaje de error al usuario
+      showMessage("Error al crear el usuario.", "error"); // Muestra un mensaje de error al usuario
     }
   }
 
@@ -407,11 +390,11 @@ const deleteUser = async (id) => {
   return (
     <DataContext.Provider value={{ 
           persons, entities, products, associations, users,
-          isLoading, message, messageType, searchName, setSearchName,
+          isLoading, searchName, setSearchName,
           getEntities, getProducts, getPersons, getAssociations,
           getPersonById, getEntityById, getProductById, getAssociationById,
           createObject, deleteObject, updateObject, addRemRelation,
-          showMessage, getUsers, deleteUser, updateUser, register, getUserById, checkUserName}}>
+          getUsers, deleteUser, updateUser, register, getUserById, checkUserName}}>
       {children}
     </DataContext.Provider>
   );

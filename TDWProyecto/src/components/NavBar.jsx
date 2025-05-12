@@ -1,13 +1,13 @@
 import { useAuth } from "../context/AuthContext";
 import { DataContext } from '../context/DataContext';
 import { Link } from "react-router-dom";
-import React, {useContext, useState} from 'react';
+import {useContext, useState} from 'react';
 import "../styles/index.scss";
 import { useNavigate } from 'react-router-dom'; // Importa useNavigate para redirección
 
 const NavBar = () => {
-  const { user, logout } = useAuth();
-  const { showMessage, message, messageType, searchName, setSearchName } = useContext(DataContext);
+  const { user, logout, message, messageType } = useAuth();
+  const {  setSearchName } = useContext(DataContext);
   const navigate = useNavigate(); // Hook para redirigir
 
   const [searchTerm, setSearchTerm] = useState(""); // Estado para el término de búsqueda

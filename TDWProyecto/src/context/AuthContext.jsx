@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, use } from "react";
+import { createContext, useContext, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import * as authService from '../services/authService'; // Importa todos los servicios de dataService
 import User from '../models/User'; // Importa el modelo User
@@ -17,21 +17,27 @@ function decodeJwt(token) {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
-  const [userLogin, setUserLogin] = useState(false); // Estado de carga (opcional)
+  const [userLogin, setUserLogin] = useState(false); // Estado de carga 
 
-  // Cargar usuario desde localStorage al iniciar
-  // Cargar usuario desde localStorage al iniciar
-  /*useEffect(() => {
-    const storedUser = sessionStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser)); // Carga el usuario desde localStorage
-      checkTokenExpiration(); // Verifica si el token ha expirado
-    }
-  }, []);*/
+  const [message, setMessage] = useState(null);
+  const [messageType, setMessageType] = useState("");
+  const [timeoutId, setTimeoutId] = useState(null);
 
+  /** Funcion para mostrar un mensaje de error o fallo en el navbar */
+  const showMessage = (text, type) => {
+    if (timeoutId) { clearTimeout(timeoutId); } // Limpia el temporizador anterior si existe
+    setMessage(text);
+    setMessageType(type);
+    const newTimeoutId = setTimeout(() => {
+      setMessage(null);
+      setMessageType("");
+    }, 3000);
+    setTimeoutId(newTimeoutId);
+  };
+
+  /** Funcion para coger el usuario del localstorage */
   const getLocalUser = () => {
     try {
-      //setUserLoading(true); // Inicia la carga
       const storedUser = localStorage.getItem("user");
       if (storedUser) {
         setUser(JSON.parse(storedUser)); // Carga el usuario desde localStorage
@@ -39,59 +45,45 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error("Error al cargar el usuario desde localStorage:", error); // Maneja el error
-    }finally {
-      //setUserLoading(false); // Finaliza la carga
     }
   }
  
-  // Función para iniciar sesión
+  /** Funcion para iniciar sesion y recibir un nuevo token */
   const login = async (userName, password) => {
     try {
-      //setUserLogin(true); // Inicia la carga
-      // Verifica si el nombre de usuario y la contraseña son válidos
-       // Llama al servicio de autenticación
-      const data = await authService.login(userName, password);
-      // Verifica si la respuesta contiene el token
-      if (data && data.access_token) {
-        const decodedToken = decodeJwt(data.access_token);
+      const data = await authService.login(userName, password);      
+      if (data && data.access_token) { // Verifica si la respuesta contiene el token
+        const decodedToken = decodeJwt(data.access_token); // Decodifica el token JWT
         const userData = new User({
           id: decodedToken.uid, // ID del usuario
           userName, // Guarda el nombre de usuario
           scope: decodedToken.scopes.includes("writer") ? "writer" : "reader", // Guarda el scope del token
           token: data.access_token, // Guarda el token de acceso
           expiresIn: new Date(Date.now() + data.expires_in * 1000), // Guarda el tiempo de expiración
-          //tokenType: data.token_type, // Guarda el tipo de token (opcional)
         });
-        // Decodifica el token para obtener los datos del usuario
-        console.log("decodedToken: ", decodedToken); // Muestra el token decodificado en la consola
-        console.log("user: ", userData); // Muestra el token decodificado en la consola
-        // Actualiza el estado global del usuario
-        setUser(userData);        
-
-         // Guarda el usuario en localStorage
-         localStorage.setItem("user", JSON.stringify(userData));
-        // Redirige al usuario a la página principal
-        navigate("/");
+        setUser(userData); // Guarda el usuario en el estado                
+        localStorage.setItem("user", JSON.stringify(userData)); // Guarda el usuario en localStorage
+        showMessage(`Bienvenido ${userData.userName}`, "success"); // Muestra un mensaje de éxito al usuario
+        navigate("/"); // Redirige al usuario a la página principal
       } else {
-        //throw new Error("Error en la autenticación: No se recibió un token válido.");
+        showMessage("Error al iniciar sesion", "error"); // Muestra un mensaje de error al usuario
       }
     } catch (error) {
-      console.error("Error al iniciar sesión:", error.message);
-      alert("Usuario o contraseña incorrectos."); // Muestra un mensaje de error al usuario
+      console.error("Error al iniciar sesión", error.message);
+      showMessage("Usuario o contraseña incorrectos.", "error"); // Muestra un mensaje de error al usuario
     }finally {  
       setUserLogin(true); // Finaliza la carga
     }
   };
 
+  /** Funcion para comprobar si el token sigue siendo valido */
   const checkTokenExpiration = () => {
-    //console.log("checkTokenExpiration", user); // Muestra el token decodificado en la consola
     if (user?.expiresIn) {
       const currentTime = new Date();
-      const expirationTime = new Date(user.expiresIn); // Asegúrate de que sea un objeto Date
-      if (currentTime > expirationTime) {
-        // Si el token ha expirado, cierra sesión
-        logout();
-        alert("Su sesión ha expirado. Por favor, inicie sesión nuevamente."); // Muestra un mensaje de error al usuario
+      const expirationTime = new Date(user.expiresIn);
+      if (currentTime > expirationTime) { // Si el token ha expirado, cierra sesión        
+        logout();        
+        showMessage("Su sesión ha expirado. Por favor, inicie sesión nuevamente.", "error"); // Muestra un mensaje de error al usuario
         navigate("/login"); // Redirigir al usuario a la pantalla de login        
       }
     }
@@ -102,18 +94,22 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     setUserLogin(false); // Finaliza la carga
     localStorage.removeItem("user");
+    showMessage("Sesión cerrada", "success"); // Muestra un mensaje de éxito al usuario
     navigate("/login"); // Redirigir al usuario a la pantalla de login
   };
 
 
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, getLocalUser,
-                checkTokenExpiration, userLogin}}>
+    <AuthContext.Provider value={{ user, login, logout, getLocalUser, 
+      showMessage, message, messageType,
+      checkTokenExpiration, userLogin}}>
       {children}
     </AuthContext.Provider>
   );
 };
+
+
 
 // Hook para acceder a la autenticación
 export const useAuth = () => useContext(AuthContext);

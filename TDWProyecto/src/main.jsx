@@ -7,7 +7,7 @@ import { AuthProvider } from "./context/AuthContext";
 import { DataProvider } from "./context/DataContext.jsx";
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  
     <BrowserRouter basename="/ProyectoTDW/">
       <AuthProvider>
         <DataProvider>
@@ -15,5 +15,4 @@ createRoot(document.getElementById('root')).render(
         </DataProvider>
         </AuthProvider>
     </BrowserRouter>
-  </StrictMode>
 )
