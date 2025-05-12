@@ -27,13 +27,24 @@ export const DataProvider = ({ children }) => {
 
   const [message, setMessage] = useState(null);
   const [messageType, setMessageType] = useState("");
+  const [timeoutId, setTimeoutId] = useState(null);
 
   const showMessage = (text, type) => {
+    // Cancela el temporizador anterior si existe
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    // Establece el nuevo mensaje y tipo
     setMessage(text);
     setMessageType(type);
-    setTimeout(() => {
+    // Configura un nuevo temporizador para limpiar el mensaje
+    const newTimeoutId = setTimeout(() => {
       setMessage(null);
+      setMessageType("");
     }, 2000);
+
+    // Almacena el identificador del nuevo temporizador
+    setTimeoutId(newTimeoutId);
   };
 
   const afertUserLogin = async () => {

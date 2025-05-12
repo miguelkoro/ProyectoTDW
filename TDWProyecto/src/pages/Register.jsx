@@ -22,15 +22,16 @@ const Register = () => {
   const navigate = useNavigate(); // Hook para redirigir
 
   const [passwordError, setPasswordError] = useState(false); // Estado para el error de contraseña
+  const [confirmPasswordError, setConfirmPasswordError] = useState(false); // Estado para el error de confirmación de contraseña
   const [emailError, setEmailError] = useState(false); // Estado para el error de email
   const [nameError, setNameError] = useState(false); // Estado para el error de nombre
-
+  const [userNameError, setUserNameError] = useState(""); 
 
   const checkEmail = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Expresión regular para validar emails
     if (!emailRegex.test(email)) {
       setEmailError(true); // Establece el error si el email no es válido
-      showMessage("El email no tiene un formato válido", "error"); // Muestra un mensaje de error
+      //showMessage("El email no tiene un formato válido", "error"); // Muestra un mensaje de error
       return false;
     } else {
       setEmailError(false); // Restablece el error si el email es válido
@@ -38,14 +39,10 @@ const Register = () => {
     }
   };
 
-  const checkPasswords = () => {
-    if (password !== confirmPassword) {
-      setPasswordError(true); // Establece el error si las contraseñas no coinciden
-      showMessage("Las contraseñas no coinciden", "error"); // Muestra un mensaje de error
-      return false;
-    } else if (password.length < 6 || password.length > 16) {
+  const checkPassword = () => {
+    if (password.length < 6 || password.length > 12) {
       setPasswordError(true); // Establece el error si la contraseña no cumple con la longitud
-      showMessage("La contraseña debe tener entre 6 y 16 caracteres", "error"); // Muestra un mensaje de error
+      //showMessage("La contraseña debe tener entre 6 y 16 caracteres", "error"); // Muestra un mensaje de error
       return false;
     } else {
       setPasswordError(false); // Restablece el error si las contraseñas son válidas
@@ -53,10 +50,22 @@ const Register = () => {
     }
   };
 
+  const confirmPasswordCheck = () => {
+    if (password !== confirmPassword) {
+      setConfirmPasswordError(true); // Establece el error si las contraseñas no coinciden
+      //showMessage("Las contraseñas no coinciden", "error"); // Muestra un mensaje de error
+      return false;
+    }else{
+      setConfirmPasswordError(false); // Restablece el error si las contraseñas coinciden
+      return true;
+    } 
+  }
+
   const checkNameLength = () => {
     if (userName.length < 3) { // Verifica si el nombre tiene menos de 3 caracteres
       setNameError(true); // Establece el error si el nombre es demasiado corto
-      showMessage("El nombre debe tener al menos 3 caracteres", "error"); // Muestra un mensaje de error
+      //showMessage("El nombre debe tener al menos 3 caracteres", "error"); // Muestra un mensaje de error
+      setUserNameError("El nombre debe tener al menos 3 caracteres")
       return false;
     } else {
       setNameError(false); // Restablece el error si el nombre es válido
@@ -65,11 +74,11 @@ const Register = () => {
   };
 
   const checkName = async () => {
-    if (!checkNameLength()) return false; // Verifica primero la longitud del nombre
-  
+    if (!checkNameLength()) return false; // Verifica primero la longitud del nombre  
     if (await checkUserName(userName)) {
       setNameError(true); // Establece el error si el nombre ya existe
-      showMessage("El nombre de usuario ya está en uso", "error"); // Muestra un mensaje de error
+      //showMessage("El nombre de usuario ya está en uso", "error"); // Muestra un mensaje de error
+      setUserNameError("El nombre de usuario ya está en uso")
       return false;
     } else {
       setNameError(false); // Restablece el error si el nombre es válido
@@ -87,8 +96,8 @@ const Register = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if ( !checkEmail() || !checkPasswords()) return; // Verifica los campos antes de enviar el formulario
-    console.log("Registro de usuario:", userName, email, password, birthDate); // Muestra los datos en la consola
+    if ( !checkEmail() || !confirmPasswordCheck || !checkPassword()) return; // Verifica los campos antes de enviar el formulario
+    //console.log("Registro de usuario:", userName, email, password, birthDate); // Muestra los datos en la consola
     register(userName, email, password, birthDate); // Llama a la función de registro
   };
 
@@ -107,40 +116,51 @@ const Register = () => {
     <div className="login-container">
       <h1 className="login-title">{!nameChecked ? "Registro de nuevo Usuario" : `Termina de registrate, ${userName}`}</h1>
       <form onSubmit={handleSubmit}>
-        {!nameChecked && <><input
-          type="text"
-          placeholder="Nombre de Usuario"
-          value={userName}
-          onChange={(e) => setUserName(e.target.value)}
-          className={nameError ? 'input-error' : ''}
-          onBlur={checkNameLength}
-          onKeyDown={handleKeyDown} />
-          <button type="button" onClick={checkName}>Comprobar nombre</button> </>}
-        {nameChecked && <><input
-          type="email"
-          placeholder="Correo Electrónico"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className={emailError ? 'input-error' : ''}
-          onBlur={checkEmail} // Valida al deseleccionar el campo
-          onKeyDown={handleKeyDown} 
-        />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className={passwordError ? 'input-error' : ''}
-          onBlur={checkPasswords} // Valida al deseleccionar el campo
-        />
-        <input
-          type="password"
-          placeholder="Confirmar Contraseña"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          className={passwordError ? 'input-error' : ''}
-          onBlur={checkPasswords} // Valida al deseleccionar el campo
-        />
+        {!nameChecked && <>
+        <div className="input-container">
+          <input
+            type="text"
+            placeholder="Nombre de Usuario"
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
+            className={nameError ? 'input-error' : ''}
+            onBlur={checkNameLength}
+            onKeyDown={handleKeyDown} />
+            {nameError &&<span className="error-input-text">{userNameError}</span>}
+            </div>
+            <button type="button" onClick={checkName}>Comprobar nombre</button> </>}
+        {nameChecked && <>
+          <div className="input-container">
+           <input
+            type="email"
+            placeholder="Correo Electrónico"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className={emailError ? 'input-error' : ''}
+            onBlur={checkEmail} // Valida al deseleccionar el campo
+            onKeyDown={handleKeyDown} 
+          />   {emailError && <span className="error-input-text">El email no tiene un formato válido</span>}
+          </div>
+          <div className="input-container">
+            <input
+              type="password"
+              placeholder="Contraseña"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className={passwordError ? 'input-error' : ''}
+              onBlur={checkPassword} // Valida al deseleccionar el campo
+            />{passwordError &&<span className="error-input-text">La contraseña debe tener entre 6 y 12 caracteres</span>}
+          </div>
+          <div className="input-container">
+            <input
+              type="password"
+              placeholder="Confirmar Contraseña"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className={confirmPasswordError ? 'input-error' : ''}
+              onBlur={confirmPasswordCheck} // Valida al deseleccionar el campo
+            />{confirmPasswordError &&<span className="error-input-text">Las contraseñas deben coincidir</span>}
+          </div>
         <input
           type="date"
           placeholder="Fecha de Nacimiento"

@@ -697,6 +697,21 @@ input {
   border: 0.1rem solid #cccccc77;  
   background-color: rgba(255, 255, 255, 0.432);    
 }
+.input-container {
+  position: relative; /* Necesario para que el texto de error se posicione relativo al contenedor */
+  padding-bottom: 0.8rem;
+}
+.error-input-text {
+  color: rgb(255, 35, 35);
+  font-size: 0.8rem;
+  padding-top: 0.2rem;
+  left: 50%; /* Centra horizontalmente */
+  transform: translateX(-50%); 
+  white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+  display: block;
+  z-index: 10;
+  position: absolute;
+}
 
 
 /** MENSAJE ERRORES */
