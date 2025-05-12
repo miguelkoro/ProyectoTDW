@@ -2,7 +2,7 @@ import { createContext, useContext, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import * as authService from '../services/authService'; // Importa todos los servicios de dataService
 import User from '../models/User'; // Importa el modelo User
-// Crear el contexto
+
 const AuthContext = createContext();
 
 
@@ -54,12 +54,9 @@ export const AuthProvider = ({ children }) => {
       const data = await authService.login(userName, password);      
       if (data && data.access_token) { // Verifica si la respuesta contiene el token
         const decodedToken = decodeJwt(data.access_token); // Decodifica el token JWT
-        const userData = new User({
-          id: decodedToken.uid, // ID del usuario
-          userName, // Guarda el nombre de usuario
+        const userData = new User({id: decodedToken.uid, userName,
           scope: decodedToken.scopes.includes("writer") ? "writer" : "reader", // Guarda el scope del token
-          token: data.access_token, // Guarda el token de acceso
-          expiresIn: new Date(Date.now() + data.expires_in * 1000), // Guarda el tiempo de expiración
+          token: data.access_token, expiresIn: new Date(Date.now() + data.expires_in * 1000),
         });
         setUser(userData); // Guarda el usuario en el estado                
         localStorage.setItem("user", JSON.stringify(userData)); // Guarda el usuario en localStorage
@@ -97,8 +94,6 @@ export const AuthProvider = ({ children }) => {
     showMessage("Sesión cerrada", "success"); // Muestra un mensaje de éxito al usuario
     navigate("/login"); // Redirigir al usuario a la pantalla de login
   };
-
-
 
   return (
     <AuthContext.Provider value={{ user, login, logout, getLocalUser, 

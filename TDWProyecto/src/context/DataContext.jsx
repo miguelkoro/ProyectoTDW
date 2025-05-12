@@ -359,14 +359,12 @@ const deleteUser = async (id) => {
   }
 
   const register = async (userName, email, password, birthDate) => {
-    //console.log("register", userName, email, password); // Muestra el objeto en la consola
     const response = await dataService.createAPIUser(userName, email, password, birthDate); // Llama al servicio de autenticación
+    console.log("register", response); // Verifica el nuevo producto creado
     if (response) {
-      //alert("Usuario creado correctamente."); // Muestra un mensaje de éxito al usuario
       showMessage("Usuario creado correctamente.", "success"); // Muestra un mensaje de éxito al usuario
       navigate("/login"); // Redirige al usuario a la página de inicio de sesión
     } else {
-      //alert("Error al crear el usuario."); // Muestra un mensaje de error al usuario
       showMessage("Error al crear el usuario.", "error"); // Muestra un mensaje de error al usuario
     }
   }
@@ -390,8 +388,6 @@ const deleteUser = async (id) => {
       const response = await dataService.checkAPIUserName(name); // Llama al servicio de autenticación
       return response 
   }
-
-
 
   return (
     <DataContext.Provider value={{ 
