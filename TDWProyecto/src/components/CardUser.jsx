@@ -27,7 +27,7 @@ const CardUser = ({object}) => {
   const handleDeleteClick = (e) => {
     e.stopPropagation(); // Evita que el evento de clic se propague al contenedor del card
     const confirmDelete = window.confirm(
-      `¿Estás seguro de que deseas eliminar el objeto "${object.name}"?`
+      `¿Estás seguro de que deseas eliminar el usuario "${object.userName}"?`
     );
     if (confirmDelete) {
       //deleteObject(object.type,object.id); // Llama a la función de eliminación para personas

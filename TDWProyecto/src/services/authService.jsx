@@ -1,9 +1,4 @@
-import User from '../models/User.js'; 
 import { ROUTES } from '../Routes.js';
-
-const API_URL = 'http://localhost:8000'; // Cambia esto según tu configuración
-const BASE_PATH = "/api/v1/"; // Cambia esto según tu configuración
-
 
 
 export const login = async (username, password) => {
@@ -49,8 +44,8 @@ export const createAPIUser = async (userName, email, password, birthDate) => {
       password: password, 
       birthDate: birthDate,      
     };
-    console.log("createAPIUser", payload); // Verifica el objeto recibido
-    const response = await fetch(`${API_URL}${BASE_PATH}users`, {
+    //console.log("createAPIUser", payload); // Verifica el objeto recibido
+    const response = await fetch(ROUTES.CREATE_USER, {
       method: 'POST',headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload),
     }).then(res => res.json())
       .then(
@@ -72,7 +67,7 @@ export const updateAPIUser = async (userObject, password, role, token) => {
       ...(password && { password }), // Solo incluye la contraseña si no está vacía
 
     };
-    const response = await fetch(`${API_URL}${BASE_PATH}users/${userObject.id}`, {
+    const response = await fetch(ROUTES.UPDATE_USER(userObject.id), {
       method: 'PUT', body: JSON.stringify(payload), // Convierte el objeto a JSON
       headers: {'Content-Type': 'application/json', 'If-Match': userObject.etag, 'Authorization': `Bearer ${token}`,}
 

@@ -219,7 +219,12 @@ export const DataProvider = ({ children }) => {
     checkTokenExpiration(); // Verifica si el token ha expirado
     //!user && console.error("No hay usuario autenticado para crear el objeto."); // Verifica si hay un usuario autenticado
     const result = await dataService.createAPIObject(getPlural(object.type),object, user.token);
-    switch (object.type) {
+    await updateModifiedObjects(object.type); // Actualiza la lista de objetos modificados
+    
+  }
+
+  const updateModifiedObjects = async (type) => {
+    switch (type) {
       case 'person':
         await getPersons(); // Actualiza la lista de personas
         break;
@@ -236,7 +241,6 @@ export const DataProvider = ({ children }) => {
         console.error("Tipo de objeto no válido para eliminar."); // Maneja el error si el tipo no es válido
         break;
     }
-    
   }
 
 
@@ -244,7 +248,8 @@ export const DataProvider = ({ children }) => {
   const updateObject = async(updatedObject) => {
     //!user && console.error("No hay usuario autenticado para actualizar la asociación."); // Verifica si hay un usuario autenticado
     checkTokenExpiration(); // Verifica si el token ha expirado
-    const result = dataService.updateAPIObject(getPlural(updatedObject.type), updatedObject, user.token); // Llama al servicio para crear el productor
+    const result = await dataService.updateAPIObject(getPlural(updatedObject.type), updatedObject, user.token); // Llama al servicio para crear el productor
+    await updateModifiedObjects(updatedObject.type); // Actualiza la lista de objetos modificados
     //console.log("updateObject", result); // Verifica el nuevo producto creado
     return result; // Devuelve el resultado de la actualización
   }

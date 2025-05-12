@@ -1,6 +1,4 @@
 import { ROUTES } from '../Routes.js';
-const API_URL = 'http://127.0.0.1:8000'; // Cambia esto a la URL de tu API
-const BASE_PATH = '/api/v1/'
 
 const fetchParams = (name, order, ordering) => {
   const queryParams = new URLSearchParams();
@@ -59,7 +57,7 @@ export const createAPIObject = async (objectsType, object, token) => {
       wikiUrl: object.wikiUrl,
     };
     //console.log("crefdfdateAPIObject", JSON.stringify(name, birthdate, deathdate, imageurl, wikiurl)); // Verifica el objeto recibido
-    const response = await fetch(`${API_URL}${BASE_PATH}${objectsType}`, {
+    const response = await fetch(ROUTES.CREATE_OBJECT(objectsType), {
       method: 'POST',
       headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`, // Agrega el token en la cabecera de autorización
       },
@@ -88,7 +86,7 @@ export const updateAPIObject = async (objectsType, object, token) => {
       wikiUrl: object.wikiUrl,
     };
     console.log("ggf", payload); // Verifica el objeto recibido
-    const response = await fetch(`${API_URL}${BASE_PATH}${objectsType}/${object.id}`, {
+    const response = await fetch(ROUTES.UPDATE_OBJECT(objectsType, object.id),{//`${API_URL}${BASE_PATH}${objectsType}/${object.id}`, {
       method: 'PUT',
       headers: {'Content-Type': 'application/json','If-Match': object.etag, 'Authorization': `Bearer ${token}`, // Agrega el token en la cabecera de autorización
       },
@@ -106,7 +104,7 @@ export const updateAPIObject = async (objectsType, object, token) => {
 
 export const deleteAPIObject = async (objectsType,id, token) => {
   try{
-    const response = await fetch(`${API_URL}${BASE_PATH}${objectsType}/${id}`, {
+    const response = await fetch(ROUTES.DELETE_OBJECT(objectsType, id),{//`${API_URL}${BASE_PATH}${objectsType}/${id}`, {
       method: 'DELETE',
       headers: {'Authorization': `Bearer ${token}`}}) // Agrega el token en la cabecera de autorización})
       .then(
@@ -121,7 +119,7 @@ export const deleteAPIObject = async (objectsType,id, token) => {
 
 export const addRemRelationAPI = async (objectsType, id, relationType, relationId, action, token) => {
   try{                                                 //entities/idEntity/person/add|rem/idPerson (quita la personas de la entidad))
-    const response = await fetch(`${API_URL}${BASE_PATH}${objectsType}/${id}/${relationType}/${action}/${relationId}`, {
+    const response = await fetch(ROUTES.ADD_REMOVE_RELATION(objectsType, id, relationType, action, relationId), {
       method: 'PUT',
       headers: {'Authorization': `Bearer ${token}`}}) // Agrega el token en la cabecera de autorización})
       .then(
@@ -138,7 +136,7 @@ export const fetchAPIUsers = async (token,name = '', order = '', ordering = '') 
   //console.log(`${ROUTES.OBJECTS("users")}?${queryParams}`)
   try{
     const queryParams = fetchParams(name, order, ordering); 
-    const response = await fetch(`${ROUTES.OBJECTS("users")}?${queryParams}`, // Realiza la solicitud a la API con los parámetros de consulta
+    const response = await fetch(`${ROUTES.USERS}?${queryParams}`, // Realiza la solicitud a la API con los parámetros de consulta
       {headers: {'Authorization': `Bearer ${token}`}})
       .then(res => res.json())
       .then(
@@ -154,7 +152,7 @@ export const fetchAPIUsers = async (token,name = '', order = '', ordering = '') 
 
 export const deleteAPIUser = async (id, token) => {
   try{
-    const response = await fetch(`${API_URL}${BASE_PATH}users/${id}`, {
+    const response = await fetch(ROUTES.DELETE_USER(id), {
       method: 'DELETE',
       headers: {'Authorization': `Bearer ${token}`,} // Agrega el token en la cabecera de autorización
     })
