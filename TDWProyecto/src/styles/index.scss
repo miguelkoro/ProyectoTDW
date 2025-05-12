@@ -444,6 +444,7 @@ input {
 }  
 .search-input {
   width: 70%;
+  color: #ffffff;
 }
 /* Cambiar el color del placeholder */
 .search-input::placeholder {
@@ -661,6 +662,7 @@ input {
   font-size: 1.2rem;
   background-color: rgba(136, 128, 255, 0.11);    
   max-width: 16rem;
+  color: #ffffff; 
 }
 .search-column-right {
   align-items: left;

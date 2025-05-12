@@ -11,31 +11,21 @@ import { useLocation } from "react-router-dom";
 
 
 const Search = (props) => {
-  //const { user } = useAuth(); // Obtén el usuario autenticado del contexto
-  //const navigate = useNavigate(); // Hook para redirigir
-  //const location = useLocation();
-  //const nameSearch =  location.state?.name;// || location.pathname.split('/')[2];
   const [objects, setObjects] = useState([]); 
-  //const [title, setTitle] = useState(''); // Estado para el título
-  //const [type, setType] = useState(''); // Estado para el tipo
   const [selectedTypes, setSelectedTypes] = useState([]); // Estado para los tipos seleccionados
   const [searchNameInput, setSearchNameInput] = useState(''); // Estado para el nombre de búsqueda'');
+  const [sortOption, setSortOption] = useState("");
+  const [date, setDate] = useState('');
+  const [isCleaningFilters, setIsCleaningFilters] = useState(false);
   const { persons, entities, products, associations, isLoading, searchName, setSearchName} = useContext(DataContext); 
 
   useEffect(() => {
-    /*const filteredObjects = [] // Arreglo para almacenar los objetos filtrados
-    const namedObjects = getSelectedTypes(filteredObjects) // Llama a la función para obtener los tipos seleccionados
-
-    setObjects(getNamedObjects(namedObjects)); // Actualiza el estado de los objetos con los objetos filtrados
-*/
     searchNavBar(); // Llama a la función para realizar la búsqueda inicial
   }, [persons, entities, products, associations, searchName]); // Se ejecuta cuando cambian los tipos seleccionados o las colecciones
 
   const searchNavBar = () => {
     const filteredObjects = [] // Arreglo para almacenar los objetos filtrados
     const namedObjects = getSelectedTypes(filteredObjects) // Llama a la función para obtener los tipos seleccionados
-
-    //setObjects(getNamedObjects(namedObjects)); 
     setObjects(namedObjects.filter((obj) =>
       obj.name.toLowerCase().includes(searchName.toLowerCase())
     ));
@@ -44,29 +34,32 @@ const Search = (props) => {
     }
   }
 
-  /*useEffect(() => {
-    if (searchNameInput) {
-      //setSearchNameInput(searchName); // Actualiza el estado del nombre de búsqueda
-      handleFilterClick(); // Realiza la búsqueda inicial
-    }
-  }, [searchNameInput]);*/
-
   const handleFilterClick = () => {
     let filteredObjects = []
     getSelectedTypes(filteredObjects)
     const namedObjects = getNamedObjects(filteredObjects);
-
-    setObjects(namedObjects);
+    const dateFilteredObjects = getFilteredByDate(namedObjects);
+    const sortedObjects = sortObjects(dateFilteredObjects);
+    setObjects(sortedObjects);
   }
 
-  const getNamedObjects = (filteredObjects) => {
+  const sortObjects = (filteredObjects) => {
+    if (sortOption === "id") {
+      // Ordenar por ID (numérico)
+      return filteredObjects.sort((a, b) => a.id - b.id);
+    } else if (sortOption === "name") {
+      // Ordenar por nombre (alfabético)
+      return filteredObjects.sort((a, b) => a.name.localeCompare(b.name));
+    }
+    // Si no hay opción de orden, devuelve los objetos sin cambios
+  return filteredObjects;
+};
+  
 
-    //console.log("searchName", searchName);
+  const getNamedObjects = (filteredObjects) => {
     if (!searchNameInput.trim()) {
-      // Si no hay texto en el input, devuelve todos los objetos
       return filteredObjects;
     }
-    // Filtra los objetos que contienen el texto ingresado en el nombre
     return filteredObjects.filter((obj) =>
       obj.name.toLowerCase().includes(searchNameInput.toLowerCase())
     );
@@ -94,6 +87,48 @@ const Search = (props) => {
     return filteredObjects;
   }
 
+  const getFilteredByDate = (filteredObjects) => {
+    if (!date.trim()) {
+      // Si el campo de fecha está vacío, devuelve todos los objetos
+      return filteredObjects;
+    }
+
+    // Convierte la fecha del input en un objeto Date
+    const inputDate = new Date(date).toISOString().split("T")[0];
+    // Filtra los objetos que tienen un intervalo válido y coinciden con la fecha
+    return filteredObjects.filter((obj) => {
+      if (!obj.birthDate || !obj.deathDate) {
+        // Ignora los objetos con fechas nulas o indefinidas
+        return false;
+      }
+      const birthDate = new Date(obj.birthDate).toISOString().split("T")[0];
+      const deathDate = new Date(obj.deathDate).toISOString().split("T")[0];
+      const isValid = inputDate >= birthDate && inputDate <= deathDate;
+      console.log(
+        "nombre: ", obj.name,
+        " Valido: ", isValid,
+        "date ", date,
+        " birthDate", birthDate,
+        "deathDate", deathDate,
+        "inputDate", inputDate
+      );
+      return isValid;
+    });
+  };
+
+  const cleanFilters = () => {
+    setSelectedTypes([]); // Limpia los tipos seleccionados
+    setSearchNameInput(''); // Limpia el campo de búsqueda
+    setDate(''); // Limpia el campo de fecha
+    setSortOption("");
+    setIsCleaningFilters(true);
+  }
+  useEffect(() => {
+    if (isCleaningFilters) {
+      handleFilterClick(); // Llama a la función de filtrado
+      setIsCleaningFilters(false); // Restablece el estado de limpieza
+    }
+  }, [isCleaningFilters]); 
 
 
     // Manejador para actualizar los tipos seleccionados
@@ -127,7 +162,7 @@ const Search = (props) => {
           <button className="search-button-filter" onClick={handleFilterClick}>
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF"><path d="M440-160q-17 0-28.5-11.5T400-200v-240L163.33-742q-14.33-18-4.16-38 10.16-20 32.83-20h576q22.67 0 32.83 20 10.17 20-4.16 38L560-440v240q0 17-11.5 28.5T520-160h-80Zm40-286.67 226-286.66H254l226 286.66Zm0 0Z"/></svg> Filtrar
           </button>
-          <button className="search-button-clean">
+          <button className="search-button-clean" onClick={cleanFilters}>
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF"><path d="M426.67-520h106.66v-280q0-22.33-15.33-37.83t-38-15.5q-22.67 0-38 15.33-15.33 15.33-15.33 38v280Zm-240 173.33h586.66v-106.66H186.67v106.66Zm-62 240h122v-86.66q0-14.17 9.61-23.75 9.62-9.59 23.84-9.59 14.21 0 23.71 9.59 9.5 9.58 9.5 23.75v86.66h133.34v-86.66q0-14.17 9.61-23.75 9.62-9.59 23.84-9.59 14.21 0 23.71 9.59 9.5 9.58 9.5 23.75v86.66h133.34v-86.66q0-14.17 9.61-23.75 9.62-9.59 23.84-9.59 14.21 0 23.71 9.59 9.5 9.58 9.5 23.75v86.66h122l-46.66-186.66H171.33l-46.66 186.66ZM818-40H142q-39 0-63-31t-14-69l55-220v-80q0-33 23.5-56.5T200-520h160v-280q0-50 35-85t85-35q50 0 85 35t35 85v280h160q33 0 56.5 23.5T840-440v80l55 220q11 38-13.17 69Q857.67-40 818-40Zm-44.67-413.33H186.67h586.66Zm-240-66.67H426.67h106.66Z"/></svg> Limpiar
           </button>
         </div>
@@ -136,19 +171,19 @@ const Search = (props) => {
           <span className="search-type-label">Tipos:</span>
           <div className="checkbox-container">
             <label>
-              <input type="checkbox" value="person" onChange={handleTypeChange} />
+              <input type="checkbox" value="person" checked={selectedTypes.includes("person")} onChange={handleTypeChange} />
               Personas
             </label>
             <label>
-              <input type="checkbox" value="entity" onChange={handleTypeChange} />
+              <input type="checkbox" value="entity" checked={selectedTypes.includes("entity")} onChange={handleTypeChange} />
               Entidades
             </label>
             <label>
-              <input type="checkbox" value="product" onChange={handleTypeChange} />
+              <input type="checkbox" value="product" checked={selectedTypes.includes("product")} onChange={handleTypeChange} />
               Productos
             </label>
             <label>
-              <input type="checkbox" value="association" onChange={handleTypeChange} />
+              <input type="checkbox" value="association" checked={selectedTypes.includes("association")} onChange={handleTypeChange} />
               Asociaciones
             </label>
           </div>
@@ -159,10 +194,9 @@ const Search = (props) => {
       <div className="search-row">
           {/* Primera columna */}
         <div className="search-column-left">
-          <label htmlFor="start-date">Desde</label>
-          <input type="date" id="start-date" className="date-input" />
-          <label htmlFor="end-date">Hasta</label>
-          <input type="date" id="end-date" className="date-input" />
+          <label htmlFor="start-date">Filtrar por fecha:</label>
+          <input type="date" id="start-date" className="date-input" value={date}
+              onChange={(e) => setDate(e.target.value)}/>
         </div>
 
         {/* Segunda columna */}
@@ -170,11 +204,13 @@ const Search = (props) => {
           <label className="search-type-label">Ordenar:</label>
           <div className="checkbox-container">
             <label>
-              <input type="radio" name='sort' value="id" />
+              <input type="radio" name='sort' value="id" checked={sortOption === "id"}
+                onChange={(e) => setSortOption(e.target.value)}/>
               ID
             </label>
             <label>
-              <input type="radio" name='sort' value="name" />
+              <input type="radio" name='sort' value="name" checked={sortOption === "name"}
+                onChange={(e) => setSortOption(e.target.value)}/>
               Nombre
             </label>
           </div>
