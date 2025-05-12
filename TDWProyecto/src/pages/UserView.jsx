@@ -1,21 +1,15 @@
-import React, { useState, useEffect, useContext, use } from 'react';
-import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { useState, useEffect, useContext} from 'react';
+import {useParams } from 'react-router-dom';
 import '../styles/index.scss'; // Reutilizamos los estilos de ObjectView
 import { DataContext } from '../context/DataContext'; // Contexto para guardar datos
 import { useAuth } from '../context/AuthContext';
-import User from '../models/User';
 
 const UserView = () => {
-    const {showMessage, getUserById} = useContext(DataContext); // Accede al método getObjectById del contexto
+    const {getUserById} = useContext(DataContext); // Accede al método getObjectById del contexto
     const {user} = useAuth(); // Obtiene el usuario autenticado del contexto
-    //const isEdit= location.state?.edit || false;
     const { id } = useParams();
     const [isLoading, setIsLoading] = useState(true); // Estado de carga   
     const [userObject, setUserObject] = useState({}); // Estado para el objeto de usuario
-
-
-    // Estados para los campos del formulario
-
 
     useEffect(() => {
       if(!user) return; // Si no hay usuario, no hace nada    
@@ -30,22 +24,11 @@ const UserView = () => {
 
     const fetchUser = async (id) => {
       let fetchedUser = await getUserById(id); // Obtiene el usuario por ID      
-      if(fetchedUser){
-        setUserObject(fetchedUser); // Obtiene el usuario por ID
-      }      
+      fetchedUser && setUserObject(fetchedUser); // Obtiene el usuario por ID      
     }
 
-    if (isLoading) {
-      return <p>Cargando...</p>; // Muestra un mensaje de carga mientras se obtienen los datos
-    }
-  
-    if (!userObject) {
-      return <p>No se encontró el usuario.</p>; // Muestra un mensaje si no se encuentra el usuario
-    }
-  
-
-
-
+    if (isLoading) {return <p>Cargando...</p>;}  
+    if (!userObject) {return <p>No se encontró el usuario.</p>;}
   return (
     <div className="object-panel object-panel-user" >
     {/* Fila principal: Título centrado y ID a la derecha */}

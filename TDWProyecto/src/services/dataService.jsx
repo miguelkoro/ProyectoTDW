@@ -160,11 +160,11 @@ export const createAPIUser = async (userName, email, password, birthDate) => {
     const response = await fetch(ROUTES.CREATE_USER, {
       method: 'POST', 
       headers: {'Content-Type': 'application/json'}, 
-      body: JSON.stringify(payload),
-    }).then(res => res.json())
-      .then(
-        (result) => {return result},
-        (error) => { console.log('Error en la solicitud:', error); return error; });
+      body: JSON.stringify(payload),})
+    .then(res => res.json())
+    .then(
+      (result) => {return result},
+      (error) => { console.log('Error en la solicitud:', error); return error; });
     return response; 
   }catch (error) {
     console.error('Error al realizar la solicitud:', error);

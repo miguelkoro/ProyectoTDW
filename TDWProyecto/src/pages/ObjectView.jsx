@@ -12,20 +12,12 @@ import loadingGif from '../assets/images/Loading.gif';
 const ObjectView = (props) => {
   const { type, id } = useParams(); // Obtén el tipo y el id desde la URL
   const [object, setObject] = useState(null); // Estado para el objeto
-  const { getProductById, getPersonById, getEntityById, getAssociationById} = useContext(DataContext); // Accede al método getObjectById del contexto
-
+  const { getProductById, getPersonById, getEntityById, getAssociationById, persons, entities} = useContext(DataContext); // Accede al método getObjectById del contexto
 
   const [relatedPersons, setRelatedPersons] = useState([]);
   const [relatedEntities, setRelatedEntities] = useState([]);
 
   const [isLoading, setIsLoading] = useState(true); // Estado de carga
-
-  //console.log("ObjectView", object); // Verifica el objeto recibido
-  //console.log("", object.getType()); // Verifica el tipo de objeto
-  //console.log("Objeto recibido en ObjectView:", type);
-  //console.log("getObjectById:", getObject);
-
-
 
   useEffect(() => {
     setIsLoading(true); // Inicia la carga
@@ -34,8 +26,6 @@ const ObjectView = (props) => {
         setRelatedPersons([]);
         setRelatedEntities([]);
         let fetchedObject = null;
-        //console.log("fetchObject", type, id); // Verifica el tipo y el id
-        // Realiza el fetch según el tipo
         switch (type) {
           case 'person':fetchedObject = await getPersonById(id); break;
           case 'entity':fetchedObject = await getEntityById(id);break;
@@ -44,9 +34,7 @@ const ObjectView = (props) => {
           default: console.error(`Tipo no válido: ${type}`); break;
         }
   
-        if (fetchedObject) {
-          setObject(fetchedObject); // Guarda el objeto en el estado
-          //console.log('Objeto obtenido:', fetchedObject); // Verifica el objeto obtenido
+        if (fetchedObject) {setObject(fetchedObject); // Guarda el objeto en el estado
         } else {
           console.error(`No se encontró un objeto con ID ${id} y tipo ${type}`);
           setObject(null); // Establece el estado como null si no se encuentra el objeto
@@ -61,35 +49,35 @@ const ObjectView = (props) => {
   }, [id,type]);
   
   useEffect(() => {
-    const fetchRelatedObjects = async () => {
-      if (!object) return; // Asegúrate de que `object` esté cargado antes de continuar
-  
-      //console.log("fetchRelatedObjects", object); // Verifica el objeto recibido
-      try {
-        if (object?.persons) {
-          // Espera a que todas las promesas se resuelvan
-          const persons = await Promise.all(
-            object.persons.map((personId) => getPersonById(personId))
-          );
-          setRelatedPersons(persons);
-          //console.log("Personas relacionadas:", persons); // Verifica las personas relacionadas
-        }
-        if (object?.entities) {
-          const entities = await Promise.all(
-            object.entities.map((entityId) => getEntityById(entityId))
-          );
-          setRelatedEntities(entities);
-        }
-      } catch (error) {
-        console.error("Error al obtener objetos relacionados:", error);
-      }finally {
-        setIsLoading(false); // Finaliza la carga
-      }
-    };
-  
     fetchRelatedObjects(); // Llama a la función para obtener los objetos relacionados
   }, [object]); // Dependencias necesarias
 
+
+  const fetchRelatedObjects = async () => {
+    if (!object) return; // Asegúrate de que `object` esté cargado antes de continuar
+    try {
+      if (object?.persons) {
+        /*const persons = await Promise.all(object.persons.map((personId) => getPersonById(personId)) );*/
+        const relatedPersonsData = await Promise.all(object.persons.map((personId) => {
+          const person = persons.find((p) => p.id === personId); // Busca la persona en el array de personas
+          return person ? person : getPersonById(personId); // Si la persona ya está en el array, la devuelve, de lo contrario, la obtiene por ID
+        }));
+        setRelatedPersons(relatedPersonsData);
+      }
+      if (object?.entities) {
+        /*const entities = await Promise.all(object.entities.map((entityId) => getEntityById(entityId)) );*/
+        const relatedEntitiesData = await Promise.all(object.entities.map((entityId) => {
+          const entity = entities.find((e) => e.id === entityId); // Busca la entidad en el array de entidades
+          return entity ? entity : getEntityById(entityId); // Si la entidad ya está en el array, la devuelve, de lo contrario, la obtiene por ID
+        }));
+        setRelatedEntities(relatedEntitiesData);
+      }
+    } catch (error) {
+      console.error("Error al obtener objetos relacionados:", error);
+    }finally {
+      setIsLoading(false); // Finaliza la carga
+    }
+  };
 
   if (isLoading) {
     return (
@@ -141,24 +129,13 @@ const ObjectView = (props) => {
     {/* Contenedor de columnas para entidades y personas relacionadas */}
     <div className="related-columns">
       {relatedPersons.length > 0 && (
-        <div
-          className={`related-column ${
-            relatedEntities.length === 0 ? 'single-column' : ''
-          }`}
-        >
-          <RelatedSection type="persons" relatedObjects={relatedPersons} father={object} fatherType={type}
-            
-            />
+        <div className={`related-column ${relatedEntities.length === 0 ? 'single-column' : ''}`}>
+          <RelatedSection type="persons" relatedObjects={relatedPersons} father={object} fatherType={type}/>
         </div>
       )}
       {relatedEntities.length > 0 && (
-        <div
-          className={`related-column ${
-            relatedPersons.length === 0 ? 'single-column' : ''
-          }`}
-        >
-          <RelatedSection type="entities" relatedObjects={relatedEntities} father={object} fatherType={type}
-            />
+        <div className={`related-column ${relatedPersons.length === 0 ? 'single-column' : ''}`}>
+          <RelatedSection type="entities" relatedObjects={relatedEntities} father={object} fatherType={type}/>
         </div>
       )}
     </div>
