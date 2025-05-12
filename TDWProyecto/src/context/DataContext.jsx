@@ -7,10 +7,12 @@ import Entidad from '../models/Entidad.js';
 import Producto from '../models/Producto.js'; 
 import Asociacion from '../models/Asociacion.js';
 import User from '../models/User.js';
+import { useNavigate } from "react-router-dom";
 
 export const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
+  const navigate = useNavigate();
   const [persons, setPersons] = useState([]);
   const [entities, setEntities] = useState([]);
   const [products, setProducts] = useState([]);
@@ -351,6 +353,45 @@ const deleteUser = async (id) => {
   }
 }
 
+  const updateUser = async (userObject, password, role) => {
+    checkTokenExpiration(); // Verifica si el token ha expirado
+    const response = await dataService.updateAPIUser(userObject, password, role, user.token); // Llama al servicio de autenticación
+    await getUsers(); // Actualiza la lista de usuarios
+    return response; // Devuelve el resultado de la solicitud
+  }
+
+  const register = async (userName, email, password, birthDate) => {
+    //console.log("register", userName, email, password); // Muestra el objeto en la consola
+    const response = await dataService.createAPIUser(userName, email, password, birthDate); // Llama al servicio de autenticación
+    if (response) {
+      alert("Usuario creado correctamente."); // Muestra un mensaje de éxito al usuario
+      navigate("/login"); // Redirige al usuario a la página de inicio de sesión
+    } else {
+      alert("Error al crear el usuario."); // Muestra un mensaje de error al usuario
+    }
+  }
+
+  const getUserById = async (id) => {
+    checkTokenExpiration(); // Verifica si el token ha expirado
+    const response = await dataService.getAPIUserById(id, user.token); // Llama al servicio de autenticación
+    const userObject = new User({
+      id: response.data.user.id, 
+      userName: response.data.user.username, 
+      scope: response.data.user.role, 
+      token:'',  
+      expiresIn:''});
+    userObject.setEtag(response.etag); // Guarda el ETag del usuario
+    userObject.setEmail(response.data.user.email); // Guarda el correo electrónico del usuario
+    userObject.setBirthDate(response.data.user.birthDate); // Guarda la fecha de nacimiento del usuario
+    return userObject; // Devuelve el objeto User 
+  }
+
+  const checkUserName = async (name) => {  
+      const response = await dataService.checkAPIUserName(name); // Llama al servicio de autenticación
+      return response 
+  }
+
+
 
   return (
     <DataContext.Provider value={{ 
@@ -359,7 +400,7 @@ const deleteUser = async (id) => {
           getEntities, getProducts, getPersons, getAssociations,
           getPersonById, getEntityById, getProductById, getAssociationById,
           createObject, deleteObject, updateObject, addRemRelation,
-          showMessage, getUsers, deleteUser }}>
+          showMessage, getUsers, deleteUser, updateUser, register, getUserById, checkUserName}}>
       {children}
     </DataContext.Provider>
   );

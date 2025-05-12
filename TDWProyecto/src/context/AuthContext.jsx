@@ -105,50 +105,11 @@ export const AuthProvider = ({ children }) => {
     navigate("/login"); // Redirigir al usuario a la pantalla de login
   };
 
-  const checkUserName = async (name) => {  
-      const response = await authService.checkAPIUserName(name); // Llama al servicio de autenticación
-      return response 
-  }
-
-  const getUserById = async (id) => {
-    checkTokenExpiration(); // Verifica si el token ha expirado
-    const response = await authService.getAPIUserById(id, user.token); // Llama al servicio de autenticación
-    const userObject = new User({
-      id: response.data.user.id, 
-      userName: response.data.user.username, 
-      scope: response.data.user.role, 
-      token:'',  
-      expiresIn:''});
-    userObject.setEtag(response.etag); // Guarda el ETag del usuario
-    userObject.setEmail(response.data.user.email); // Guarda el correo electrónico del usuario
-    userObject.setBirthDate(response.data.user.birthDate); // Guarda la fecha de nacimiento del usuario
-    return userObject; // Devuelve el objeto User 
-  }
-
-  const updateUser = async (userObject, password, role) => {
-    checkTokenExpiration(); // Verifica si el token ha expirado
-    const response = await authService.updateAPIUser(userObject, password, role, user.token); // Llama al servicio de autenticación
-    return response; // Devuelve el resultado de la solicitud
-  }
-
-  const register = async (userName, email, password, birthDate) => {
-    //console.log("register", userName, email, password); // Muestra el objeto en la consola
-    const response = await authService.createAPIUser(userName, email, password, birthDate); // Llama al servicio de autenticación
-    if (response) {
-      alert("Usuario creado correctamente."); // Muestra un mensaje de éxito al usuario
-      navigate("/login"); // Redirige al usuario a la página de inicio de sesión
-    } else {
-      alert("Error al crear el usuario."); // Muestra un mensaje de error al usuario
-    }
-  }
-
-
 
 
   return (
     <AuthContext.Provider value={{ user, login, logout, getLocalUser,
-                checkTokenExpiration, checkUserName, 
-                getUserById, updateUser, register, userLogin}}>
+                checkTokenExpiration, userLogin}}>
       {children}
     </AuthContext.Provider>
   );

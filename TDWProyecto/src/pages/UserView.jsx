@@ -6,8 +6,8 @@ import { useAuth } from '../context/AuthContext';
 import User from '../models/User';
 
 const UserView = () => {
-    const {showMessage} = useContext(DataContext); // Accede al método getObjectById del contexto
-    const {user, getUserById} = useAuth(); // Obtiene el usuario autenticado del contexto
+    const {showMessage, getUserById} = useContext(DataContext); // Accede al método getObjectById del contexto
+    const {user} = useAuth(); // Obtiene el usuario autenticado del contexto
     //const isEdit= location.state?.edit || false;
     const { id } = useParams();
     const [isLoading, setIsLoading] = useState(true); // Estado de carga   

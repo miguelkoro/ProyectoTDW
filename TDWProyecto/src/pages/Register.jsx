@@ -5,7 +5,7 @@ import { useNavigate, Link } from "react-router-dom"; // Importa useNavigate y L
 import { DataContext } from '../context/DataContext'; // Contexto para guardar datos
 
 const Register = () => {
-  const { register, user, checkUserName } = useAuth(); // Obtén la función register y el usuario autenticado
+  const { user,  } = useAuth(); // Obtén la función register y el usuario autenticado
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,7 +17,7 @@ const Register = () => {
 
   const [nameChecked, setNameChecked] = useState(false); // Estado para verificar el nombre de usuario
 
-  const {showMessage} = useContext(DataContext); // Accede al método getObjectById del contexto
+  const {showMessage, register, checkUserName} = useContext(DataContext); // Accede al método getObjectById del contexto
 
   const navigate = useNavigate(); // Hook para redirigir
 

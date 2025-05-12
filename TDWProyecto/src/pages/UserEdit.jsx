@@ -9,8 +9,8 @@ const UserEdit = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const isEdit= location.state?.edit || false;
-    const {showMessage} = useContext(DataContext); // Accede al método getObjectById del contexto
-    const {user, checkUserName, getUserById, updateUser} = useAuth(); // Obtiene el usuario autenticado del contexto
+    const {showMessage, updateUser, getUserById, checkUserName} = useContext(DataContext); // Accede al método getObjectById del contexto
+    const {user} = useAuth(); // Obtiene el usuario autenticado del contexto
     //const isEdit= location.state?.edit || false;
     const { id } = useParams();
     const [isLoading, setIsLoading] = useState(true); // Estado de carga
