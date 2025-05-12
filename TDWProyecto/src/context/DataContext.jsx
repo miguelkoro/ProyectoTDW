@@ -346,10 +346,16 @@ const deleteUser = async (id) => {
 }
 
   const updateUser = async (userObject, password, role) => {
-    checkTokenExpiration(); // Verifica si el token ha expirado
-    const response = await dataService.updateAPIUser(userObject, password, role, user.token); // Llama al servicio de autenticación
-    await getUsers(); // Actualiza la lista de usuarios
-    return response; // Devuelve el resultado de la solicitud
+    try{
+      checkTokenExpiration(); // Verifica si el token ha expirado
+      const response = await dataService.updateAPIUser(userObject, password, role, user.token); // Llama al servicio de autenticación
+      await getUsers(); // Actualiza la lista de usuarios
+      showMessage('Usuario actualizado correctamente', 'success'); // Muestra un mensaje de éxito al usuario
+      return response; // Devuelve el resultado de la solicitud      
+    }catch (error) {
+      console.error('Error al actualizar el usuario:', error);
+      showMessage('Error al actualizar el usuario', 'error');
+    }
   }
 
   const register = async (userName, email, password, birthDate) => {

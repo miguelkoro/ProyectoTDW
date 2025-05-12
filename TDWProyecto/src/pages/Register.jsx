@@ -17,7 +17,7 @@ const Register = () => {
 
   const [nameChecked, setNameChecked] = useState(false); // Estado para verificar el nombre de usuario
 
-  const {showMessage, register, checkUserName} = useContext(DataContext); // Accede al método getObjectById del contexto
+  const {register, checkUserName} = useContext(DataContext); // Accede al método getObjectById del contexto
 
   const navigate = useNavigate(); // Hook para redirigir
 
@@ -63,8 +63,7 @@ const Register = () => {
 
   const checkNameLength = () => {
     if (userName.length < 3) { // Verifica si el nombre tiene menos de 3 caracteres
-      setNameError(true); // Establece el error si el nombre es demasiado corto
-      //showMessage("El nombre debe tener al menos 3 caracteres", "error"); // Muestra un mensaje de error
+      setNameError(true); // Establece el error si el nombre es demasiado corto     
       setUserNameError("El nombre debe tener al menos 3 caracteres")
       return false;
     } else {
@@ -77,7 +76,6 @@ const Register = () => {
     if (!checkNameLength()) return false; // Verifica primero la longitud del nombre  
     if (await checkUserName(userName)) {
       setNameError(true); // Establece el error si el nombre ya existe
-      //showMessage("El nombre de usuario ya está en uso", "error"); // Muestra un mensaje de error
       setUserNameError("El nombre de usuario ya está en uso")
       return false;
     } else {
@@ -118,60 +116,37 @@ const Register = () => {
       <form onSubmit={handleSubmit}>
         {!nameChecked && <>
         <div className="input-container">
-          <input
-            type="text"
-            placeholder="Nombre de Usuario"
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
-            className={nameError ? 'input-error' : ''}
-            onBlur={checkNameLength}
-            onKeyDown={handleKeyDown} />
-            {nameError &&<span className="error-input-text">{userNameError}</span>}
-            </div>
-            <button type="button" onClick={checkName}>Comprobar nombre</button> </>}
+          <input type="text" placeholder="Nombre de Usuario" value={userName}
+            onChange={(e) => setUserName(e.target.value)} className={nameError ? 'input-error' : ''}
+            onBlur={checkNameLength} onKeyDown={handleKeyDown} />
+          {nameError &&<span className="error-input-text">{userNameError}</span>}
+        </div>
+        <button type="button" onClick={checkName}>Comprobar nombre</button> </>}
         {nameChecked && <>
           <div className="input-container">
-           <input
-            type="email"
-            placeholder="Correo Electrónico"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className={emailError ? 'input-error' : ''}
-            onBlur={checkEmail} // Valida al deseleccionar el campo
-            onKeyDown={handleKeyDown} 
-          />   {emailError && <span className="error-input-text">El email no tiene un formato válido</span>}
+            <input type="email" placeholder="Correo Electrónico" value={email}
+              onChange={(e) => setEmail(e.target.value)} className={emailError ? 'input-error' : ''}
+              onBlur={checkEmail} onKeyDown={handleKeyDown} />
+            {emailError && <span className="error-input-text">El email no tiene un formato válido</span>}
           </div>
           <div className="input-container">
-            <input
-              type="password"
-              placeholder="Contraseña"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className={passwordError ? 'input-error' : ''}
-              onBlur={checkPassword} // Valida al deseleccionar el campo
-            />{passwordError &&<span className="error-input-text">La contraseña debe tener entre 6 y 12 caracteres</span>}
+            <input type="password" placeholder="Contraseña" value={password}
+              onChange={(e) => setPassword(e.target.value)} className={passwordError ? 'input-error' : ''}
+              onBlur={checkPassword} />
+            {passwordError &&<span className="error-input-text">La contraseña debe tener entre 6 y 12 caracteres</span>}
           </div>
           <div className="input-container">
-            <input
-              type="password"
-              placeholder="Confirmar Contraseña"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className={confirmPasswordError ? 'input-error' : ''}
-              onBlur={confirmPasswordCheck} // Valida al deseleccionar el campo
-            />{confirmPasswordError &&<span className="error-input-text">Las contraseñas deben coincidir</span>}
+            <input type="password" placeholder="Confirmar Contraseña" value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)} className={confirmPasswordError ? 'input-error' : ''}
+              onBlur={confirmPasswordCheck} />
+            {confirmPasswordError &&<span className="error-input-text">Las contraseñas deben coincidir</span>}
           </div>
-        <input
-          type="date"
-          placeholder="Fecha de Nacimiento"
-          value={birthDate}
-          onChange={(e) => setBirthDate(e.target.value)}
-        />
-        <button type="submit">Registrarse</button> </>} 
+          <input type="date" placeholder="Fecha de Nacimiento" value={birthDate}
+            onChange={(e) => setBirthDate(e.target.value)} />
+          <button type="submit">Registrarse</button> 
+        </>} 
       </form>
-      <p className="login-redirect">
-        ¿Ya tienes cuenta? <Link to="/login">Inicia sesión</Link>
-      </p>
+      <p className="login-redirect"> ¿Ya tienes cuenta? <Link to="/login">Inicia sesión</Link> </p>
     </div>
   );
 };
