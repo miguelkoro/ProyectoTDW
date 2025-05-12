@@ -117,7 +117,7 @@ const UserEdit = () => {
       const emailValid = checkEmail(); // Verifica el formato del email
       const nameValid = await checkName(); // Espera a que se resuelva la verificación del nombre
       
-      if (!passwordsValid || !nameValid || !emailValid) {return;} // Si hay errores, no guarda los datos
+      if (!passwordsValid || !nameValid || !emailValid || !confirmPasswordCheck()) {return;} // Si hay errores, no guarda los datos
       let userObj = new User({ id: userObject.id, userName: username,  
         email: email, scope: scope, token: userObject.token, expiresIn: ''}); 
       userObj.setEtag(userObject.etag); // Establece el ETag del usuario
