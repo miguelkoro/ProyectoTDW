@@ -16,6 +16,7 @@ export const DataProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const [associations, setAssociations] = useState([]); // Estado para las asociaciones 
   const [users, setUsers] = useState([]); // Estado para los usuarios
+  const [searchName, setSearchName] = useState(''); // Estado para el nombre de búsqueda
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -349,7 +350,7 @@ const deleteUser = async (id) => {
   return (
     <DataContext.Provider value={{ 
           persons, entities, products, associations, users,
-          isLoading, message, messageType,
+          isLoading, message, messageType, searchName, setSearchName,
           getEntities, getProducts, getPersons, getAssociations,
           getPersonById, getEntityById, getProductById, getAssociationById,
           createObject, deleteObject, updateObject, addRemRelation,

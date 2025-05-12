@@ -635,11 +635,11 @@ input {
 }
 .card-management-wrapper{
   display: grid; /* Cambia a Grid Layout */
-  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); /* Máximo 5 columnas */
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1rem)); /* Máximo 5 columnas */
   row-gap: 1rem; /* Espaciado entre las tarjetas */  
-  justify-items: start; /* Alinea las tarjetas a la izquierda */ 
+  justify-items: center; /* Alinea las tarjetas a la izquierda */ 
   padding: 1rem; /* Espaciado interno */
-  box-sizing: border-box; /* Incluye el padding en el tamaño total */
+  /*box-sizing: border-box; /* Incluye el padding en el tamaño total */
 }
 /* SEARCH */
 .search-panel {

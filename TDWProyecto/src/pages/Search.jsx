@@ -7,41 +7,94 @@ import { useContext, useEffect, useState } from 'react';
 import { DataContext } from '../context/DataContext';
 import loadingGif from '../assets/images/Loading.gif';
 import '../styles/index.scss';
+import { useLocation } from "react-router-dom";
 
 
 const Search = (props) => {
   //const { user } = useAuth(); // Obtén el usuario autenticado del contexto
   //const navigate = useNavigate(); // Hook para redirigir
-  //const typeFromState =  location.state?.type || location.pathname.split('/')[2];
+  //const location = useLocation();
+  //const nameSearch =  location.state?.name;// || location.pathname.split('/')[2];
   const [objects, setObjects] = useState([]); 
   //const [title, setTitle] = useState(''); // Estado para el título
-  const [type, setType] = useState(''); // Estado para el tipo
+  //const [type, setType] = useState(''); // Estado para el tipo
   const [selectedTypes, setSelectedTypes] = useState([]); // Estado para los tipos seleccionados
-
-  const { persons, entities, products, associations, isLoading} = useContext(DataContext); 
+  const [searchNameInput, setSearchNameInput] = useState(''); // Estado para el nombre de búsqueda'');
+  const { persons, entities, products, associations, isLoading, searchName, setSearchName} = useContext(DataContext); 
 
   useEffect(() => {
+    /*const filteredObjects = [] // Arreglo para almacenar los objetos filtrados
+    const namedObjects = getSelectedTypes(filteredObjects) // Llama a la función para obtener los tipos seleccionados
+
+    setObjects(getNamedObjects(namedObjects)); // Actualiza el estado de los objetos con los objetos filtrados
+*/
+    searchNavBar(); // Llama a la función para realizar la búsqueda inicial
+  }, [persons, entities, products, associations, searchName]); // Se ejecuta cuando cambian los tipos seleccionados o las colecciones
+
+  const searchNavBar = () => {
+    const filteredObjects = [] // Arreglo para almacenar los objetos filtrados
+    const namedObjects = getSelectedTypes(filteredObjects) // Llama a la función para obtener los tipos seleccionados
+
+    //setObjects(getNamedObjects(namedObjects)); 
+    setObjects(namedObjects.filter((obj) =>
+      obj.name.toLowerCase().includes(searchName.toLowerCase())
+    ));
+    if (searchName) {
+      setSearchNameInput(searchName); // Actualiza el estado del nombre de búsqueda
+    }
+  }
+
+  /*useEffect(() => {
+    if (searchNameInput) {
+      //setSearchNameInput(searchName); // Actualiza el estado del nombre de búsqueda
+      handleFilterClick(); // Realiza la búsqueda inicial
+    }
+  }, [searchNameInput]);*/
+
+  const handleFilterClick = () => {
+    let filteredObjects = []
+    getSelectedTypes(filteredObjects)
+    const namedObjects = getNamedObjects(filteredObjects);
+
+    setObjects(namedObjects);
+  }
+
+  const getNamedObjects = (filteredObjects) => {
+
+    //console.log("searchName", searchName);
+    if (!searchNameInput.trim()) {
+      // Si no hay texto en el input, devuelve todos los objetos
+      return filteredObjects;
+    }
+    // Filtra los objetos que contienen el texto ingresado en el nombre
+    return filteredObjects.filter((obj) =>
+      obj.name.toLowerCase().includes(searchNameInput.toLowerCase())
+    );
+  }
+
+  const getSelectedTypes = (filteredObjects) => {
     if (selectedTypes.length === 0) {
       // Si no hay tipos seleccionados, combina todas las colecciones
-      setObjects([...persons, ...entities, ...products, ...associations]);
+      filteredObjects.push(...persons, ...entities, ...products, ...associations);
     } else {
       // Si hay tipos seleccionados, filtra las colecciones correspondientes
-      const updatedObjects = [];
       if (selectedTypes.includes("person")) {
-        updatedObjects.push(...persons);
+        filteredObjects.push(...persons);
       }
       if (selectedTypes.includes("entity")) {
-        updatedObjects.push(...entities);
+        filteredObjects.push(...entities);
       }
       if (selectedTypes.includes("product")) {
-        updatedObjects.push(...products);
+        filteredObjects.push(...products);
       }
       if (selectedTypes.includes("association")) {
-        updatedObjects.push(...associations);
-      }
-      setObjects(updatedObjects);
+        filteredObjects.push(...associations);
+      }      
     }
-  }, [selectedTypes, persons, entities, products, associations]); // Se ejecuta cuando cambian los tipos seleccionados o las colecciones
+    return filteredObjects;
+  }
+
+
 
     // Manejador para actualizar los tipos seleccionados
   const handleTypeChange = (e) => {
@@ -54,16 +107,6 @@ const Search = (props) => {
       setSelectedTypes((prev) => prev.filter((type) => type !== value));
     }
   };
-
-    // Filtrar los objetos según los tipos seleccionados
-  const filteredObjects = selectedTypes.length
-    ? objects.filter((object) => selectedTypes.includes(object.type))
-    : objects;
-
-  useEffect(() => {
-
-  },[]);
-
 
   return (
   <div className="section-container-management">
@@ -78,8 +121,10 @@ const Search = (props) => {
             type="text"
             placeholder="Buscar nombre"
             className="search-input"
+            value={searchNameInput} // Valor del input de búsqueda
+            onChange={(e) => setSearchNameInput(e.target.value)} // Actualiza el estado
           />
-          <button className="search-button-filter">
+          <button className="search-button-filter" onClick={handleFilterClick}>
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF"><path d="M440-160q-17 0-28.5-11.5T400-200v-240L163.33-742q-14.33-18-4.16-38 10.16-20 32.83-20h576q22.67 0 32.83 20 10.17 20-4.16 38L560-440v240q0 17-11.5 28.5T520-160h-80Zm40-286.67 226-286.66H254l226 286.66Zm0 0Z"/></svg> Filtrar
           </button>
           <button className="search-button-clean">

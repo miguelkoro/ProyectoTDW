@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom'; // Importa useNavigate para redi
 
 const NavBar = () => {
   const { user, logout } = useAuth();
-  const { showMessage, message, messageType } = useContext(DataContext);
+  const { showMessage, message, messageType, searchName, setSearchName } = useContext(DataContext);
   const navigate = useNavigate(); // Hook para redirigir
 
   const [searchTerm, setSearchTerm] = useState(""); // Estado para el término de búsqueda
@@ -24,7 +24,9 @@ const NavBar = () => {
   const handleSearch = () => {
     // Lógica para manejar la búsqueda
     console.log("Realizando búsqueda...");
-    navigate(`/search/${searchTerm}`, { state: { searchTerm } }); 
+    setSearchName(searchTerm); // Actualiza el término de búsqueda en el contexto
+    setSearchTerm(""); // Limpia el campo de búsqueda
+    navigate(`/search/`); 
   };
 
   return (
@@ -43,6 +45,7 @@ const NavBar = () => {
             type="text"
             className="search-input"
             placeholder="Buscar..."
+            value={searchTerm} // Valor del input de búsqueda
             onChange={(e) => setSearchTerm(e.target.value)} // Actualiza el término de búsqueda
           />
           <button className="search-button" onClick={handleSearch}>
