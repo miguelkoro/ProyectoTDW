@@ -4,15 +4,20 @@ import '../styles/index.scss'; // Reutilizamos los estilos de ObjectView
 import { DataContext } from '../context/DataContext'; // Contexto para guardar datos
 import { useAuth } from '../context/AuthContext';
 import User from '../models/User';
+import loadingGif from '../assets/images/Loading.gif';
+import Error from './Error'; // Importa el componente de error
 
 const UserEdit = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const isEdit= location.state?.edit || false;
-    const {updateUser, getUserById, checkUserName} = useContext(DataContext); // Accede al método getObjectById del contexto
+    const isEdit= location.pathname.includes("edit"); // Verifica si la ruta incluye "edit"
+    const isProfile = location.pathname.includes("profile"); // Verifica si la ruta incluye "profile"
+    const {updateUser, getUserById} = useContext(DataContext); // Accede al método getObjectById del contexto
     const {user} = useAuth(); // Obtiene el usuario autenticado del contexto
     const { id } = useParams();
+
     const [isLoading, setIsLoading] = useState(true); // Estado de carga
+    const [error, setError] = useState(false); // Estado para manejar errores
 
     const [passwordError, setPasswordError] = useState(false); // Estado para el error de contraseña
     const [confirmPasswordError, setConfirmPasswordError] = useState(false); // Estado para el error de confirmación de contraseña
@@ -34,24 +39,46 @@ const UserEdit = () => {
     const [birthDate, setBirthDate] = useState(''); // Estado para la fecha de nacimiento
 
     useEffect(() => {
-      cleanInputs(); // Limpia los inputs al cargar el componente
-      if(!user) return; // Si no hay usuario, no hace nada
+      const fetchData = async () => {
+        setIsLoading(true); // Inicia la carga
+        try {
+          cleanInputs(); // Limpia los inputs al cargar el componente
+          if (!user) return; // Si no hay usuario, no hace nada
 
-      let userId;
-      !isEdit ? userId = user.id : userId = id; // Si es edición, usa el ID del usuario autenticado, si no, usa el ID del objeto de usuario
-      fetchUser(userId); // Llama a la función para obtener el usuario por ID
-    },[id])
+          let userId;
+          if (isEdit) userId = id; // Si es edición usa el ID del objeto de usuario
+          if(isProfile) userId = user.id; 
+          //console.log("ID del usuario:", userId, "fddf", id); // Muestra el ID del usuario en la consola
+          
+          await fetchUser(userId); // Llama a la función para obtener el usuario por ID
+        } catch (error) {
+          console.error("Error fetching user:", error); // Muestra el error en la consola
+          setError(true); // Establece el error a true
+        }
+      };
+    fetchData();
+    },[user,id])
 
     const fetchUser = async (id) => {
-      let fetchedUser = await getUserById(id); // Obtiene el usuario por ID      
-      if(fetchedUser){
-        setUserObject(fetchedUser); // Obtiene el usuario por ID
-        setUserId(fetchedUser.id || ''); // Establece el ID del usuario
-        setUsername(fetchedUser.userName || ''); // Establece el nombre de usuario
-        setEmail(fetchedUser.email || ''); // Establece el email del usuario
-        setScope(fetchedUser.scope || ''); // Establece el rol del usuario
-        setBirthDate(fetchedUser.birthDate || ''); // Establece la fecha de nacimiento del usuario
-        setName(fetchedUser.name || ''); // Establece el nombre del usuario
+      try{
+        const fetchedUser = await getUserById(id); // Obtiene el usuario por ID      
+        if(fetchedUser){
+          setUserObject(fetchedUser); // Obtiene el usuario por ID
+          setUserId(fetchedUser.id || ''); // Establece el ID del usuario
+          setUsername(fetchedUser.userName || ''); // Establece el nombre de usuario
+          setEmail(fetchedUser.email || ''); // Establece el email del usuario
+          setScope(fetchedUser.scope || ''); // Establece el rol del usuario
+          setBirthDate(fetchedUser.birthDate || ''); // Establece la fecha de nacimiento del usuario
+          setName(fetchedUser.name || ''); // Establece el nombre del usuario
+        }else{
+          console.error(`No se encontró un objeto con ID ${id}`); // Muestra un mensaje de error si no se encuentra el objeto
+          setError(true); // Establece el error a true
+        }
+      }catch (error) {
+        console.error("Error fetching user:", error); // Muestra el error en la consola
+        setError(true); // Establece el error a true
+      }finally {
+        setIsLoading(false); // Cambia el estado de carga a falso
       }
     }
 
@@ -99,29 +126,6 @@ const UserEdit = () => {
       }
     };
 
-    /*const checkNameLength = () => {
-      if (username.length < 3) { // Verifica si el nombre tiene menos de 3 caracteres
-        setNameError(true); // Establece el error si el nombre es demasiado corto     
-        setUserNameError("El nombre debe tener al menos 3 caracteres")
-        return false;
-      } else {
-        setNameError(false); // Restablece el error si el nombre es válido
-        return true;
-      }
-    };*/
-  
-    /*const checkName = async () => {
-      if (username === userObject.userName) return true; // Si el nombre no ha cambiado, no verifica
-      if (!checkNameLength()) return false; // Verifica primero la longitud del nombre  
-      if (await checkUserName(username)) {
-        setNameError(true); // Establece el error si el nombre ya existe
-        setUserNameError("El nombre de usuario ya está en uso")
-        return false;
-      } else {
-        setNameError(false); // Restablece el error si el nombre es válido
-        return true;
-      }
-    };*/
 
     /** Guarda los cambios del usuario */  
     const handleSave = async () => {
@@ -141,6 +145,18 @@ const UserEdit = () => {
       await updateUser(userObj, password, userObj.scope); // Llama a la función de actualización del usuario
       await fetchUser(userObject.id); // Vuelve a obtener el usuario actualizado (Por el ETAG)
     };
+
+    if (error) {
+      return <Error message="No se encontró el objeto." />; // Muestra un mensaje de error si no se encuentra el objeto
+    }
+
+    if (isLoading) {
+      return (
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" , width:"100vw"}}>
+        <img src={loadingGif} alt="Cargando..." style={{ height: "5rem" , margin:"0 auto"}} />
+      </div>
+      ); // Muestra un spinner de carga
+    }
 
     const handleCancel = () => { navigate(-1); }; // Redirige a la página anterior
 

@@ -126,8 +126,8 @@ const ObjectView = (props) => {
         <div className="object-detail-row">
           <strong>{type==="association" ? "URL" : "URL a la Wiki:"}</strong>
           <span>
-            {object.wikiUrl ? <a href={object.wikiUrl} target="_blank" rel="noopener noreferrer">{object.wikiUrl}</a> :
-             " URL no disponible"}
+            {object.wikiUrl ? <a href={object.wikiUrl.startsWith('http') ? object.wikiUrl : `https://${object.wikiUrl}`} target="_blank"
+                rel="noopener noreferrer">{object.wikiUrl}</a> :  " URL no disponible"}
           </span>
         </div>
       </div>

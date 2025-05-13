@@ -24,7 +24,7 @@ const ObjectEdit = () => {
   const [error, setError] = useState(false); // Estado para manejar errores
   const [nameError, setNameError] = useState(false); // Estado para el error de nombre
 
-  const isNew= location.state?.new || false;
+  const isNew= location.pathname.includes("new"); // Verifica si es un nuevo objeto
 
 
 
@@ -38,7 +38,7 @@ const ObjectEdit = () => {
 
    useEffect(() => {
     //console.log("type", type); // Verifica si es un nuevo objeto
-    if(isNew) return; // Si es un nuevo objeto, no hacemos nada    
+    if(isNew){ setIsLoading(false); return}; // Si es un nuevo objeto, no hacemos nada    
       fetchObject(); // Llama a la función para obtener el objeto
     }, []);
 

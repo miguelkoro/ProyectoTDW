@@ -98,11 +98,11 @@ const Management = (props) => {
     </div>
 
     {isLoading ? (
-      <div className="centered-container">
+      <div className="centered-container" style={{display:"flex", justifyContent: "center", }}>
         <img
           src={loadingGif}
           alt="Cargando..."
-          className="loading-image"
+          className="loading-image" style={{ maxWidth: '10rem' }}
         />
       </div>
     ) : objects.length === 0 ? (
