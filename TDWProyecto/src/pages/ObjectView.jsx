@@ -1,11 +1,10 @@
-import React, { useEffect, useState, useContext, use } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
 import { DataContext } from '../context/DataContext'; // Importa el contexto
 import '../styles/index.scss'; // Archivo CSS para estilos
-//import '../styles/ObjectView.css'; // Archivo CSS para estilos
 import RelatedSection from '../components/RelatedSection'; // Importa el componente de objetos relacionados
 import loadingGif from '../assets/images/Loading.gif';
+import Error from './Error'; // Importa el componente de error
 
 
 
@@ -13,6 +12,8 @@ const ObjectView = (props) => {
   const { type, id } = useParams(); // Obtén el tipo y el id desde la URL
   const [object, setObject] = useState(null); // Estado para el objeto
   const { getProductById, getPersonById, getEntityById, getAssociationById, persons, entities} = useContext(DataContext); // Accede al método getObjectById del contexto
+
+  const [error, setError] = useState(false); // Estado para manejar errores
 
   const [relatedPersons, setRelatedPersons] = useState([]);
   const [relatedEntities, setRelatedEntities] = useState([]);
@@ -38,10 +39,12 @@ const ObjectView = (props) => {
         } else {
           console.error(`No se encontró un objeto con ID ${id} y tipo ${type}`);
           setObject(null); // Establece el estado como null si no se encuentra el objeto
+          setError(true); // Establece el error a true
         }
       } catch (error) {
         console.error('Error al obtener el objeto:', error);
         setObject(null); // Maneja errores estableciendo el estado como null
+        setError(true); // Establece el error a true
       } 
     }
   
@@ -79,6 +82,10 @@ const ObjectView = (props) => {
     }
   };
 
+  if (error) {
+    return <Error message="No se encontró el objeto." />; // Muestra un mensaje de error si no se encuentra el objeto
+  }
+
   if (isLoading) {
     return (
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" , width:"100vw"}}>
@@ -86,6 +93,8 @@ const ObjectView = (props) => {
     </div>
     ); // Muestra un spinner de carga
   }
+
+
 
  
   return (

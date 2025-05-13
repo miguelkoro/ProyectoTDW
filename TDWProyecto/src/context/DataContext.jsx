@@ -42,23 +42,15 @@ export const DataProvider = ({ children }) => {
   const getProducts = async (name='', order='', ordering='') => {
     try {
       setIsLoading(true); // Indica que los datos están siendo cargados
-  
-      // Llama al servicio para cargar los productos
       const response = await dataService.fetchAPIObjects('products', name, order, ordering);
-
-      // Convierte cada producto del JSON en una instancia de Product
       const productCollection = response.data.products.map((productData) => {
         const product = new Producto(productData.product); // Crea una instancia de Product
         product.setType('product'); // Configura el tipo como 'product'
-        //console.log('Producto cargado:', productData); // Verifica el producto cargado
         return product;
-      });
-  
+      });  
       setProducts(productCollection); // Guarda los productos en el estado
-      //showMessage('Productos cargados correctamente', 'success');
     } catch (error) {
       console.error('Error al cargar productos:', error);
-      //showMessage('Error al cargar productos', 'error');
     } finally {
       setIsLoading(false); // Indica que los datos han terminado de cargarse
     }
@@ -66,24 +58,15 @@ export const DataProvider = ({ children }) => {
   const getPersons = async (name='', order='', ordering='') => {
     try {
       setIsLoading(true); // Indica que los datos están siendo cargados
-  
-      // Llama al servicio para cargar los productos
       const response = await dataService.fetchAPIObjects('persons', name, order, ordering);
-  
-
-      // Convierte cada producto del JSON en una instancia de Product
       const personCollection = response.data.persons.map((personData) => {
         const person = new Persona(personData.person); // Crea una instancia de Product
         person.setType('person'); // Configura el tipo como 'product'
-        //console.log('Producto cargado:', productData); // Verifica el producto cargado
         return person;
       });  
       setPersons(personCollection); // Guarda los productos en el estado
-      //showMessage('Productos cargados correctamente', 'success');
     } catch (error) {
       console.error('Error al cargar personas:', error);
-      //showMessage('Error al cargar personas', 'error');
-      //setIsLoading(false); // Finaliza la carga en caso de error
     } finally {
       setIsLoading(false); // Indica que los datos han terminado de cargarse
     }
@@ -91,24 +74,15 @@ export const DataProvider = ({ children }) => {
   const getEntities = async (name='', order='', ordering='') => {
     try {
       setIsLoading(true); // Indica que los datos están siendo cargados
-  
-      // Llama al servicio para cargar los productos
       const response = await dataService.fetchAPIObjects('entities', name, order, ordering);
-      // Convierte cada producto del JSON en una instancia de Product
       const entityCollection = response.data.entities.map((entityData) => {
         const entity = new Entidad(entityData.entity); // Crea una instancia de Product
         entity.setType('entity'); // Configura el tipo como 'product'
-        //console.log('Producto cargado:', productData); // Verifica el producto cargado
         return entity;
-      });
-  
+      });  
       setEntities(entityCollection); // Guarda los productos en el estado
-      //showMessage('Productos cargados correctamente', 'success');
-      //console.log("loadEntities", entityCollection); // Verifica el nuevo producto creado
     } catch (error) {
       console.error('Error al cargar entidades:', error);
-      //showMessage('Error al cargar entidades', 'error');
-      //setIsLoading(false); // Finaliza la carga en caso de error
     } finally {
       setIsLoading(false); // Indica que los datos han terminado de cargarse
     }
@@ -121,10 +95,9 @@ export const DataProvider = ({ children }) => {
       const response = await dataService.fetchAPIObjects('associations', name, order, ordering);
       // Convierte cada producto del JSON en una instancia de Product
       const associationCollection = response.data.associations.map((associationData) => {
-        const association = new Asociacion(associationData.association); // Crea una instancia de Product
-        association.setType('association'); // Configura el tipo como 'product'
-        //console.log('Producto cargado:', productData); // Verifica el producto cargado
-        return association;
+          const association = new Asociacion(associationData.association); // Crea una instancia de Product
+          association.setType('association'); // Configura el tipo como 'product'
+          return association;
       });
   
       setAssociations(associationCollection); // Guarda los productos en el estado
@@ -168,16 +141,12 @@ export const DataProvider = ({ children }) => {
     try {
       setIsLoading(true); // Indica que los datos están siendo cargados
       const { data, etag } = await dataService.fetchAPIObjectById('products', id);
-      // Convierte el objeto en una instancia de Persona
       const product = new Producto(data.product);
       product.etag = etag; // Asigna el ETag al objeto
       product.setType('product'); // Configura el tipo como 'person'
-      console.log(JSON.stringify(product))
       return product; // Devuelve la persona encontrada
     } catch (error) {
       console.error('Error al cargar el producto:', error);
-      //showMessage('Error al cargar el producto', 'error');
-      //setIsLoading(false); // Finaliza la carga en caso de error
     }
     finally {
       setIsLoading(false); // Finaliza la carga en caso de error
@@ -295,24 +264,12 @@ const getUsers = async (name='', order='', ordering='') => {
     try{
       checkTokenExpiration(); // Verifica si el token ha expirado
       setIsLoading(true); // Indica que los datos están siendo cargados
-      
-      // Llama al servicio para cargar los productos
       const response = await dataService.fetchAPIUsers(user.token,name, order, ordering );
-
-      /*if (response.type === 'error') {
-        console.error(`Error al cargar productos: ${response.data}`);
-        showMessage('Error al cargar productos', 'error');
-        setIsLoading(false);
-        return;
-      }  */
-      // Convierte cada producto del JSON en una instancia de Product
-      //console.log("getUsers", response); // Verifica el nuevo producto creado
       const userCollection = response.users.map((userData) => {
         const newUser= new User({
           id: userData.user.id,
           userName: userData.user.username,
           scope: userData.user.role,
-          //email: userData.user.email,
         });
         newUser.setEmail(userData.user.email); // Guarda el correo electrónico del usuario
         return newUser; // Devuelve el nuevo objeto User

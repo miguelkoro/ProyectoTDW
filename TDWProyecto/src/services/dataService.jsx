@@ -63,7 +63,7 @@ export const updateAPIObject = async (objectsType, object, token) => {
       imageUrl: object.imageUrl, wikiUrl: object.wikiUrl,};
     const response = await fetch(ROUTES.UPDATE_OBJECT(objectsType, object.id),{//`${API_URL}${BASE_PATH}${objectsType}/${object.id}`, {
       method: 'PUT',
-      headers: {'If-Match': object.etag, 'Authorization': `Bearer ${token}`, },
+      headers: {'Content-Type': 'application/json', 'If-Match': object.etag, 'Authorization': `Bearer ${token}`, },
       body: JSON.stringify(payload),})
       .then(res => res.json())
       .then(
@@ -174,7 +174,8 @@ export const createAPIUser = async (userName, email, password, birthDate) => {
 export const getAPIUserById = async (id, token) => {
   try{
     const response = await fetch(ROUTES.USER_BY_ID(id), { // Realiza la solicitud a la API con el ID
-      headers: {'Authorization': `Bearer ${token}`} // Agrega el token en la cabecera de autorización
+      headers: {'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`} // Agrega el token en la cabecera de autorización
       }).then(async (res) => { 
           const etag = res.headers.get('ETag'); // Obtiene el ETag de la respuesta 
           const data = await res.json();
