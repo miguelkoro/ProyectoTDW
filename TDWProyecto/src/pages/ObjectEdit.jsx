@@ -13,8 +13,8 @@ const ObjectEdit = () => {
   const { type, id } = useParams();
   const [object, setObject] = useState(null); // Estado para el objeto
   const { getProductById, getPersonById, getEntityById, getAssociationById,
-          createObject, updateObject, addRemRelation,
-          showMessage} = useContext(DataContext); // Accede al método getObjectById del contexto
+          createObject, updateObject, addRemRelation, persons, entities,
+          } = useContext(DataContext); // Accede al método getObjectById del contexto
 
   const [relatedPersons, setRelatedPersons] = useState([]);
   const [relatedEntities, setRelatedEntities] = useState([]);
@@ -79,24 +79,28 @@ const ObjectEdit = () => {
     }
 
     const fetchRelatedObjects = async () => {       
-      //console.log("fetchRelatedObjects", object); // Verifica el objeto recibido
+      if (!object) return; // Asegúrate de que `object` esté cargado antes de continuar
       try {
         if (object?.persons) {
-          // Espera a que todas las promesas se resuelvan
-          const persons = await Promise.all(
-            object.persons.map((personId) => getPersonById(personId))
-          );
-          setRelatedPersons(persons);
-          //console.log("Personas relacionadas:", persons); // Verifica las personas relacionadas
+          /*const persons = await Promise.all(object.persons.map((personId) => getPersonById(personId)) );*/
+          const relatedPersonsData = await Promise.all(object.persons.map((personId) => {
+            const person = persons.find((p) => p.id === personId); // Busca la persona en el array de personas
+            return person ? person : getPersonById(personId); // Si la persona ya está en el array, la devuelve, de lo contrario, la obtiene por ID
+          }));
+          setRelatedPersons(relatedPersonsData);
         }
         if (object?.entities) {
-          const entities = await Promise.all(
-            object.entities.map((entityId) => getEntityById(entityId))
-          );
-          setRelatedEntities(entities);
+          /*const entities = await Promise.all(object.entities.map((entityId) => getEntityById(entityId)) );*/
+          const relatedEntitiesData = await Promise.all(object.entities.map((entityId) => {
+            const entity = entities.find((e) => e.id === entityId); // Busca la entidad en el array de entidades
+            return entity ? entity : getEntityById(entityId); // Si la entidad ya está en el array, la devuelve, de lo contrario, la obtiene por ID
+          }));
+          setRelatedEntities(relatedEntitiesData);
         }
       } catch (error) {
         console.error("Error al obtener objetos relacionados:", error);
+      }finally {
+        setIsLoading(false); // Finaliza la carga
       }
     };
 
@@ -117,7 +121,7 @@ const ObjectEdit = () => {
   const checkName = () => {
     if (!name) {
       //console.error("El nombre no puede estar vacío"); // Mensaje de error si el nombre está vacío
-      showMessage("El nombre no puede estar vacío", "error"); // Mensaje de error si el nombre está vacío
+      //showMessage("El nombre no puede estar vacío", "error"); // Mensaje de error si el nombre está vacío
       setNameError(true); // Cambia el estado para mostrar el error en el campo
       return false; // Si el nombre está vacío, no se puede crear el objeto
     }else return true;
@@ -130,8 +134,8 @@ const ObjectEdit = () => {
     }
 
     setNameError(false); // Restablece el estado si el nombre es válido
-    let birthDateTemp = birthDate === '' ? '2015-12-05' : birthDate; // Si la fecha de nacimiento está vacía, asigna una fecha por defecto
-    let deathDateTemp = deathDate === '' ? '2025-05-30' : deathDate; // Si la fecha de muerte está vacía, asigna una fecha por defecto
+    let birthDateTemp = birthDate ; // Si la fecha de nacimiento está vacía, asigna una fecha por defecto
+    let deathDateTemp = deathDate ; // Si la fecha de muerte está vacía, asigna una fecha por defecto
     let imageUrlTemp = imageUrl === '' ? "https://static.thenounproject.com/png/559530-200.png" : imageUrl; // Si la URL de la imagen está vacía, asigna una URL por defecto
     let newObject = new Objeto({name, birthDate:birthDateTemp, deathDate:deathDateTemp, wikiUrl, imageUrl:imageUrlTemp}); // Crear un nuevo objeto persona
     newObject.setType(type)
