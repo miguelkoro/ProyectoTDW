@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext} from 'react';
+import { useState, useEffect, useContext, use} from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import '../styles/index.scss'; // Reutilizamos los estilos de ObjectView
 import { DataContext } from '../context/DataContext'; // Contexto para guardar datos
@@ -17,8 +17,8 @@ const UserEdit = () => {
     const [passwordError, setPasswordError] = useState(false); // Estado para el error de contraseña
     const [confirmPasswordError, setConfirmPasswordError] = useState(false); // Estado para el error de confirmación de contraseña
     const [emailError, setEmailError] = useState(false); // Estado para el error de email
-    const [nameError, setNameError] = useState(false); // Estado para el error de nombre
-    const [userNameError, setUserNameError] = useState("");  
+    //const [nameError, setNameError] = useState(false); // Estado para el error de nombre
+    //const [userNameError, setUserNameError] = useState("");  
 
     const [userObject, setUserObject] = useState({}); // Estado para el objeto de usuario
 
@@ -26,6 +26,7 @@ const UserEdit = () => {
     // Estados para los campos del formulario
     const [userId, setUserId] = useState(''); // ID del usuario
     const [username, setUsername] = useState('');
+    const [name, setName] = useState(''); // Estado para el nombre
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -48,6 +49,7 @@ const UserEdit = () => {
         setEmail(fetchedUser.email || ''); // Establece el email del usuario
         setScope(fetchedUser.scope || ''); // Establece el rol del usuario
         setBirthDate(fetchedUser.birthDate || ''); // Establece la fecha de nacimiento del usuario
+        setName(fetchedUser.name || ''); // Establece el nombre del usuario
       }
     }
 
@@ -86,7 +88,7 @@ const UserEdit = () => {
       }
     };
 
-    const checkNameLength = () => {
+    /*const checkNameLength = () => {
       if (username.length < 3) { // Verifica si el nombre tiene menos de 3 caracteres
         setNameError(true); // Establece el error si el nombre es demasiado corto     
         setUserNameError("El nombre debe tener al menos 3 caracteres")
@@ -95,9 +97,9 @@ const UserEdit = () => {
         setNameError(false); // Restablece el error si el nombre es válido
         return true;
       }
-    };
+    };*/
   
-    const checkName = async () => {
+    /*const checkName = async () => {
       if (username === userObject.userName) return true; // Si el nombre no ha cambiado, no verifica
       if (!checkNameLength()) return false; // Verifica primero la longitud del nombre  
       if (await checkUserName(username)) {
@@ -108,21 +110,22 @@ const UserEdit = () => {
         setNameError(false); // Restablece el error si el nombre es válido
         return true;
       }
-    };
+    };*/
 
     /** Guarda los cambios del usuario */  
     const handleSave = async () => {
       let passwordsValid; //Si la password esta vacia, no modifica la contraseña
       password === '' ? passwordsValid = true : passwordsValid = checkPassword(); // Verifica las contraseñas
       const emailValid = checkEmail(); // Verifica el formato del email
-      const nameValid = await checkName(); // Espera a que se resuelva la verificación del nombre
+      //const nameValid = await checkName(); // Espera a que se resuelva la verificación del nombre
       
-      if (!passwordsValid || !nameValid || !emailValid || !confirmPasswordCheck()) {return;} // Si hay errores, no guarda los datos
-      let userObj = new User({ id: userObject.id, userName: username,  
+      if (!passwordsValid || !emailValid || !confirmPasswordCheck()) {return;} // Si hay errores, no guarda los datos
+      let userObj = new User({ id: userObject.id,  
         email: email, scope: scope, token: userObject.token, expiresIn: ''}); 
       userObj.setEtag(userObject.etag); // Establece el ETag del usuario
       userObj.setEmail(email); // Establece el email del usuario
       userObj.setBirthDate(birthDate); // Establece la fecha de nacimiento del usuario
+      userObj.setName(name); // Establece el nombre del usuario
     
       await updateUser(userObj, password, userObj.scope); // Llama a la función de actualización del usuario
       await fetchUser(userObject.id); // Vuelve a obtener el usuario actualizado (Por el ETAG)
@@ -137,19 +140,23 @@ const UserEdit = () => {
         <span className="object-id">ID:{userId}</span>
       </div>
       <div className="object-header">
-        <h1 className="object-title">{isEdit ? `Editar usuario: ${userObject.userName}` : "Mi Cuenta"}</h1>
+        <h1 className="object-title">{isEdit ? `Editar usuario:` : "Mi Cuenta"}</h1>
       </div>
       <hr className="object-divider" />
 
       <div className="object-content">
         <div className="object-details-column">
           <div className="object-detail-row">
-            <strong>Nombre de usuario:</strong>
+            <strong>UserName:</strong>
             <div className="input-container">
-              <input type="text"  value={username} onChange={(e) => setUsername(e.target.value)}
-                placeholder="Introduce tu nombre de usuario" className={nameError ? 'input-error' : ''}
-                onBlur={checkNameLength}/> 
-              {nameError &&<span className="error-input-text">{userNameError}</span>}
+              <span style={{fontSize:"1.3rem"}}>{username}</span>
+            </div>
+          </div>
+          <div className="object-detail-row">
+            <strong>Nombre y apellidos:</strong>
+            <div className="input-container">
+              <input type="text"  value={name} onChange={(e) => setName(e.target.value)}
+                placeholder="Introduce tu nombre "/> 
             </div>
           </div>
           <div className="object-detail-row">

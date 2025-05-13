@@ -8,6 +8,7 @@ export default class User {
     this.etag = null; // ETag del usuario (opcional)
     this.email= null; // Correo electrónico del usuario (opcional)
     this.birthDate = null; // Fecha de nacimiento del usuario (opcional)
+    this.name = null; // Nombre del usuario (opcional)
   }
 
   setEtag(etag) {
@@ -20,5 +21,9 @@ export default class User {
 
   setBirthDate(birthDate) {
     this.birthDate = birthDate; // Establece la fecha de nacimiento del usuario
+  }
+
+  setName(name) {
+    this.name = name; // Establece el nombre del usuario
   }
 }

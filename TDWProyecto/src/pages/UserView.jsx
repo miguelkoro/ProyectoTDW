@@ -43,8 +43,12 @@ const UserView = () => {
       {/* Columna derecha: Detalles */}
       <div className="object-details-column">
         <div className="object-detail-row">
-          <strong>Nombre:</strong>
+          <strong>Username:</strong>
           <span>{userObject.userName}</span>
+        </div>
+        <div className="object-detail-row">
+          <strong>Nombre:</strong>
+          <span>{userObject.name}</span>
         </div>
         <div className="object-detail-row">
           <strong>Email:</strong>

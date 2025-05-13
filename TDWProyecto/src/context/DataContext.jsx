@@ -272,6 +272,8 @@ const getUsers = async (name='', order='', ordering='') => {
           scope: userData.user.role,
         });
         newUser.setEmail(userData.user.email); // Guarda el correo electrónico del usuario
+        newUser.setBirthDate(userData.user.birthDate); // Guarda la fecha de nacimiento del usuario
+        newUser.setName(userData.user.name); // Guarda el nombre del usuario
         return newUser; // Devuelve el nuevo objeto User
       }); 
       console.log("userCollection", userCollection); // Verifica el nuevo producto creado
@@ -315,8 +317,8 @@ const deleteUser = async (id) => {
     }
   }
 
-  const register = async (userName, email, password, birthDate) => {
-    const response = await dataService.createAPIUser(userName, email, password, birthDate); // Llama al servicio de autenticación
+  const register = async (userName, email, password, birthDate, name) => {
+    const response = await dataService.createAPIUser(userName, email, password, birthDate, name); // Llama al servicio de autenticación
     console.log("register", response); // Verifica el nuevo producto creado
     if (response) {
       showMessage("Usuario creado correctamente.", "success"); // Muestra un mensaje de éxito al usuario
@@ -338,6 +340,7 @@ const deleteUser = async (id) => {
     userObject.setEtag(response.etag); // Guarda el ETag del usuario
     userObject.setEmail(response.data.user.email); // Guarda el correo electrónico del usuario
     userObject.setBirthDate(response.data.user.birthDate); // Guarda la fecha de nacimiento del usuario
+    userObject.setName(response.data.user.name); // Guarda el nombre del usuario
     return userObject; // Devuelve el objeto User 
   }
 

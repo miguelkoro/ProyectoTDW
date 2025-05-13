@@ -136,8 +136,8 @@ export const deleteAPIUser = async (id, token) => {
 /**Actualizar un usuario */
 export const updateAPIUser = async (userObject, password, role, token) => {
   try{    
-    const payload = {username: userObject.userName, email: userObject.email, 
-      role: role, birthDate: userObject.birthDate, ...(password && { password }) }; //Solo actualiza la contraseña si se proporciona
+    const payload = {email: userObject.email, 
+      role: role, birthDate: userObject.birthDate,name:userObject.name, ...(password && { password }) }; //Solo actualiza la contraseña si se proporciona
     const response = await fetch(ROUTES.UPDATE_USER(userObject.id), {
         method: 'PUT', body: JSON.stringify(payload), // Convierte el objeto a JSON
         headers: {'Content-Type': 'application/json',
@@ -153,9 +153,9 @@ export const updateAPIUser = async (userObject, password, role, token) => {
   }
 }
 /**Crear un usuario */
-export const createAPIUser = async (userName, email, password, birthDate) => {
+export const createAPIUser = async (userName, email, password, birthDate, name) => {
   try{
-    const payload = {username: userName, email: email, password: password,  birthDate: birthDate, };
+    const payload = {username: userName, email: email, password: password,  birthDate: birthDate, name:name};
     console.log("Payload", payload)
     const response = await fetch(ROUTES.CREATE_USER, {
       method: 'POST', 

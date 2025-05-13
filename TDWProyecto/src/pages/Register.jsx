@@ -14,6 +14,7 @@ const Register = () => {
     const today = new Date();
     return today.toISOString().split('T')[0]; // Formato 'YYYY-MM-DD'
   });
+  const [name, setName] = useState(""); // Estado para el nombre
 
   const [nameChecked, setNameChecked] = useState(false); // Estado para verificar el nombre de usuario
 
@@ -96,7 +97,7 @@ const Register = () => {
     e.preventDefault();
     if ( !checkEmail() || !confirmPasswordCheck || !checkPassword()) return; // Verifica los campos antes de enviar el formulario
     //console.log("Registro de usuario:", userName, email, password, birthDate); // Muestra los datos en la consola
-    register(userName, email, password, birthDate); // Llama a la función de registro
+    register(userName, email, password, birthDate, name); // Llama a la función de registro
   };
 
   const handleKeyDown = (e) => {
@@ -128,6 +129,10 @@ const Register = () => {
               onChange={(e) => setEmail(e.target.value)} className={emailError ? 'input-error' : ''}
               onBlur={checkEmail} onKeyDown={handleKeyDown} />
             {emailError && <span className="error-input-text">El email no tiene un formato válido</span>}
+          </div>
+          <div className="input-container">
+            <input type="text" placeholder="Nombre y apellidos" value={name}
+              onChange={(e) => setName(e.target.value)}  />            
           </div>
           <div className="input-container">
             <input type="password" placeholder="Contraseña" value={password}
