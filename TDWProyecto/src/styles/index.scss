@@ -712,7 +712,21 @@ input {
   z-index: 10;
   position: absolute;
 }
-
+.select-option-container{
+  display: flex;
+  align-items: center;
+  padding-bottom: 1.5rem;
+}
+.error-select-option{
+  color: rgb(255, 35, 35);
+  font-size: 0.8rem;
+  padding-top: 4rem;
+  white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+  display: block;
+  z-index: 10;
+  pointer-events: none;
+  position: absolute;
+}
 
 /** MENSAJE ERRORES */
 .message-container {
