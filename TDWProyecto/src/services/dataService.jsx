@@ -197,7 +197,7 @@ export const checkAPIUserName = async (name) => {
         (error) => { console.log('Error en la solicitud:', error); return error; }
     )
     if(response.ok)return true; 
-    else if(response.status === 404)return false; // El usuario no existe
+    else return false; // El usuario no existe
   }catch (error) {
     console.error('Error al realizar la solicitud:', error);
     return false;

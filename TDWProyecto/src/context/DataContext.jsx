@@ -25,7 +25,7 @@ export const DataProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const {user, checkTokenExpiration, showMessage} = useAuth(); // Obtiene el usuario autenticado del contexto
 
-
+  const VAGUE_MODE = true; 
 
 
  /* const afertUserLogin = async () => {
@@ -294,7 +294,7 @@ const deleteUser = async (id) => {
     setIsLoading(true); // Indica que los datos están siendo cargados
     checkTokenExpiration(); // Verifica si el token ha expirado
     const response = await dataService.deleteAPIUser(id, user.token); // Llama al servicio de autenticación
-    await getUsers(); // Actualiza la lista de usuarios
+    await getUsers(); 
     return response; // Devuelve el resultado de la solicitud
   }catch (error) {
     console.error('Error al eliminar el usuario:', error);
@@ -308,7 +308,8 @@ const deleteUser = async (id) => {
     try{
       checkTokenExpiration(); // Verifica si el token ha expirado
       const response = await dataService.updateAPIUser(userObject, password, role, user.token); // Llama al servicio de autenticación
-      await getUsers(); // Actualiza la lista de usuarios
+      console.log("addUpdateUser", response); // Verifica el nuevo producto creado
+      VAGUE_MODE ? addUpdateUser(response.user) : await getUsers(); // Actualiza la lista de usuarios
       showMessage('Usuario actualizado correctamente', 'success'); // Muestra un mensaje de éxito al usuario
       return response; // Devuelve el resultado de la solicitud      
     }catch (error) {
@@ -317,13 +318,33 @@ const deleteUser = async (id) => {
     }
   }
 
+  const addUpdateUser = async (userObj) => {
+    
+    const updatedUser = new User({id: userObj.id, userName: userObj.username,
+        scope: userObj.role, token: '', expiresIn: '',});      
+      updatedUser.setEmail(userObj.email); // Guarda el correo electrónico del usuario
+      updatedUser.setBirthDate(userObj.birthDate); // Guarda la fecha de nacimiento del usuario
+      updatedUser.setName(userObj.name); // Guarda el nombre del usuario
+    const existingUserIndex = users.findIndex((user) => userObj.id === user.id);
+    if (existingUserIndex !== -1) {       
+      setUsers((prevUsers) => { // Si el usuario ya existe, actualiza su información
+        const updatedUsers = [...prevUsers];
+        updatedUsers[existingUserIndex] = updatedUser; // Actualiza el usuario existente
+        return updatedUsers;
+      });
+    } else { // Si el usuario no existe, lo añade a la lista de usuarios
+      setUsers((prevUsers) => [...prevUsers, updatedUser]); 
+    }
+  }
+
   const register = async (userName, email, password, birthDate, name) => {
     const response = await dataService.createAPIUser(userName, email, password, birthDate, name); // Llama al servicio de autenticación
-    console.log("register", response); // Verifica el nuevo producto creado
-    if (response) {
+    console.log("status", response); // Verifica el nuevo producto creado
+    if (response.user) { // Verifica si la respuesta es exitosa
       showMessage("Usuario creado correctamente.", "success"); // Muestra un mensaje de éxito al usuario
       navigate("/login"); // Redirige al usuario a la página de inicio de sesión
     } else {
+      console.error("Error al crear el usuario:", response.code); // Maneja el error si la creación del usuario falla
       showMessage("Error al crear el usuario.", "error"); // Muestra un mensaje de error al usuario
     }
   }
@@ -332,12 +353,8 @@ const deleteUser = async (id) => {
     try{
       checkTokenExpiration(); // Verifica si el token ha expirado
       const response = await dataService.getAPIUserById(id, user.token); // Llama al servicio de autenticación
-      const userObject = new User({
-        id: response.data.user.id, 
-        userName: response.data.user.username, 
-        scope: response.data.user.role, 
-        token:'',  
-        expiresIn:''});
+      const userObject = new User({id: response.data.user.id, userName: response.data.user.username, 
+        scope: response.data.user.role, token:'', expiresIn:''});
       userObject.setEtag(response.etag); // Guarda el ETag del usuario
       userObject.setEmail(response.data.user.email); // Guarda el correo electrónico del usuario
       userObject.setBirthDate(response.data.user.birthDate); // Guarda la fecha de nacimiento del usuario
@@ -348,6 +365,8 @@ const deleteUser = async (id) => {
       //showMessage('Error al cargar el usuario', 'error');
     }
   }
+
+
 
   const checkUserName = async (name) => {  
       const response = await dataService.checkAPIUserName(name); // Llama al servicio de autenticación
