@@ -19,6 +19,8 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const [userLogin, setUserLogin] = useState(false); // Estado de carga 
 
+  const [isLoading, setIsLoading] = useState(true); // Estado de carga
+
   const [message, setMessage] = useState(null);
   const [messageType, setMessageType] = useState("");
   const [timeoutId, setTimeoutId] = useState(null);
@@ -45,6 +47,8 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error("Error al cargar el usuario desde localStorage:", error); // Maneja el error
+    } finally {
+      setIsLoading(false); // Finaliza la carga
     }
   }
  
@@ -70,6 +74,7 @@ export const AuthProvider = ({ children }) => {
       showMessage("Usuario o contraseña incorrectos.", "error"); // Muestra un mensaje de error al usuario
     }finally {  
       setUserLogin(true); // Finaliza la carga
+      setIsLoading(false); // Finaliza la carga
     }
   };
 
@@ -96,7 +101,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, getLocalUser, 
+    <AuthContext.Provider value={{ user, login, logout, getLocalUser, isLoading,
       showMessage, message, messageType,
       checkTokenExpiration, userLogin}}>
       {children}

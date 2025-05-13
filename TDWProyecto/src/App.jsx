@@ -50,7 +50,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/view/:type/:id" element={<ObjectView />} />
-            <Route path="/edit/:type/:id" element={<ObjectEdit/>} />
+            <Route path="/edit/:type/:id" element={<ProtectedRoute><ObjectEdit/></ProtectedRoute>} />
             <Route path="/view/user/:id" element={<UserView />} />
             <Route path="/edit/user/:id" element={<ProtectedRoute><UserEdit/></ProtectedRoute>} />
             <Route path="/new/:type" element={<ProtectedRoute><ObjectEdit/></ProtectedRoute>} />
