@@ -329,19 +329,24 @@ const deleteUser = async (id) => {
   }
 
   const getUserById = async (id) => {
-    checkTokenExpiration(); // Verifica si el token ha expirado
-    const response = await dataService.getAPIUserById(id, user.token); // Llama al servicio de autenticación
-    const userObject = new User({
-      id: response.data.user.id, 
-      userName: response.data.user.username, 
-      scope: response.data.user.role, 
-      token:'',  
-      expiresIn:''});
-    userObject.setEtag(response.etag); // Guarda el ETag del usuario
-    userObject.setEmail(response.data.user.email); // Guarda el correo electrónico del usuario
-    userObject.setBirthDate(response.data.user.birthDate); // Guarda la fecha de nacimiento del usuario
-    userObject.setName(response.data.user.name); // Guarda el nombre del usuario
-    return userObject; // Devuelve el objeto User 
+    try{
+      checkTokenExpiration(); // Verifica si el token ha expirado
+      const response = await dataService.getAPIUserById(id, user.token); // Llama al servicio de autenticación
+      const userObject = new User({
+        id: response.data.user.id, 
+        userName: response.data.user.username, 
+        scope: response.data.user.role, 
+        token:'',  
+        expiresIn:''});
+      userObject.setEtag(response.etag); // Guarda el ETag del usuario
+      userObject.setEmail(response.data.user.email); // Guarda el correo electrónico del usuario
+      userObject.setBirthDate(response.data.user.birthDate); // Guarda la fecha de nacimiento del usuario
+      userObject.setName(response.data.user.name); // Guarda el nombre del usuario
+      return userObject; // Devuelve el objeto User 
+    }catch (error) {
+      console.error('Error al cargar el usuario:', error);
+      //showMessage('Error al cargar el usuario', 'error');
+    }
   }
 
   const checkUserName = async (name) => {  

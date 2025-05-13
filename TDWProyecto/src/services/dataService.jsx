@@ -45,7 +45,7 @@ export const createAPIObject = async (objectsType, object, token) => {
       imageUrl: object.imageUrl,wikiUrl: object.wikiUrl,};
     const response = await fetch(ROUTES.CREATE_OBJECT(objectsType), {
         method: 'POST',
-        headers: {'Authorization': `Bearer ${token}`,},
+        headers: {'Content-Type': 'application/json','Authorization': `Bearer ${token}`,},
         body: JSON.stringify(payload)})
       .then(res => res.json())
       .then(

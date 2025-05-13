@@ -3,32 +3,59 @@ import {useParams } from 'react-router-dom';
 import '../styles/index.scss'; // Reutilizamos los estilos de ObjectView
 import { DataContext } from '../context/DataContext'; // Contexto para guardar datos
 import { useAuth } from '../context/AuthContext';
+import loadingGif from '../assets/images/Loading.gif';
+import Error from './Error'; // Importa el componente de error
 
 const UserView = () => {
     const {getUserById} = useContext(DataContext); // Accede al método getObjectById del contexto
     const {user} = useAuth(); // Obtiene el usuario autenticado del contexto
     const { id } = useParams();
     const [isLoading, setIsLoading] = useState(true); // Estado de carga   
+    const [error, setError] = useState(false); // Estado para manejar errores
     const [userObject, setUserObject] = useState({}); // Estado para el objeto de usuario
 
-    useEffect(() => {
-      if(!user) return; // Si no hay usuario, no hace nada    
-      try { 
-        fetchUser(id); // Llama a la función para obtener el usuario por ID
-      } catch (error) {
-        console.error("Error fetching user:", error); // Muestra el error en la consola
-      }finally {
-        setIsLoading(false); // Cambia el estado de carga a falso
-      }
-    },[])
+    useEffect(() => {   
+      const fetchData = async () => {
+        setIsLoading(true); // Inicia la carga
+        try {
+          if (!user) return; // Si no hay usuario, no hace nada
+          await fetchUser(id); // Llama a la función para obtener el usuario por ID
+        } catch (error) {
+          console.error("Error fetching user:", error); // Muestra el error en la consola
+          setError(true); // Establece el error a true
+        } finally {
+          setIsLoading(false); // Cambia el estado de carga a falso
+        }
+      };
+      fetchData();
+    },[user, id])
 
     const fetchUser = async (id) => {
-      let fetchedUser = await getUserById(id); // Obtiene el usuario por ID      
-      fetchedUser && setUserObject(fetchedUser); // Obtiene el usuario por ID      
+      try {
+        const fetchedUser = await getUserById(id); // Obtiene el usuario por ID
+        if (fetchedUser) {
+          setUserObject(fetchedUser); // Establece el usuario en el estado
+        } else {
+          //throw new Error("Usuario no encontrado"); // Lanza un error si no se encuentra el usuario
+          setError(true); // Establece el estado de error
+        }
+      } catch (error) {
+        console.error("Error al obtener el usuario:", error);
+        setError(true); // Establece el estado de error
+      }   
     }
 
-    if (isLoading) {return <p>Cargando...</p>;}  
-    if (!userObject) {return <p>No se encontró el usuario.</p>;}
+    if (error) {
+      return <Error message="No se encontró el objeto." />; // Muestra un mensaje de error si no se encuentra el objeto
+    }
+
+    if (isLoading) {
+      return (
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" , width:"100vw"}}>
+        <img src={loadingGif} alt="Cargando..." style={{ height: "5rem" , margin:"0 auto"}} />
+      </div>
+      ); // Muestra un spinner de carga
+    }
   return (
     <div className="object-panel object-panel-user" >
     {/* Fila principal: Título centrado y ID a la derecha */}

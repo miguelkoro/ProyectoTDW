@@ -14,7 +14,7 @@ const CardUser = ({object}) => {
   const handleCardClick = () => {
     //console.log("Objeto clickeado:", object); // Verifica el objeto clickeado
     navigate(`/view/user/${object.id}`, { state: { view: true } });
-    console.log("Datos del objeto:", object);
+    //console.log("Datos del objeto:", object);
 
   };
 

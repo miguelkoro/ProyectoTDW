@@ -34,11 +34,13 @@ const UserEdit = () => {
     const [birthDate, setBirthDate] = useState(''); // Estado para la fecha de nacimiento
 
     useEffect(() => {
+      cleanInputs(); // Limpia los inputs al cargar el componente
       if(!user) return; // Si no hay usuario, no hace nada
+
       let userId;
       !isEdit ? userId = user.id : userId = id; // Si es edición, usa el ID del usuario autenticado, si no, usa el ID del objeto de usuario
       fetchUser(userId); // Llama a la función para obtener el usuario por ID
-    },[])
+    },[id])
 
     const fetchUser = async (id) => {
       let fetchedUser = await getUserById(id); // Obtiene el usuario por ID      
@@ -51,6 +53,15 @@ const UserEdit = () => {
         setBirthDate(fetchedUser.birthDate || ''); // Establece la fecha de nacimiento del usuario
         setName(fetchedUser.name || ''); // Establece el nombre del usuario
       }
+    }
+
+    const cleanInputs = () => {
+      setUserId(''); // Limpia el ID del usuario
+      setUsername(''); // Limpia el nombre de usuario
+      setEmail(''); // Limpia el email del usuario
+      setScope(''); // Limpia el rol del usuario
+      setBirthDate(''); // Limpia la fecha de nacimiento del usuario
+      setName(''); // Limpia el nombre del usuario
     }
 
     const checkPassword = () => {
