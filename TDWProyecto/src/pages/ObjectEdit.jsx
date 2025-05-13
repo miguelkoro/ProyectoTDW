@@ -2,7 +2,8 @@ import React, { useState, useEffect, useContext, use } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import '../styles/index.scss'; // Reutilizamos los estilos de ObjectView
 import { DataContext } from '../context/DataContext'; // Contexto para guardar datos
-
+import loadingGif from '../assets/images/Loading.gif';
+import Error from './Error'; // Importa el componente de error
 
 import Objeto from '../models/Objeto'; // Importa el modelo Objeto
 import RelatedSection from '../components/RelatedSection'; // Importa el componente de objetos relacionados
@@ -20,6 +21,7 @@ const ObjectEdit = () => {
   const [relatedEntities, setRelatedEntities] = useState([]);
 
   const [isLoading, setIsLoading] = useState(true); // Estado de carga
+  const [error, setError] = useState(false); // Estado para manejar errores
   const [nameError, setNameError] = useState(false); // Estado para el error de nombre
 
   const isNew= location.state?.new || false;
@@ -42,6 +44,7 @@ const ObjectEdit = () => {
 
     const fetchObject = async () => {
       try {
+        setIsLoading(true); // Inicia la carga
         let fetchedObject = null;
   
         // Realiza el fetch según el tipo
@@ -54,14 +57,17 @@ const ObjectEdit = () => {
         }
         //console.log("fetchObject", fetchedObject); // Verifica el objeto recibido
         if (fetchedObject) {
-          
-          //console.log('Objeto obtenido:', fetchedObject); // Verifica el objeto obtenido
           await setfetchObject(fetchedObject); // Llama a la función para establecer los datos del objeto
+        } else {
+          console.error(`No se encontró un objeto con ID ${id} y tipo ${type}`);
+          setObject(null); // Establece el estado como null si no se encuentra el objeto
+          setError(true); // Establece el error a true
         }
       } catch (error) {
         console.error('Error al obtener el objeto:', error);
         setObject(null); // Maneja errores estableciendo el estado como null
-        navigate('/'); // Redirige a la página principal en caso de error
+        setError(true); // Establece el error a true
+        //navigate('/'); // Redirige a la página principal en caso de error
       } 
     }
 
@@ -99,8 +105,10 @@ const ObjectEdit = () => {
         }
       } catch (error) {
         console.error("Error al obtener objetos relacionados:", error);
+        setError(true); // Establece el error a true
       }finally {
         setIsLoading(false); // Finaliza la carga
+        
       }
     };
 
@@ -109,15 +117,7 @@ const ObjectEdit = () => {
         fetchRelatedObjects(); // Llama a la función para obtener los objetos relacionados
       }
     }, [object]); // Dependencia para ejecutar cuando el objeto cambie
-
-    /*useEffect(() => {
-      if (updateTriggered) {
-        setfetchObject(object); // Llama a la función para establecer los datos del objeto
-        setUpdateTriggered(false); // Resetea el estado para evitar ejecuciones futuras
-      }
-    }, [updateTriggered]); */
-
-
+  
   const checkName = () => {
     if (!name) {
       //console.error("El nombre no puede estar vacío"); // Mensaje de error si el nombre está vacío
@@ -127,12 +127,10 @@ const ObjectEdit = () => {
     }else return true;
   }
 
-  const saveNewObject = () => {
-    //console.log("nacimiento: ", birthDate, " muerte: ", deathDate, " wikiUrl: ", wikiUrl, " imageUrl: ", imageUrl);
+  const saveNewObject = () => {   
     if (!checkName()) {
       return; // Si el nombre no es válido, no se puede crear el objeto
     }
-
     setNameError(false); // Restablece el estado si el nombre es válido
     let birthDateTemp = birthDate ; // Si la fecha de nacimiento está vacía, asigna una fecha por defecto
     let deathDateTemp = deathDate ; // Si la fecha de muerte está vacía, asigna una fecha por defecto
@@ -146,17 +144,13 @@ const ObjectEdit = () => {
   }
 
   const update = async () => {
-    if (!checkName()) {
-      return; // Si el nombre no es válido, no se puede crear el objeto
-    }
-
+    if (!checkName()) {return; }
     setNameError(false); // Restablece el estado si el nombre es válido
-
-    let objeto=new Objeto({id:object.id, name, birthDate, deathDate, imageUrl, wikiUrl}); // Crear un nuevo objeto con los datos actualizados
+    let imageUrlTemp = imageUrl === '' ? "https://static.thenounproject.com/png/559530-200.png" : imageUrl;
+    let objeto=new Objeto({id:object.id, name, birthDate, deathDate, imageUrlTemp, wikiUrl}); // Crear un nuevo objeto con los datos actualizados
     objeto.setEtag(object.etag); // Establecer el etag del objeto original
     objeto.setType(type); // Establecer el tipo del objeto
     let result = await updateObject(objeto); // Guardar el objeto usando el contexto
-    //console.log("result: ", result.product); // Verifica el resultado de la actualización
     await fetchObject(); // Llama a la función para establecer los datos del objeto
   }
 
@@ -196,6 +190,20 @@ const ObjectEdit = () => {
     navigate(-1); // Volver a la página anterior sin guardar
   };
 
+
+  if (error) {
+    return <Error message="No se encontró el objeto." />; // Muestra un mensaje de error si no se encuentra el objeto
+  }
+
+  if (isLoading) {
+    return (
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" , width:"100vw"}}>
+      <img src={loadingGif} alt="Cargando..." style={{ height: "5rem" , margin:"0 auto"}} />
+    </div>
+    ); // Muestra un spinner de carga
+  }
+
+
   return (
     <div className="object-panel">
       {/* Fila principal: Título centrado y ID a la derecha */}
@@ -208,51 +216,31 @@ const ObjectEdit = () => {
       <div className="object-content">
         {/* Columna izquierda: Imagen */}
         <div className="object-image-column">
-          <img
-            className="object-image"
-            src={imageUrl || 'https://static.thenounproject.com/png/559530-200.png'}
-            alt={name || 'Nuevo Objeto'}
-          />
-          <input
-            type="url"
-            value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
-            placeholder="Introduce la URL de la imagen"
-            className="image-url-input"
-          />
+          <img className="object-image" src={imageUrl || 'https://static.thenounproject.com/png/559530-200.png'}
+            alt={name || 'Nuevo Objeto'}/>
+          <input  type="url" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)}
+            placeholder="Introduce la URL de la imagen" className="image-url-input" />
         </div>
-
 
         {/* Columna derecha: Detalles */}
         <div className="object-details-column">
           <div className="object-detail-row">
             <strong>Nombre:</strong>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Introduce el nombre"
-              className={nameError ? 'input-error' : ''}
-            />
+            <input  type="text" value={name} onChange={(e) => setName(e.target.value)}
+              placeholder="Introduce el nombre"  className={nameError ? 'input-error' : ''} />
           </div>
           <div className="object-detail-row">
             <strong>{type === "person" ? "Nacimiento" : "Creacion"}:</strong>
-            <input
-              type="date"
-              value={birthDate}
-              onChange={(e) => setBirthDate(e.target.value)}
-            />
+            <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} />
           </div>
           <div className="object-detail-row">
             <strong>{type === "person" ? "Muerte" : "Descontinuacion"}:</strong>
-            <input
-              type="date"
-              value={deathDate}
+            <input type="date" value={deathDate}
               onChange={(e) => setDeathDate(e.target.value)}
             />
           </div>
           <div className="object-detail-row">
-            <strong>URL a la Wiki:</strong>
+            <strong>{type==="association" ? "URL" : "URL a la Wiki:"}</strong>
             <input
               type="url"
               value={wikiUrl}
@@ -282,7 +270,7 @@ const ObjectEdit = () => {
           }`}
         >
           <RelatedSection type="persons" relatedObjects={relatedPersons} father={object} fatherType={type}
-              addRelation={addRelation} removeRelation={removeRelation} />
+              addRelation={addRelation} removeRelation={removeRelation} isEdit={true}/>
         </div>
       )}
       {((type==="product" || type === "association") && !isNew) && (
@@ -292,7 +280,7 @@ const ObjectEdit = () => {
           }`}
         >
           <RelatedSection type="entities" relatedObjects={relatedEntities} father={object} fatherType={type}
-             addRelation={addRelation} removeRelation={removeRelation} />
+             addRelation={addRelation} removeRelation={removeRelation} isEdit={true}/>
         </div>
       )}
     </div>

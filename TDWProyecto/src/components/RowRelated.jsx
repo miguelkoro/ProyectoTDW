@@ -23,17 +23,17 @@ const RowRelated = (props) => {
 
     const handleClick = () => {
       console.log("Objeto clickeado:", props.object); // Verifica el objeto clickeado
-      isView &&
+      !props.isEdit &&
         navigate(`/view/${props.object.type}/${props.object.id}`, { state: { view: true } }); // Redirige al ObjectView con el objeto como estado
       //console.log("Datos del objeto:", object);
     };
 
   return (
     <>          
-            <div key={props.object.id} className="related-row" onClick={handleClick} style={{ cursor: isView ? 'pointer' : 'default' }}>
+            <div key={props.object.id} className="related-row" onClick={handleClick} style={{ cursor: !props.isEdit ? 'pointer' : 'default' }}>
                 <div className="related-column-id">{props.object.id}</div>
                 <div className="related-column-name">{props.object.name || 'Sin nombre'}</div>
-                {(user?.scope === "writer" && !isView) && ( // Solo muestra los botones si el usuario ha iniciado sesión
+                {(user?.scope === "writer" && props.isEdit) && ( // Solo muestra los botones si el usuario ha iniciado sesión
                 <div className="related-column-action">
                 <button className="delete-button" title="Eliminar"
                     onClick={(e) => handleDeleteClick(e)} >

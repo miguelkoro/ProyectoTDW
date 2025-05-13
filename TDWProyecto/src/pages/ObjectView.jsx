@@ -124,7 +124,7 @@ const ObjectView = (props) => {
           <span>{new Date(object.deathDate).toLocaleDateString()}</span>
         </div>
         <div className="object-detail-row">
-          <strong>URL a la Wiki:</strong>
+          <strong>{type==="association" ? "URL" : "URL a la Wiki:"}</strong>
           <span>
             {object.wikiUrl ? <a href={object.wikiUrl} target="_blank" rel="noopener noreferrer">{object.wikiUrl}</a> :
              " URL no disponible"}
@@ -138,12 +138,12 @@ const ObjectView = (props) => {
     <div className="related-columns">
       {relatedPersons.length > 0 && (
         <div className={`related-column ${relatedEntities.length === 0 ? 'single-column' : ''}`}>
-          <RelatedSection type="persons" relatedObjects={relatedPersons} father={object} fatherType={type}/>
+          <RelatedSection type="persons" relatedObjects={relatedPersons} father={object} fatherType={type} isEdit={false}/>
         </div>
       )}
       {relatedEntities.length > 0 && (
         <div className={`related-column ${relatedPersons.length === 0 ? 'single-column' : ''}`}>
-          <RelatedSection type="entities" relatedObjects={relatedEntities} father={object} fatherType={type}/>
+          <RelatedSection type="entities" relatedObjects={relatedEntities} father={object} fatherType={type} isEdit={false}/>
         </div>
       )}
     </div>

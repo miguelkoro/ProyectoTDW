@@ -13,7 +13,7 @@ const RelatedSection = (props) => {
     const [selectedId, setSelectedId] = useState(''); // Estado para el ID seleccionado
     //const [localRelatedObjects, setLocalRelatedObjects] = useState(relatedObjects); // Estado local para los objetos relacionados
     const location = useLocation(); // Obtén la ubicación actual
-    const isView = location.state?.view || false;
+    const isView = props.isEdit;
 
     let title = ''; // 
     let options = []; // Opciones para el selector
@@ -68,7 +68,7 @@ const RelatedSection = (props) => {
       </div>
 
       {/* Selector para añadir relaciones */}
-      {(user?.scope === 'writer' && !isView) && (
+      {(user?.scope === 'writer' && props.isEdit) && (
         <div className="related-add">
           <select
             value={selectedId}
@@ -98,7 +98,7 @@ const RelatedSection = (props) => {
       <div className="related-list">
         {props.relatedObjects
             .map((object) => (
-            <RowRelated  key={object.id}  type={props.type}  object={object} father={props.father} removeRelation={props.removeRelation}/>
+            <RowRelated  key={object.id}  type={props.type}  object={object} father={props.father} removeRelation={props.removeRelation} isEdit={props.isEdit}/>
             ))}
         </div>
     </div>
