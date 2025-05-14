@@ -1,4 +1,4 @@
-import { createContext, useContext, useState} from "react";
+import { createContext, useContext, useState, useRef} from "react";
 import { useNavigate } from "react-router-dom";
 import * as authService from '../services/authService'; // Importa todos los servicios de dataService
 import User from '../models/User'; // Importa el modelo User
@@ -23,19 +23,18 @@ export const AuthProvider = ({ children }) => {
 
   const [message, setMessage] = useState(null);
   const [messageType, setMessageType] = useState("");
-  const [timeoutId, setTimeoutId] = useState(null);
+  const timeoutIdRef = useRef(null);
 
   /** Funcion para mostrar un mensaje de error o fallo en el navbar */
-  const showMessage = (text, type) => {
-    if (timeoutId) { clearTimeout(timeoutId); } // Limpia el temporizador anterior si existe
-    setMessage(text);
-    setMessageType(type);
-    const newTimeoutId = setTimeout(() => {
-      setMessage(null);
-      setMessageType("");
-    }, 3000);
-    setTimeoutId(newTimeoutId);
-  };
+const showMessage = (text, type) => {
+  if (timeoutIdRef.current) { clearTimeout(timeoutIdRef.current);  timeoutIdRef.current = null;  }
+  // Establece el nuevo mensaje y tipo
+  setMessage(text);
+  setMessageType(type);
+  // Configura un nuevo temporizador para ocultar el mensaje después de 3 segundos
+  timeoutIdRef.current = setTimeout(() => {setMessage(null);
+    setMessageType(""); timeoutIdRef.current = null; }, 3000);
+};
 
   /** Funcion para coger el usuario del localstorage */
   const getLocalUser = () => {
@@ -64,7 +63,7 @@ export const AuthProvider = ({ children }) => {
         });
         setUser(userData); // Guarda el usuario en el estado                
         localStorage.setItem("user", JSON.stringify(userData)); // Guarda el usuario en localStorage
-        showMessage(`Bienvenido ${userData.userName}`, "success"); // Muestra un mensaje de éxito al usuario
+        showMessage(`Inicio de sesion correcto. Bienvenido ${userData.userName}`, "success"); // Muestra un mensaje de éxito al usuario
         navigate("/"); // Redirige al usuario a la página principal
       } else {
         showMessage("Error al iniciar sesion", "error"); // Muestra un mensaje de error al usuario
@@ -96,7 +95,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     setUserLogin(false); // Finaliza la carga
     localStorage.removeItem("user");
-    showMessage("Sesión cerrada", "success"); // Muestra un mensaje de éxito al usuario
+    showMessage("Sesión cerrada correctamente", "success"); // Muestra un mensaje de éxito al usuario
     navigate("/login"); // Redirigir al usuario a la pantalla de login
   };
 

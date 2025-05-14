@@ -103,7 +103,7 @@ const NavBar = () => {
 
     {/* Mensaje de error o éxito */}
     {message && (
-      <div className={`message-container ${messageType}`}>
+      <div className={`message-container ${messageType}`} key={message}>
         <p>{message}</p>
       </div>
     )}

@@ -179,11 +179,18 @@ export const DataProvider = ({ children }) => {
   }
 
   const createObject = async (object) => {
-    checkTokenExpiration(); // Verifica si el token ha expirado
-    //!user && console.error("No hay usuario autenticado para crear el objeto."); // Verifica si hay un usuario autenticado
-    const result = await dataService.createAPIObject(getPlural(object.type),object, user.token);
-    await updateModifiedObjects(object.type); // Actualiza la lista de objetos modificados
-    
+    try{
+      checkTokenExpiration(); // Verifica si el token ha expirado    
+      const result = await dataService.createAPIObject(getPlural(object.type),object, user.token);
+      if(result.code === 400) {
+        showMessage(`Error al crear el objeto ${object.type}. El nombre ya existe.`, "error"); // Muestra un mensaje de error al usuario
+      }
+      console.log("createObject", result); // Verifica el nuevo producto creado
+      await updateModifiedObjects(object.type); // Actualiza la lista de objetos modificados    
+    }catch (error) {
+      console.error('Error al crear el objeto:', error);
+      showMessage('Error al crear el objeto', 'error');
+    }
   }
 
   const updateModifiedObjects = async (type) => {
@@ -323,13 +330,20 @@ export const DataProvider = ({ children }) => {
     try{
       checkTokenExpiration(); // Verifica si el token ha expirado
       const response = await dataService.updateAPIUser(userObject, password, role, user.token); // Llama al servicio de autenticación
-      if(!response.user) {
-        console.error("Error al actualizar el usuario:", response.code); // Maneja el error si la creación del usuario falla
-        showMessage("Error al actualizar el usuario.", "error"); // Muestra un mensaje de error al usuario
-      }else{
-        //console.log("addUpdateUser", response); // Verifica el nuevo producto creado
+      if(response.user) {
         VAGUE_MODE ? addUpdateUser(response.user) : await getUsers(); // Actualiza la lista de usuarios
         showMessage('Usuario actualizado correctamente', 'success'); // Muestra un mensaje de éxito al usuario
+      }else if(response.code === 400) {
+        showMessage("Error al actualizar el usuario. El usuario o correo ya existen.", "error"); // Muestra un mensaje de error al usuario
+      }else if(response.code === 404) {
+        showMessage("Error al actualizar el usuario. El usuario no existe.", "error"); // Muestra un mensaje de error al usuario
+      }else if(response.code === 401) {
+        showMessage("Error al actualizar el usuario. No tienes permiso para realizar esta acción.", "error"); // Muestra un mensaje de error al usuario
+      }else if(response.code === 428) {
+        showMessage("Error al actualizar el usuario. Fallo en el eTag", "error"); // Muestra un mensaje de error al usuario
+      }else{
+        console.error("Error al actualizar el usuario:", response.code); // Maneja el error si la creación del usuario falla
+        showMessage("Error al actualizar el usuario.", "error"); // Muestra un mensaje de error al usuario
       }      
       return response; // Devuelve el resultado de la solicitud      
     }catch (error) {
@@ -362,7 +376,11 @@ export const DataProvider = ({ children }) => {
     if (response.user) { // Verifica si la respuesta es exitosa
       showMessage("Usuario creado correctamente.", "success"); // Muestra un mensaje de éxito al usuario
       navigate("/login"); // Redirige al usuario a la página de inicio de sesión
-    } else {
+    } else if(response.code === 400) {
+      showMessage("Error al crear el usuario. El usuario o correo ya existen.", "error"); // Muestra un mensaje de error al usuario
+    }else if(response.code === 422) {
+      showMessage("Error al crear el usuario. Faltan campos", "error"); // Muestra un mensaje de error al usuario
+    }else{
       console.error("Error al crear el usuario:", response.code); // Maneja el error si la creación del usuario falla
       showMessage("Error al crear el usuario.", "error"); // Muestra un mensaje de error al usuario
     }
@@ -376,6 +394,7 @@ export const DataProvider = ({ children }) => {
       if (!response.data.user) {
         console.error("Error al obtener el usuario por ID:", response.code); // Maneja el error si la creación del usuario falla
         showMessage("Error al obtener el usuario por ID.", "error"); // Muestra un mensaje de error al usuario
+        await getUsers(); // Actualiza la lista de usuarios
       }
       const userObject = new User({id: response.data.user.id, userName: response.data.user.username, 
         scope: response.data.user.role, token:'', expiresIn:''});
@@ -383,12 +402,28 @@ export const DataProvider = ({ children }) => {
       userObject.setEmail(response.data.user.email); // Guarda el correo electrónico del usuario
       userObject.setBirthDate(response.data.user.birthDate); // Guarda la fecha de nacimiento del usuario
       userObject.setName(response.data.user.name); // Guarda el nombre del usuario
+      addUser(userObject); // Añade el usuario al estado
       return userObject; // Devuelve el objeto User 
     }catch (error) {
       console.error('Error al cargar el usuario:', error);
       //showMessage('Error al cargar el usuario', 'error');
     }
   }
+
+  /**Añadir un usuario a la coleccion local */
+  const addUser = async (userObj) => {   
+    const existingUserIndex = users.findIndex((user) => userObj.id === user.id);
+    if (existingUserIndex !== -1) {       
+      setUsers((prevUsers) => { // Si el usuario ya existe, actualiza su información
+        const updatedUsers = [...prevUsers];
+        updatedUsers[existingUserIndex] = userObj; // Actualiza el usuario existente
+        return updatedUsers;
+      });
+    } else { // Si el usuario no existe, lo añade a la lista de usuarios
+      setUsers((prevUsers) => [...prevUsers, userObj]); 
+    }
+  }
+
   /**Comprobar si existe el nombre de usuario */
   const checkUserName = async (name) => {  
       const response = await dataService.checkAPIUserName(name); // Llama al servicio de autenticación

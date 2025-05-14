@@ -731,23 +731,29 @@ input {
 /** MENSAJE ERRORES */
 .message-container {
   position: fixed;
-  top: 70px; /* Ajusta según la altura del navbar */
-  right: 20px;
+  top: 4.5rem; /* Ajusta según la altura del navbar */
+  right: 1rem;
   background-color: #f8d7da; /* Color de fondo para errores */
   color: #721c24; /* Color del texto para errores */
-  padding: 10px 20px;
-  border-radius: 5px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 1rem 2rem;
+  border-radius: 0.5rem;
+  box-shadow: $common-box-shadow;
   z-index: 1000;
-  animation: fadeOut 3s forwards; /* Animación para desaparecer */
+  animation: fadeIn 0.3s ease-in-out;
 }
 .message-container.success {
   background-color: #d4edda; /* Color de fondo para éxito */
   color: #155724; /* Color del texto para éxito */
 }
-@keyframes fadeOut {
-  0% {opacity: 1;}
-  100% { opacity: 0; transform: translateY(-10px); }
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform:  translateY(-2rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /** ELIMINAR */
