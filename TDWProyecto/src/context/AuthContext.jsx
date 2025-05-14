@@ -54,22 +54,24 @@ const showMessage = (text, type) => {
   /** Funcion para iniciar sesion y recibir un nuevo token */
   const login = async (userName, password) => {
     try {
-      const data = await authService.login(userName, password);      
-      if (data && data.access_token) { // Verifica si la respuesta contiene el token
-        const decodedToken = decodeJwt(data.access_token); // Decodifica el token JWT
+      const response = await authService.login(userName, password);      
+      if (response.status===200) { // Verifica si la respuesta contiene el token        
+        const decodedToken = decodeJwt(response.data.access_token); // Decodifica el token JWT
         const userData = new User({id: decodedToken.uid, userName,
           scope: decodedToken.scopes.includes("writer") ? "writer" : "reader", // Guarda el scope del token
-          token: data.access_token, expiresIn: new Date(Date.now() + data.expires_in * 1000),
+          token: response.data.access_token, expiresIn: new Date(Date.now() + response.data.expires_in * 1000),
         });
         setUser(userData); // Guarda el usuario en el estado                
         localStorage.setItem("user", JSON.stringify(userData)); // Guarda el usuario en localStorage
         showMessage(`Inicio de sesion correcto. Bienvenido ${userData.userName}`, "success"); // Muestra un mensaje de éxito al usuario
         navigate("/"); // Redirige al usuario a la página principal
-      } else {
+      }else if (response.status===400) { // Si el usuario no existe o la contraseña es incorrecta
+        showMessage("Usuario o contraseña incorrectos, o el usuario es invalido", "error"); // Muestra un mensaje de error al usuario
+      }else {
         showMessage("Error al iniciar sesion", "error"); // Muestra un mensaje de error al usuario
       }
     } catch (error) {
-      console.error("Error al iniciar sesión", error.message);
+      console.error("Error al iniciar sesión", error);
       showMessage("Usuario o contraseña incorrectos.", "error"); // Muestra un mensaje de error al usuario
     }finally {  
       setUserLogin(true); // Finaliza la carga
