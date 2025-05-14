@@ -179,20 +179,38 @@ export const DataProvider = ({ children }) => {
   }
 
   const createObject = async (object) => {
-    try{
       checkTokenExpiration(); // Verifica si el token ha expirado    
       const result = await dataService.createAPIObject(getPlural(object.type),object, user.token);
-      if(result.code === 400) {
-        showMessage(`Error al crear el objeto ${object.type}. El nombre ya existe.`, "error"); // Muestra un mensaje de error al usuario
-      }
       console.log("createObject", result); // Verifica el nuevo producto creado
-      await updateModifiedObjects(object.type); // Actualiza la lista de objetos modificados    
-    }catch (error) {
-      console.error('Error al crear el objeto:', error);
-      showMessage('Error al crear el objeto', 'error');
-    }
+      if(result.status === 201) {
+        await updateModifiedObjects(object.type); // Actualiza la lista de objetos modificados  
+        showMessage(`Objeto ${object.name} creado correctamente`, 'success'); // Muestra un mensaje de éxito al usuario
+      }else if(result.status === 400) {
+        showMessage(`Error al crear el objeto ${object.type}. El nombre ya existe.`, "error"); // Muestra un mensaje de error al usuario
+        await updateModifiedObjects(object.type); // Actualiza la lista de objetos modificados
+      }else if(result.status === 401 || result.status === 403) {
+        showMessage("Error al crear el objeto. No tienes permiso para realizar esta acción.", "error"); // Muestra un mensaje de error al usuario
+        VAGUE_MODE && await updateModifiedObjects(object.type);
+      }else{
+        console.error("Error al crear el objeto:", result); // Maneja el error si la creación del usuario falla
+        showMessage("Error al crear el objeto.", "error"); // Muestra un mensaje de error al usuario
+        VAGUE_MODE && await updateModifiedObjects(object.type);
+      }
   }
 
+  const createEntity = (object) => {
+    
+  }
+
+
+  const updateObject = async(updatedObject) => {
+    //!user && console.error("No hay usuario autenticado para actualizar la asociación."); // Verifica si hay un usuario autenticado
+    checkTokenExpiration(); // Verifica si el token ha expirado
+    const result = await dataService.updateAPIObject(getPlural(updatedObject.type), updatedObject, user.token); // Llama al servicio para crear el productor
+    await updateModifiedObjects(updatedObject.type); // Actualiza la lista de objetos modificados
+    return result; // Devuelve el resultado de la actualización
+  }
+  /** Actualiza la lista de objetos con la API */
   const updateModifiedObjects = async (type) => {
     switch (type) {
       case 'person':
@@ -213,53 +231,69 @@ export const DataProvider = ({ children }) => {
     }
   }
 
-
-
-  const updateObject = async(updatedObject) => {
-    //!user && console.error("No hay usuario autenticado para actualizar la asociación."); // Verifica si hay un usuario autenticado
+  /**Elimina un objeto de la API */
+  const deleteObject = async (type, id) => {   
     checkTokenExpiration(); // Verifica si el token ha expirado
-    const result = await dataService.updateAPIObject(getPlural(updatedObject.type), updatedObject, user.token); // Llama al servicio para crear el productor
-    await updateModifiedObjects(updatedObject.type); // Actualiza la lista de objetos modificados
-    return result; // Devuelve el resultado de la actualización
-  }
-
-
-  const deleteObject = async (type, id) => {
-    try{
-      setIsLoading(true); // Indica que los datos están siendo cargados
-      //!user && console.error("No hay usuario autenticado para eliminar el objeto."); // Verifica si hay un usuario autenticado
-      checkTokenExpiration(); // Verifica si el token ha expirado
-      const result = await dataService.deleteAPIObject(getPlural(type), id, user.token); // Llama al servicio para eliminar
-      switch (type) {
-        case 'person':
-          await getPersons(); // Actualiza la lista de personas
-           setPersons((prev) => prev.filter((person) => person.id !== id));
-          break;
-        case 'entity':
-          await getEntities(); // Actualiza la lista de entidades
-           setEntities((prev) => prev.filter((entity) => entity.id !== id));
-          break;
-        case 'product':
-          await getProducts(); // Actualiza la lista de productos
-          setProducts((prev) => prev.filter((product) => product.id !== id));
-          break;
-        case 'association':
-          await getAssociations(); // Actualiza la lista de asociaciones
-           setAssociations((prev) => prev.filter((association) => association.id !== id));
-          break;
-        default:
-          console.error("Tipo de objeto no válido para eliminar."); // Maneja el error si el tipo no es válido
-          break;
-      }
-    }catch (error) {
-      console.error('Error al eliminar el objeto:', error);
-      //showMessage('Error al eliminar el objeto', 'error');
-      //setIsLoading(false); // Finaliza la carga en caso de error
-    }finally {
-      setIsLoading(false); // Indica que los datos han terminado de cargarse
+    const result = await dataService.deleteAPIObject(getPlural(type), id, user.token); // Llama al servicio para eliminar
+    if (result.ok) {
+      showMessage('Objeto eliminado correctamente', 'success'); // Muestra un mensaje de éxito al usuario
+      await setDeleteObject(type, id); // Actualiza la lista de objetos eliminados
+    }else if(result.status === 401) {
+      showMessage("Error al eliminar el objeto. No tienes permiso para realizar esta acción.", "error"); // Muestra un mensaje de error al usuario
+      await updateObjects(type); // Actualiza la lista de objetos eliminados
+    }else if(result.status === 404) {
+      showMessage("Error al eliminar el objeto. El objeto no existe o no tienes acceso.", "error"); // Muestra un mensaje de error al usuario
+      await updateObjects(type); // Actualiza la lista de objetos eliminados
+    }else{
+      console.error("Error al eliminar el objeto:", result); // Maneja el error si la creación del usuario falla
+      showMessage("Error al eliminar el objeto.", "error"); // Muestra un mensaje de error al usuario
+      await updateObjects(type); // Actualiza la lista de objetos eliminados
+    }   
+  }  
+  /** Actualiza la lista local de objetos del tipo que le pongamos */
+  const updateObjects = async (type) => {
+    switch (type) {
+      case 'person':
+        await getPersons(); // Actualiza la lista de personas
+        break;
+      case 'entity':
+        await getEntities(); // Actualiza la lista de entidades
+        break;
+      case 'product':
+        await getProducts(); // Actualiza la lista de productos
+        break;
+      case 'association':
+        await getAssociations(); // Actualiza la lista de asociaciones
+        break;
+      default:
+        console.error("Tipo de objeto no válido para eliminar."); // Maneja el error si el tipo no es válido
+        break;
     }
   }
-
+  /**Eliminar un objeto de la lista local y actualizar todos */
+  const setDeleteObject = async (type, id) => {
+    switch (type) {
+      case 'person':
+        !VAGUE_MODE && await getPersons(); // Actualiza la lista de personas
+        setPersons((prev) => prev.filter((person) => person.id !== id));
+        break;
+      case 'entity':
+        !VAGUE_MODE && await getEntities(); // Actualiza la lista de entidades
+        setEntities((prev) => prev.filter((entity) => entity.id !== id));
+        break;
+      case 'product':
+        !VAGUE_MODE && await getProducts(); // Actualiza la lista de productos
+        setProducts((prev) => prev.filter((product) => product.id !== id));
+        break;
+      case 'association':
+        !VAGUE_MODE && await getAssociations(); // Actualiza la lista de asociaciones
+        setAssociations((prev) => prev.filter((association) => association.id !== id));
+        break;
+      default:
+        console.error("Tipo de objeto no válido para eliminar."); // Maneja el error si el tipo no es válido
+        break;
+      }  
+  }
   /**Añadir o eliminar una relacion con un objeto */
   const addRemRelation = async (objectsType, idObject, typeRelation, idRelation, action) => {
     checkTokenExpiration(); // Verifica si el token ha expirado

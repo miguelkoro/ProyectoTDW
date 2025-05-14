@@ -5,7 +5,7 @@ export const login = async (username, password) => {
     try {
       const response = await fetch(ROUTES.LOGIN, {method: 'POST', 
               body: new URLSearchParams({username, password,})})
-        .then(res =>  res.json())
+        .then((res) =>  {console.log(res); return res.json()})
         .then(
             (result) => {return result},
             (error) => { console.log('Error en la solicitud:', error); return error; })

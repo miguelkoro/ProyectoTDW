@@ -26,13 +26,15 @@ export const fetchAPIObjects = async (objectsType, name = '', order = '', orderi
 export const fetchAPIObjectById = async (objectsType, id) => {
   try{
     const response = await fetch(ROUTES.OBJECT_BY_ID(objectsType,id)) // Realiza la solicitud a la API con el ID
-      .then(async (res) => { 
+      .then(async (res) => {
+        const status = res.status; // Obtiene el estado de la respuesta 
         const etag = res.headers.get('ETag'); // Obtiene el ETag de la respuesta 
         const data = await res.json();
-        return ({ data, etag });})
+        return ({ data, etag, status });})
       .then(
         (result) => {return result},
         (error) => { console.log('Error en la solicitud:', error); return error; });
+    console.log("Respuesta de la API:", response); // Muestra la respuesta de la API en la consola
     return response; // Devuelve el objeto obtenido de la API
   }catch (error) {
     console.error('Error al realizar la solicitud:', error);
@@ -47,7 +49,11 @@ export const createAPIObject = async (objectsType, object, token) => {
         method: 'POST',
         headers: {'Content-Type': 'application/json','Authorization': `Bearer ${token}`,},
         body: JSON.stringify(payload)})
-      .then(res => res.json())
+      .then(async (res) => {
+          const status = res.status;
+          const data = await res.json(); // Convierte la respuesta en JSON
+          return ({ status, data }); // Devuelve el estado y los datos
+        })
       .then(
         (result) => {return result},
         (error) => { console.log('Error en la solicitud:', error); return error; });
