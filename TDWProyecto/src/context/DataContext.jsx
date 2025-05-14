@@ -387,15 +387,9 @@ export const DataProvider = ({ children }) => {
   }
   /**Obtener usuario por id */
   const getUserById = async (id) => {
-    try{
-      checkTokenExpiration(); // Verifica si el token ha expirado
-      const response = await dataService.getAPIUserById(id, user.token); // Llama al servicio de autenticación
-      //console.log("getUserById", response); // Verifica el nuevo producto creado
-      if (!response.data.user) {
-        console.error("Error al obtener el usuario por ID:", response.code); // Maneja el error si la creación del usuario falla
-        showMessage("Error al obtener el usuario por ID.", "error"); // Muestra un mensaje de error al usuario
-        await getUsers(); // Actualiza la lista de usuarios
-      }
+    checkTokenExpiration(); // Verifica si el token ha expirado
+    const response = await dataService.getAPIUserById(id, user.token);
+    if (response.data.user) {   
       const userObject = new User({id: response.data.user.id, userName: response.data.user.username, 
         scope: response.data.user.role, token:'', expiresIn:''});
       userObject.setEtag(response.etag); // Guarda el ETag del usuario
@@ -404,9 +398,15 @@ export const DataProvider = ({ children }) => {
       userObject.setName(response.data.user.name); // Guarda el nombre del usuario
       addUser(userObject); // Añade el usuario al estado
       return userObject; // Devuelve el objeto User 
-    }catch (error) {
-      console.error('Error al cargar el usuario:', error);
-      //showMessage('Error al cargar el usuario', 'error');
+    }else if(response.data.code === 404) {
+      showMessage("Error, Usuario no encontrado", "error"); // Muestra un mensaje de error al usuario
+      await getUsers(); // Actualiza la lista de usuarios
+      return null; // Devuelve null si no se encuentra el usuario
+    }else{
+      console.error("Error al obtener el usuario por ID:", response); // Maneja el error si la creación del usuario falla
+      showMessage("Error al obtener el usuario por ID.", "error"); // Muestra un mensaje de error al usuario
+      await getUsers(); // Actualiza la lista de usuarios
+      return null; // Devuelve null si no se encuentra el usuario
     }
   }
 
