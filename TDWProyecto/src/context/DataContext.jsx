@@ -264,15 +264,23 @@ export const DataProvider = ({ children }) => {
   const addRemRelation = async (objectsType, idObject, typeRelation, idRelation, action) => {
     checkTokenExpiration(); // Verifica si el token ha expirado
     const response = await dataService.addRemRelationAPI(getPlural(objectsType),idObject, typeRelation, idRelation, action, user.token); // Llama al servicio para añadir o eliminar la relación
-    let accion = action === 'add' ? 'añadida' : 'eliminada'; // Determina la acción realizada
-    if(!response.ok) {
-    console.error(`Error al ${accion} la relación:`, response.code); // Maneja el error si la creación del usuario falla
-      showMessage(`Error al ${accion} la relación.`, "error"); // Muestra un mensaje de error al usuario
-    }else{   
-      showMessage(`Relación ${accion} correctamente`, 'success'); // Muestra un mensaje de éxito al usuario
-    }
     console.log("addRemRelation", response); // Verifica la respuesta del servicio
+    let accion = action === 'add' ? 'añadida' : 'eliminada'; // Determina la acción realizada
+    if(response.ok) {
+       showMessage(`Relación ${accion} correctamente`, 'success'); // Muestra un mensaje de éxito al usuario    
+    }else if(response.status === 401 || response.status === 403) {
+      let accion = action === 'add' ? 'añadir' : 'eliminar';
+      showMessage(`Error al ${accion} la relación. No tienes permiso para realizar esta acción.`, "error"); // Muestra un mensaje de error al usuario
+    }else if(response.status === 404 || response.status === 406) {
+      let accion = action === 'add' ? 'añadir' : 'eliminar';
+      showMessage(`Error al ${accion} la relación. No se ha encontrado el objeto relacionado.`, "error"); // Muestra un mensaje de error al usuario
+    }else{   
+      let accion = action === 'add' ? 'añadir' : 'eliminar';
+      console.error(`Error al ${accion} la relación:`, response.code); // Maneja el error si la creación del usuario falla
+      showMessage(`Error al ${accion} la relación.`, "error"); // Muestra un mensaje de error al usuario
+    }
   }
+    
 
  /**USUARIOS */
  /**Recupera todos los usuarios */
@@ -280,23 +288,31 @@ export const DataProvider = ({ children }) => {
     try{
       checkTokenExpiration(); // Verifica si el token ha expirado
       setIsLoading(true); // Indica que los datos están siendo cargados
-      const response = await dataService.fetchAPIUsers(user.token,name, order, ordering );     
-      if (!response.users) {
+      const response = await dataService.fetchAPIUsers(user?.token,name, order, ordering );     
+      if (response.users) {
+          const userCollection = response.users.map((userData) => {
+            const newUser= new User({
+              id: userData.user.id,
+              userName: userData.user.username,
+              scope: userData.user.role,
+            });
+            newUser.setEmail(userData.user.email); // Guarda el correo electrónico del usuario
+            newUser.setBirthDate(userData.user.birthDate); // Guarda la fecha de nacimiento del usuario
+            newUser.setName(userData.user.name); // Guarda el nombre del usuario
+            return newUser; // Devuelve el nuevo objeto User
+          }); 
+        setUsers(userCollection); // Guarda los productos en el estado        
+      }else if(response.code === 401) {
+        showMessage("Error al cargar los usuarios. No tienes permiso para realizar esta acción.", "error"); // Muestra un mensaje de error al usuario
+        setUsers([]); // Limpia la lista de usuarios
+      }else if(response.code === 404) {
+        showMessage("Error al cargar los usuarios. No se han encontrado usuarios.", "error"); // Muestra un mensaje de error al usuario
+        setUsers([]); // Limpia la lista de usuarios
+      }else{
         console.error("Error al cargar los usuarios:", response.code); // Maneja el error si la creación del usuario falla
         showMessage("Error al cargar los usuarios.", "error"); // Muestra un mensaje de error al usuario
+        setUsers([]); // Limpia la lista de usuarios
       }
-      const userCollection = response.users.map((userData) => {
-        const newUser= new User({
-          id: userData.user.id,
-          userName: userData.user.username,
-          scope: userData.user.role,
-        });
-        newUser.setEmail(userData.user.email); // Guarda el correo electrónico del usuario
-        newUser.setBirthDate(userData.user.birthDate); // Guarda la fecha de nacimiento del usuario
-        newUser.setName(userData.user.name); // Guarda el nombre del usuario
-        return newUser; // Devuelve el nuevo objeto User
-      }); 
-      setUsers(userCollection); // Guarda los productos en el estado
     } catch (error) {
       console.error('Error al cargar productos:', error);
     } finally {
@@ -305,29 +321,24 @@ export const DataProvider = ({ children }) => {
   }
   /**Eliminar un usuario */
   const deleteUser = async (id) => {
-    try {
       setIsLoading(true); // Indica que los datos están siendo cargados
       checkTokenExpiration(); // Verifica si el token ha expirado
       const response = await dataService.deleteAPIUser(id, user.token); // Llama al servicio de autenticación
-      console.log("deleteUser", response); // Verifica el nuevo producto creado
       if (response.ok) {
         showMessage('Usuario eliminado correctamente', 'success');     
+      }else if(response.status=== 401) {
+        showMessage("Error al eliminar el usuario. No tienes permiso para realizar esta acción.", "error"); // Muestra un mensaje de error al usuario
+      }else if(response.status === 404) {
+        showMessage("Error al eliminar el usuario. El usuario no existe.", "error"); // Muestra un mensaje de error al usuario
       }else{
-        console.error("Error al eliminar el usuario:", response.code); // Maneja el error si la creación del usuario falla
+        console.error("Error al eliminar el usuario:", response); // Maneja el error si la creación del usuario falla
         showMessage("Error al eliminar el usuario.", "error"); // Muestra un mensaje de error al usuario
       }
       await getUsers(); 
       return response; // Devuelve el resultado de la solicitud
-    }catch (error) {
-      console.error('Error al eliminar el usuario:', error);
-      //showMessage('Error al eliminar el usuario', 'error');
-    }finally {
-      setIsLoading(false); // Indica que los datos han terminado de cargarse
-    }
   }
   /**Actualizar un usuario */
   const updateUser = async (userObject, password, role) => {
-    try{
       checkTokenExpiration(); // Verifica si el token ha expirado
       const response = await dataService.updateAPIUser(userObject, password, role, user.token); // Llama al servicio de autenticación
       if(response.user) {
@@ -345,11 +356,7 @@ export const DataProvider = ({ children }) => {
         console.error("Error al actualizar el usuario:", response.code); // Maneja el error si la creación del usuario falla
         showMessage("Error al actualizar el usuario.", "error"); // Muestra un mensaje de error al usuario
       }      
-      return response; // Devuelve el resultado de la solicitud      
-    }catch (error) {
-      console.error('Error al actualizar el usuario:', error);
-      showMessage('Error al actualizar el usuario', 'error');
-    }
+      return response; // Devuelve el resultado de la solicitud   
   }
   /**Guarda la actualizacion del usuario en local */
   const addUpdateUser = async (userObj) => {    
@@ -372,7 +379,6 @@ export const DataProvider = ({ children }) => {
   /**Registro de nuevo usuario */
   const register = async (userName, email, password, birthDate, name) => {
     const response = await dataService.createAPIUser(userName, email, password, birthDate, name); // Llama al servicio de autenticación
-    console.log("status", response); // Verifica el nuevo producto creado
     if (response.user) { // Verifica si la respuesta es exitosa
       showMessage("Usuario creado correctamente.", "success"); // Muestra un mensaje de éxito al usuario
       navigate("/login"); // Redirige al usuario a la página de inicio de sesión
@@ -409,7 +415,6 @@ export const DataProvider = ({ children }) => {
       return null; // Devuelve null si no se encuentra el usuario
     }
   }
-
   /**Añadir un usuario a la coleccion local */
   const addUser = async (userObj) => {   
     const existingUserIndex = users.findIndex((user) => userObj.id === user.id);
@@ -423,7 +428,6 @@ export const DataProvider = ({ children }) => {
       setUsers((prevUsers) => [...prevUsers, userObj]); 
     }
   }
-
   /**Comprobar si existe el nombre de usuario */
   const checkUserName = async (name) => {  
       const response = await dataService.checkAPIUserName(name); // Llama al servicio de autenticación
