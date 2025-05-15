@@ -21,7 +21,7 @@ const Management = (props) => {
     getPersons, getEntities, getProducts, getAssociations, getUsers} = useContext(DataContext); 
 
   // Llama a las funciones de obtención al montar el componente
-  useEffect(() => {
+  /*useEffect(() => {
     switch (typeFromState) {
       case 'persons':
         getPersons(); // Llama a la función para obtener personas
@@ -41,8 +41,7 @@ const Management = (props) => {
       default:
         break;
     }
-    console.log("getObjects", typeFromState); // Muestra el tipo en la consola
-  }, [typeFromState]);
+  }, [typeFromState]);*/
 
   // Observa los cambios en las variables del contexto y actualiza el estado `objects`
   useEffect(() => {
@@ -106,7 +105,7 @@ const Management = (props) => {
         />
       </div>
     ) : objects.length === 0 ? (
-      <div className="centered-container">
+      <div className="centered-container" style={{display:"flex", justifyContent: "center", }}>
         <div>
           <p style={{ color: 'white' }}>No hay datos disponibles.</p>
           <img

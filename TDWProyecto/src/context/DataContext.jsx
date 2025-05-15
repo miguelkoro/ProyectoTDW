@@ -181,9 +181,25 @@ export const DataProvider = ({ children }) => {
   const createObject = async (object) => {
       checkTokenExpiration(); // Verifica si el token ha expirado    
       const result = await dataService.createAPIObject(getPlural(object.type),object, user.token);
-      console.log("createObject", result); // Verifica el nuevo producto creado
-      if(result.status === 201) {
-        await updateModifiedObjects(object.type); // Actualiza la lista de objetos modificados  
+      //console.log("createObject", result); // Verifica el nuevo producto creado
+      if(result.status === 201) {                
+        switch (object.type) {
+          case 'person':
+            setPersons((prev) => [...prev, createPerson(result.data)]); // Añade la nueva persona a la lista de personas
+            break;
+          case 'entity':
+            setEntities((prev) => [...prev, createEntity(result.data)]); // Añade la nueva entidad a la lista de entidades
+            break;
+          case 'product':
+            setProducts((prev) => [...prev, createProduct(result.data)]); // Añade el nuevo producto a la lista de productos
+            break;
+          case 'association':
+            setAssociations((prev) => [...prev, createAssociation(result.data)]); // Añade la nueva asociación a la lista de asociaciones
+            break;
+          default:
+            console.error("Tipo de objeto no válido para crear."); // Maneja el error si el tipo no es válido
+        }
+        !VAGUE_MODE && await updateModifiedObjects(object.type); // Actualiza la lista de objetos modificados  
         showMessage(`Objeto ${object.name} creado correctamente`, 'success'); // Muestra un mensaje de éxito al usuario
       }else if(result.status === 400) {
         showMessage(`Error al crear el objeto ${object.type}. El nombre ya existe.`, "error"); // Muestra un mensaje de error al usuario
@@ -198,8 +214,27 @@ export const DataProvider = ({ children }) => {
       }
   }
 
-  const createEntity = (object) => {
-    
+
+ /**Metodos que crean un objeto con los datos devueltos de la API y lo devuelven */
+  const createEntity = (data) => {
+    const entity = new Entidad(data.entity);    
+    entity.setType('entity'); // Configura el tipo como 'person'
+    return entity; // Devuelve la persona encontrada
+  }
+  const createPerson = (data) => {
+    const person = new Persona(data.person);
+    person.setType('person'); // Configura el tipo como 'person'
+    return person; // Devuelve la persona encontrada
+  }
+  const createProduct = (data) => {
+    const product = new Producto(data.product);
+    product.setType('product'); // Configura el tipo como 'person'
+    return product; // Devuelve la persona encontrada
+  }
+  const createAssociation = (data) => {
+    const association = new Asociacion(data.association);
+    association.setType('association'); // Configura el tipo como 'person'
+    return association; // Devuelve la persona encontrada
   }
 
 
