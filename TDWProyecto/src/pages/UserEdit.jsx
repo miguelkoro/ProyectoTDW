@@ -61,7 +61,8 @@ const UserEdit = () => {
 
     const fetchUser = async (id) => {
       try{
-        const fetchedUser = await getUserById(id); // Obtiene el usuario por ID      
+        const fetchedUser = await getUserById(id); // Obtiene el usuario por ID     
+        //console.log("Fetched user:", fetchedUser); // Muestra el usuario obtenido en la consola 
         if(fetchedUser){
           setUserObject(fetchedUser); // Obtiene el usuario por ID
           setUserId(fetchedUser.id || ''); // Establece el ID del usuario
@@ -158,7 +159,7 @@ const UserEdit = () => {
       ); // Muestra un spinner de carga
     }
 
-    const handleCancel = () => { navigate(-1); }; // Redirige a la página anterior
+    const handleCancel = () => { navigate('/'); }; // Redirige a la página anterior
 
   return (
     <div className="object-panel object-panel-user">

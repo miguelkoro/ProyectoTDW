@@ -33,8 +33,7 @@ export const fetchAPIObjectById = async (objectsType, id) => {
         return ({ data, etag, status });})
       .then(
         (result) => {return result},
-        (error) => { console.log('Error en la solicitud:', error); return error; });
-    console.log("Respuesta de la API:", response); // Muestra la respuesta de la API en la consola
+        (error) => { console.log('Error en la solicitud:', error); return error; });    
     return response; // Devuelve el objeto obtenido de la API
   }catch (error) {
     console.error('Error al realizar la solicitud:', error);
@@ -71,10 +70,14 @@ export const updateAPIObject = async (objectsType, object, token) => {
       method: 'PUT',
       headers: {'Content-Type': 'application/json', 'If-Match': object.etag, 'Authorization': `Bearer ${token}`, },
       body: JSON.stringify(payload),})
-      .then(res => res.json())
+      .then(async (res) => {
+        const data = await res.json()
+        const status = res.status; // Obtiene el estado de la respuesta
+        return ({ data , status });})
       .then(
         (result) => {return result},
         (error) => { console.log('Error en la solicitud:', error); return error; });
+        console.log("Response", response)
     return response; // Devuelve el resultado de la solicitud
   }catch (error) {
     console.error('Error al realizar la solicitud:', error);

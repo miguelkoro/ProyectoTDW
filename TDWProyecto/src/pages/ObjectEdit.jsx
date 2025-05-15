@@ -150,19 +150,19 @@ const ObjectEdit = () => {
     let objeto=new Objeto({id:object.id, name, birthDate, deathDate, imageUrlTemp, wikiUrl}); // Crear un nuevo objeto con los datos actualizados
     objeto.setEtag(object.etag); // Establecer el etag del objeto original
     objeto.setType(type); // Establecer el tipo del objeto
-    let result = await updateObject(objeto); // Guardar el objeto usando el contexto
+    await updateObject(objeto); // Guardar el objeto usando el contexto
     await fetchObject(); // Llama a la función para establecer los datos del objeto
   }
 
   const addRelation = async (childId, childType) => {
     console.log("addRelationdd: ", type, id, childId, childType); // Verifica los IDs de los objetos relacionados
-    let result = await addRemRelation(type,id, childType, childId,'add');
+    await addRemRelation(type,id, childType, childId,'add');
     await fetchObject(); // Llama a la función para obtener los objetos relacionados
   }
 
   const removeRelation = async (childId, childType) => {
     console.log("removeRelation: ", type, id, childId, childType); // Verifica los IDs de los objetos relacionados
-    let result = await addRemRelation(type,id, childType, childId,'rem');
+    await addRemRelation(type,id, childType, childId,'rem');
     await fetchObject(); // Llama a la función para obtener los objetos relacionados
   }
 
