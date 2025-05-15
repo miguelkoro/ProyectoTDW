@@ -12,12 +12,15 @@ const fetchParams = (name, order, ordering) => {
 export const fetchAPIObjects = async (objectsType, name = '', order = '', ordering = '') => { //(contieneNombre, id | nombre, ASC | DESC)
   try{
     const queryParams = fetchParams(name, order, ordering);  
-    const response = await fetch(`${ROUTES.OBJECTS(objectsType)}?${queryParams}`); 
-    if (!response.ok) {     
-      return {type: 'error', data: response.status}; // Devuelve un objeto de error
-    }
-    const objects = await response.json(); // Convierte la respuesta en JSON
-    return {type: 'success', data: objects}; // Devuelve los datos obtenidos de la API
+    const response = await fetch(`${ROUTES.OBJECTS(objectsType)}?${queryParams}`)
+      .then(async (res) => {
+              const status = res.status; // Obtiene el estado de la respuesta
+              const data = await res.json() // Convierte la respuesta en JSON
+              return ({ data, status });}) // Devuelve el estado y los datos
+      .then(
+        (result) => {return result},
+        (error) => { console.log('Error en la solicitud:', error); return error; });
+    return response; // Devuelve los datos obtenidos de la API
   }catch (error) {
     console.error('Error al realizar la solicitud:', error);
   }
@@ -46,7 +49,8 @@ export const createAPIObject = async (objectsType, object, token) => {
       imageUrl: object.imageUrl,wikiUrl: object.wikiUrl,};
     const response = await fetch(ROUTES.CREATE_OBJECT(objectsType), {
         method: 'POST',
-        headers: {'Content-Type': 'application/json','Authorization': `Bearer ${token}`,},
+        headers: {'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`,},
         body: JSON.stringify(payload)})
       .then(async (res) => {
           const status = res.status;
@@ -77,7 +81,6 @@ export const updateAPIObject = async (objectsType, object, token) => {
       .then(
         (result) => {return result},
         (error) => { console.log('Error en la solicitud:', error); return error; });
-        console.log("Response", response)
     return response; // Devuelve el resultado de la solicitud
   }catch (error) {
     console.error('Error al realizar la solicitud:', error);

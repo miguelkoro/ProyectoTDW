@@ -43,12 +43,21 @@ export const DataProvider = ({ children }) => {
     try {
       setIsLoading(true); // Indica que los datos están siendo cargados
       const response = await dataService.fetchAPIObjects('products', name, order, ordering);
-      const productCollection = response.data.products.map((productData) => {
-        const product = new Producto(productData.product); // Crea una instancia de Product
-        product.setType('product'); // Configura el tipo como 'product'
-        return product;
-      });  
-      setProducts(productCollection); // Guarda los productos en el estado
+      if(response.status === 200) {
+        const productCollection = response.data.products.map((productData) => {
+          const product = new Producto(productData.product); // Crea una instancia de Product
+          product.setType('product'); // Configura el tipo como 'product'
+          return product;
+        });  
+        setProducts(productCollection); // Guarda los productos en el estado
+      }else if(response.status === 404) {
+        showMessage("Error al cargar los productos. No se han encontrado productos.", "error"); // Muestra un mensaje de error al usuario
+        setProducts([]); // Limpia la lista de productos
+      }else{
+        console.error("Error al cargar los productos:", response.status); // Maneja el error si la creación del usuario falla
+        showMessage("Error al cargar los productos.", "error"); // Muestra un mensaje de error al usuario
+        setProducts([]); // Limpia la lista de productos
+      }
     } catch (error) {
       console.error('Error al cargar productos:', error);
     } finally {
@@ -59,12 +68,21 @@ export const DataProvider = ({ children }) => {
     try {
       setIsLoading(true); // Indica que los datos están siendo cargados
       const response = await dataService.fetchAPIObjects('persons', name, order, ordering);
-      const personCollection = response.data.persons.map((personData) => {
-        const person = new Persona(personData.person); // Crea una instancia de Product
-        person.setType('person'); // Configura el tipo como 'product'
-        return person;
-      });  
-      setPersons(personCollection); // Guarda los productos en el estado
+      if(response.status === 200) {
+        const personCollection = response.data.persons.map((personData) => {
+          const person = new Persona(personData.person); // Crea una instancia de Product
+          person.setType('person'); // Configura el tipo como 'product'
+          return person;
+        });  
+        setPersons(personCollection); // Guarda los productos en el estado
+      }else if(response.status === 404) {
+        showMessage("Error al cargar las personas. No se han encontrado personas.", "error"); // Muestra un mensaje de error al usuario
+        setPersons([]); // Limpia la lista de personas
+      }else{
+        console.error("Error al cargar las personas:", response.status); // Maneja el error si la creación del usuario falla
+        showMessage("Error al cargar las personas.", "error"); // Muestra un mensaje de error al usuario
+        setPersons([]); // Limpia la lista de personas
+      }
     } catch (error) {
       console.error('Error al cargar personas:', error);
     } finally {
@@ -75,12 +93,21 @@ export const DataProvider = ({ children }) => {
     try {
       setIsLoading(true); // Indica que los datos están siendo cargados
       const response = await dataService.fetchAPIObjects('entities', name, order, ordering);
-      const entityCollection = response.data.entities.map((entityData) => {
-        const entity = new Entidad(entityData.entity); // Crea una instancia de Product
-        entity.setType('entity'); // Configura el tipo como 'product'
-        return entity;
-      });  
-      setEntities(entityCollection); // Guarda los productos en el estado
+      if(response.status=200){
+        const entityCollection = response.data.entities.map((entityData) => {
+          const entity = new Entidad(entityData.entity); // Crea una instancia de Product
+          entity.setType('entity'); // Configura el tipo como 'product'
+          return entity;
+        });  
+        setEntities(entityCollection); // Guarda los productos en el estado
+      }else if(response.status === 404) {
+        showMessage("Error al cargar las entidades. No se han encontrado entidades.", "error"); // Muestra un mensaje de error al usuario
+        setEntities([]); // Limpia la lista de entidades
+      }else{
+        console.error("Error al cargar las entidades:", response.status); // Maneja el error si la creación del usuario falla
+        showMessage("Error al cargar las entidades.", "error"); // Muestra un mensaje de error al usuario
+        setEntities([]); // Limpia la lista de entidades
+      }
     } catch (error) {
       console.error('Error al cargar entidades:', error);
     } finally {
@@ -89,78 +116,137 @@ export const DataProvider = ({ children }) => {
   }
   const getAssociations = async (name='', order='', ordering='') => {
     try {
-      setIsLoading(true); // Indica que los datos están siendo cargados
-  
-      // Llama al servicio para cargar los productos
+      setIsLoading(true); // Indica que los datos están siendo cargados  
       const response = await dataService.fetchAPIObjects('associations', name, order, ordering);
-      // Convierte cada producto del JSON en una instancia de Product
-      const associationCollection = response.data.associations.map((associationData) => {
-          const association = new Asociacion(associationData.association); // Crea una instancia de Product
-          association.setType('association'); // Configura el tipo como 'product'
-          return association;
-      });
-  
-      setAssociations(associationCollection); // Guarda los productos en el estado
-      
-      //showMessage('Productos cargados correctamente', 'success');
+      if(response.status === 200) {
+        const associationCollection = response.data.associations.map((associationData) => {
+            const association = new Asociacion(associationData.association); // Crea una instancia de Product
+            association.setType('association'); // Configura el tipo como 'product'
+            return association;
+        });  
+        setAssociations(associationCollection); // Guarda los productos en el estado
+      }else if(response.status === 404) {
+        showMessage("Error al cargar las asociaciones. No se han encontrado asociaciones.", "error"); // Muestra un mensaje de error al usuario
+        setAssociations([]); // Limpia la lista de asociaciones
+      }else{
+        console.error("Error al cargar las asociaciones:", response.status); // Maneja el error si la creación del usuario falla
+        showMessage("Error al cargar las asociaciones.", "error"); // Muestra un mensaje de error al usuario
+        setAssociations([]); // Limpia la lista de asociaciones
+      }
     } catch (error) {
       console.error('Error al cargar asociaciones:', error);
-      //showMessage('Error al cargar asociaciones', 'error');
-      //setIsLoading(false); // Finaliza la carga en caso de error
+      showMessage("Error al cargar asociaciones", "error"); // Muestra un mensaje de error al usuario
     } finally {
       setIsLoading(false); // Indica que los datos han terminado de cargarse
     }
   }
 
-  const getPersonById = async (id) => {
-
-      //setIsLoading(true); // Indica que los datos están siendo cargados
-      // Llama al servicio para obtener la persona por ID
-      const { data, etag } = await dataService.fetchAPIObjectById('persons', id);
-      // Convierte el objeto en una instancia de Persona
-      const person = new Persona(data.person);
-      person.etag = etag; // Asigna el ETag al objeto
-      person.setType('person'); // Configura el tipo como 'person'
-
-      return person; // Devuelve la persona encontrada
-
-      //setIsLoading(false); // Finaliza la carga en caso de error
-    
-
+  /** Get por Id de los diferentes objetos
+   * Con el objeto recibido, se crea una nueva instancia del objeto correspondiente
+   * y se añade a la lista de objetos del contexto o se actualiza si ya existia.
+   * @returns {Promise<Persona|null>} Devuelve la persona encontrada o null si no se encuentra
+   */
+  const getPersonById = async (id) => {      
+      const { data, etag, status } = await dataService.fetchAPIObjectById('persons', id);
+      if(status === 200){        
+        // Convierte el objeto en una instancia de Persona
+        const person = new Persona(data.person);
+        person.etag = etag; // Asigna el ETag al objeto
+        person.setType('person'); // Configura el tipo como 'person'
+        const existingPersonIndex = persons.findIndex((object) => person.id === object.id);
+        if (existingPersonIndex !== -1) {
+          setPersons((prevPersons) => { // Si el usuario ya existe, actualiza su información
+            const updatedPersons = [...prevPersons]; // Crea una copia de la lista de personas
+            updatedPersons[existingPersonIndex] = person; // Actualiza el usuario existente
+            return updatedPersons;
+          });
+        } else { // Si el usuario no existe, lo añade a la lista de usuarios
+          setPersons((prevPersons) => [...prevPersons, person]); // Añade la nueva persona a la lista de personas
+        }
+        return person; // Devuelve la persona encontrada
+      }else if(status === 404){
+        showMessage("Error al cargar la persona. No se ha encontrado la persona.", "error"); // Muestra un mensaje de error al usuario
+        return null; // Devuelve null si no se encuentra la asociación
+      }else{
+        showMessage("Error al cargar la persona.", "error"); // Muestra un mensaje de error al usuario
+        return null; // Devuelve null si no se encuentra la asociación
+      }
   };
   const getEntityById = async (id) => {
-    const { data, etag } = await dataService.fetchAPIObjectById('entities', id);
-    // Convierte el objeto en una instancia de Persona
-    const entity = new Entidad(data.entity);
-    entity.etag = etag; // Asigna el ETag al objeto
-    entity.setType('entity'); // Configura el tipo como 'person'
-
-    return entity; // Devuelve la persona encontrada
+    const { data, etag, status } = await dataService.fetchAPIObjectById('entities', id);
+    if(status === 200){
+      const entity = new Entidad(data.entity);
+      entity.etag = etag; // Asigna el ETag al objeto
+      entity.setType('entity'); // Configura el tipo como 'person'
+      const existingEntityIndex = entities.findIndex((object) => entity.id === object.id);
+      if (existingEntityIndex !== -1) {
+        setEntities((prevEntities) => { // Si el usuario ya existe, actualiza su información
+          const updatedEntities = [...prevEntities]; // Crea una copia de la lista de entidades
+          updatedEntities[existingEntityIndex] = entity; // Actualiza el usuario existente
+          return updatedEntities;
+        });
+      } else { // Si el usuario no existe, lo añade a la lista de usuarios
+        setEntities((prevEntities) => [...prevEntities, entity]); // Añade la nueva entidad a la lista de entidades
+      }      
+      return entity; // Devuelve la persona encontrada
+    }else if(status === 404){
+      showMessage("Error al cargar la entidad. No se ha encontrado la entidad.", "error"); // Muestra un mensaje de error al usuario
+      return null; // Devuelve null si no se encuentra la asociación
+    }else{
+      showMessage("Error al cargar la entidad.", "error"); // Muestra un mensaje de error al usuario
+      return null; // Devuelve null si no se encuentra la asociación
+    }
   }
-  const getProductById = async (id) => {
-    try {
-      setIsLoading(true); // Indica que los datos están siendo cargados
-      const { data, etag } = await dataService.fetchAPIObjectById('products', id);
-      const product = new Producto(data.product);
-      product.etag = etag; // Asigna el ETag al objeto
-      product.setType('product'); // Configura el tipo como 'person'
-      return product; // Devuelve la persona encontrada
-    } catch (error) {
-      console.error('Error al cargar el producto:', error);
-    }
-    finally {
-      setIsLoading(false); // Finaliza la carga en caso de error
-    }
+  const getProductById = async (id) => {     
+      const { data, etag , status} = await dataService.fetchAPIObjectById('products', id);
+      if(status === 200){
+        const product = new Producto(data.product);
+        product.etag = etag; // Asigna el ETag al objeto
+        product.setType('product'); // Configura el tipo como 'person'
+        const existingProductIndex = products.findIndex((object) => product.id === object.id);
+        if (existingProductIndex !== -1) {
+          setProducts((prevProducts) => { // Si el usuario ya existe, actualiza su información
+            const updatedProducts = [...prevProducts]; // Crea una copia de la lista de productos
+            updatedProducts[existingProductIndex] = product; // Actualiza el usuario existente
+            return updatedProducts;
+          });
+        } else { // Si el usuario no existe, lo añade a la lista de usuarios
+          setProducts((prevProducts) => [...prevProducts, product]);
+        }
+        return product; // Devuelve la persona encontrada
+      }else if(status === 404){
+        showMessage("Error al cargar el producto. No se ha encontrado el producto.", "error"); // Muestra un mensaje de error al usuario
+        return null; // Devuelve null si no se encuentra la asociación
+      }
+
   };
   const getAssociationById = async (id) => {
-    const { data, etag } = await dataService.fetchAPIObjectById('associations', id);
-    // Convierte el objeto en una instancia de Persona
-    const association = new Asociacion(data.association);
-    association.etag = etag; // Asigna el ETag al objeto
-    association.setType('association'); // Configura el tipo como 'person'
-
-    return association; // Devuelve la persona encontrada
+    const { data, etag, status } = await dataService.fetchAPIObjectById('associations', id);
+    if(status === 200 ){
+      const association = new Asociacion(data.association);
+      association.etag = etag; // Asigna el ETag al objeto
+      association.setType('association'); 
+      const existingAssociationIndex = associations.findIndex((object) => association.id === object.id);
+      if (existingAssociationIndex !== -1) {       
+        setAssociations((prevAssociations) => { // Si el usuario ya existe, actualiza su información
+          const updatedAssociations = [...prevAssociations]; // Crea una copia de la lista de asociaciones
+          updatedAssociations[existingAssociationIndex] = association; // Actualiza el usuario existente
+          return updatedAssociations;
+        });
+      } else { // Si el usuario no existe, lo añade a la lista de usuarios
+        setUsers((prevAssociations) => [...prevAssociations, association]); 
+      }      
+      //console.log("association", associations); // Muestra el objeto en la consola
+      return association; // Devuelve la persona encontrada
+    }else if(status === 404){
+      showMessage("Error al cargar la asociación. No se ha encontrado la asociación.", "error"); // Muestra un mensaje de error al usuario
+      return null; // Devuelve null si no se encuentra la asociación
+    }else{
+      showMessage("Error al cargar la asociación.", "error"); // Muestra un mensaje de error al usuario
+      return null; // Devuelve null si no se encuentra la asociación
+    }
   };
+
 
 
   const getPlural = (type) => {
@@ -178,6 +264,7 @@ export const DataProvider = ({ children }) => {
     }
   }
 
+  /** Crea un objeto en la API */
   const createObject = async (object) => {
       checkTokenExpiration(); // Verifica si el token ha expirado    
       const result = await dataService.createAPIObject(getPlural(object.type),object, user.token);

@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useContext, use } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import '../styles/index.scss'; // Reutilizamos los estilos de ObjectView
 import { DataContext } from '../context/DataContext'; // Contexto para guardar datos
 import loadingGif from '../assets/images/Loading.gif';
 import Error from './Error'; // Importa el componente de error
-
 import Objeto from '../models/Objeto'; // Importa el modelo Objeto
 import RelatedSection from '../components/RelatedSection'; // Importa el componente de objetos relacionados
 
@@ -26,8 +25,6 @@ const ObjectEdit = () => {
 
   const isNew= location.pathname.includes("new"); // Verifica si es un nuevo objeto
 
-
-
   // Estados para los campos del formulario
   const [name, setName] = useState('');
   const [birthDate, setBirthDate] = useState('');
@@ -37,7 +34,6 @@ const ObjectEdit = () => {
 
 
    useEffect(() => {
-    //console.log("type", type); // Verifica si es un nuevo objeto
     if(isNew){ setIsLoading(false); return}; // Si es un nuevo objeto, no hacemos nada    
       fetchObject(); // Llama a la función para obtener el objeto
     }, []);
@@ -46,8 +42,6 @@ const ObjectEdit = () => {
       try {
         setIsLoading(true); // Inicia la carga
         let fetchedObject = null;
-  
-        // Realiza el fetch según el tipo
         switch (type) {
           case 'person':fetchedObject = await getPersonById(id); break;
           case 'entity':fetchedObject = await getEntityById(id);break;
@@ -55,7 +49,6 @@ const ObjectEdit = () => {
           case 'association':fetchedObject = await getAssociationById(id);break;
           default: console.error(`Tipo no válido: ${type}`); break;
         }
-        //console.log("fetchObject", fetchedObject); // Verifica el objeto recibido
         if (fetchedObject) {
           await setfetchObject(fetchedObject); // Llama a la función para establecer los datos del objeto
         } else {
@@ -67,36 +60,29 @@ const ObjectEdit = () => {
         console.error('Error al obtener el objeto:', error);
         setObject(null); // Maneja errores estableciendo el estado como null
         setError(true); // Establece el error a true
-        //navigate('/'); // Redirige a la página principal en caso de error
       } 
     }
 
     const setfetchObject = async (fetchedObject) => {
         setObject(fetchedObject); // Guarda el objeto en el estado
-        // Si es un objeto existente, rellenar los campos con sus datos
         setName(fetchedObject.name || '');
         setBirthDate(fetchedObject.birthDate  || '');
         setDeathDate(fetchedObject.deathDate  || '');
         setWikiUrl(fetchedObject.wikiUrl || 'null');
-        setImageUrl(fetchedObject.imageUrl || 'https://static.thenounproject.com/png/559530-200.png'); // Inicializar la URL de la imagen
-  
-       // await fetchRelatedObjects(); // Llama a la función para obtener los objetos relacionados
-      
+        setImageUrl(fetchedObject.imageUrl || 'https://static.thenounproject.com/png/559530-200.png'); // Inicializar la URL de la imagen      
     }
 
     const fetchRelatedObjects = async () => {       
       if (!object) return; // Asegúrate de que `object` esté cargado antes de continuar
       try {
-        if (object?.persons) {
-          /*const persons = await Promise.all(object.persons.map((personId) => getPersonById(personId)) );*/
+        if (object?.persons) {        
           const relatedPersonsData = await Promise.all(object.persons.map((personId) => {
             const person = persons.find((p) => p.id === personId); // Busca la persona en el array de personas
             return person ? person : getPersonById(personId); // Si la persona ya está en el array, la devuelve, de lo contrario, la obtiene por ID
           }));
           setRelatedPersons(relatedPersonsData);
         }
-        if (object?.entities) {
-          /*const entities = await Promise.all(object.entities.map((entityId) => getEntityById(entityId)) );*/
+        if (object?.entities) {          
           const relatedEntitiesData = await Promise.all(object.entities.map((entityId) => {
             const entity = entities.find((e) => e.id === entityId); // Busca la entidad en el array de entidades
             return entity ? entity : getEntityById(entityId); // Si la entidad ya está en el array, la devuelve, de lo contrario, la obtiene por ID
@@ -106,22 +92,15 @@ const ObjectEdit = () => {
       } catch (error) {
         console.error("Error al obtener objetos relacionados:", error);
         setError(true); // Establece el error a true
-      }finally {
-        setIsLoading(false); // Finaliza la carga
-        
-      }
+      }finally {setIsLoading(false);}
     };
 
     useEffect(() => {
-      if (object) {
-        fetchRelatedObjects(); // Llama a la función para obtener los objetos relacionados
-      }
+      if (object) { fetchRelatedObjects(); }
     }, [object]); // Dependencia para ejecutar cuando el objeto cambie
   
   const checkName = () => {
-    if (!name) {
-      //console.error("El nombre no puede estar vacío"); // Mensaje de error si el nombre está vacío
-      //showMessage("El nombre no puede estar vacío", "error"); // Mensaje de error si el nombre está vacío
+    if (!name) {      
       setNameError(true); // Cambia el estado para mostrar el error en el campo
       return false; // Si el nombre está vacío, no se puede crear el objeto
     }else return true;
@@ -136,10 +115,8 @@ const ObjectEdit = () => {
     let deathDateTemp = deathDate ; // Si la fecha de muerte está vacía, asigna una fecha por defecto
     let imageUrlTemp = imageUrl === '' ? "https://static.thenounproject.com/png/559530-200.png" : imageUrl; // Si la URL de la imagen está vacía, asigna una URL por defecto
     let newObject = new Objeto({name, birthDate:birthDateTemp, deathDate:deathDateTemp, wikiUrl, imageUrl:imageUrlTemp}); // Crear un nuevo objeto persona
-    newObject.setType(type)
-    //console.log("nacimiento: ", birthDateTemp, " muerte: ", deathDateTemp, " wikiUrl: ", wikiUrl, " imageUrl: ", imageUrlTemp);
+    newObject.setType(type)  
     createObject(newObject); // Guardar el objeto usando el contexto
-    //saveObject(newObject); // Guardar el objeto usando el contexto
     navigate(-1); // Volver a la página anterior
   }
 
@@ -154,8 +131,7 @@ const ObjectEdit = () => {
     await fetchObject(); // Llama a la función para establecer los datos del objeto
   }
 
-  const addRelation = async (childId, childType) => {
-    console.log("addRelationdd: ", type, id, childId, childType); // Verifica los IDs de los objetos relacionados
+  const addRelation = async (childId, childType) => {   
     await addRemRelation(type,id, childType, childId,'add');
     await fetchObject(); // Llama a la función para obtener los objetos relacionados
   }
@@ -187,7 +163,7 @@ const ObjectEdit = () => {
   };
 
   const handleCancel = () => {
-    navigate(-1); // Volver a la página anterior sin guardar
+    navigate('/'); // Volver a la página anterior sin guardar
   };
 
 
@@ -235,18 +211,12 @@ const ObjectEdit = () => {
           </div>
           <div className="object-detail-row">
             <strong>{type === "person" ? "Muerte" : "Descontinuacion"}:</strong>
-            <input type="date" value={deathDate}
-              onChange={(e) => setDeathDate(e.target.value)}
-            />
+            <input type="date" value={deathDate} onChange={(e) => setDeathDate(e.target.value)}/>
           </div>
           <div className="object-detail-row">
             <strong>{type==="association" ? "URL" : "URL a la Wiki:"}</strong>
-            <input
-              type="url"
-              value={wikiUrl}
-              onChange={(e) => setWikiUrl(e.target.value)}
-              placeholder="Introduce la URL"
-            />
+            <input type="url" value={wikiUrl} onChange={(e) => setWikiUrl(e.target.value)}
+              placeholder="Introduce la URL"/>
           </div>
         </div>
       </div>
@@ -254,31 +224,19 @@ const ObjectEdit = () => {
 
       {/* Botones de acción */}
       <div className="object-actions">
-        <button className="cancel-button" onClick={handleCancel}>
-          Cancelar
-        </button>
-        <button className="save-button" onClick={handleSave}>
-          Guardar
-        </button>
+        <button className="cancel-button" onClick={handleCancel}>Cancelar</button>
+        <button className="save-button" onClick={handleSave}>Guardar</button>
       </div>
 
       <div className="related-columns">
       {((type==="product" || type === "entity" ) && !isNew) && (
-        <div
-          className={`related-column ${
-            relatedEntities.length === 0 ? 'single-column' : ''
-          }`}
-        >
+        <div className={`related-column ${relatedEntities.length === 0 ? 'single-column' : ''}`}>
           <RelatedSection type="persons" relatedObjects={relatedPersons} father={object} fatherType={type}
               addRelation={addRelation} removeRelation={removeRelation} isEdit={true}/>
         </div>
       )}
       {((type==="product" || type === "association") && !isNew) && (
-        <div
-          className={`related-column ${
-            relatedPersons.length === 0 ? 'single-column' : ''
-          }`}
-        >
+        <div className={`related-column ${relatedPersons.length === 0 ? 'single-column' : ''}`}>
           <RelatedSection type="entities" relatedObjects={relatedEntities} father={object} fatherType={type}
              addRelation={addRelation} removeRelation={removeRelation} isEdit={true}/>
         </div>

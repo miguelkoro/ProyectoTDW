@@ -1,4 +1,3 @@
-import React from 'react';
 import '../styles/index.scss'; // Archivo CSS para estilos
 import Card from '../components/Card.jsx'; // Importa el componente de sección pequeña
 import CardUser from '../components/CardUser.jsx'; // Importa el componente de sección pequeña
@@ -16,7 +15,7 @@ const Management = (props) => {
   const [objects, setObjects] = useState([]); 
   const [title, setTitle] = useState(''); // Estado para el título
   const [type, setType] = useState(''); // Estado para el tipo
-
+  const [showNoData, setShowNoData] = useState(false); 
   const { persons, entities, products, associations, users, isLoading,
     getPersons, getEntities, getProducts, getAssociations, getUsers} = useContext(DataContext); 
 
@@ -42,6 +41,21 @@ const Management = (props) => {
         break;
     }
   }, [typeFromState]);*/
+
+  
+  useEffect(() => {
+    if (!isLoading) {
+      const timer = setTimeout(() => {
+        setShowNoData(true); // Activa el estado después del retraso
+      }, 500); // Retraso de 300 ms
+
+      return () => clearTimeout(timer); // Limpia el temporizador si el componente se desmonta o `isLoading` cambia
+    } else {
+      setShowNoData(false); // Reinicia el estado si vuelve a cargarse
+    }
+    console.log("isLoading", isLoading); // Muestra el estado de carga en la consola
+
+  }, [props.objects]);
 
   // Observa los cambios en las variables del contexto y actualiza el estado `objects`
   useEffect(() => {
@@ -90,41 +104,26 @@ const Management = (props) => {
     <div className="section-header">
       <h1 className="section-title-management">{title}</h1>
       {(user?.scope === "writer" && typeFromState !== "users") && (
-        <button className="new-button" onClick={handleNewClick}>
-          Nuevo
-        </button>
+        <button className="new-button" onClick={handleNewClick}> Nuevo </button>
       )}
     </div>
 
     {isLoading ? (
       <div className="centered-container" style={{display:"flex", justifyContent: "center", }}>
-        <img
-          src={loadingGif}
-          alt="Cargando..."
-          className="loading-image" style={{ maxWidth: '10rem' }}
-        />
+        <img src={loadingGif} alt="Cargando..." className="loading-image" style={{ maxWidth: '10rem' }} />
       </div>
-    ) : objects.length === 0 ? (
+    ) : showNoData && objects  && objects.length ===0 ? (
       <div className="centered-container" style={{display:"flex", justifyContent: "center", }}>
         <div>
           <p style={{ color: 'white' }}>No hay datos disponibles.</p>
-          <img
-            src="./assets/images/SinDatos.jpg"
-            style={{ maxWidth: '10rem', borderRadius: '1rem' }}
-            alt="No hay datos disponibles"
-            className="empty-image"
-          />
+          <img src="./assets/images/SinDatos.jpg" style={{ maxWidth: '10rem', borderRadius: '1rem' }}
+            alt="No hay datos disponibles" className="empty-image" />
         </div>
       </div>
     ) : (
       <div className="card-management-wrapper">
-        {objects.map((object) =>
-          typeFromState !== "users" ? (
-            <Card key={object.id} object={object} />
-          ) : (
-            <CardUser key={object.id} object={object} />
-          )
-        )}
+        {objects.map((object) => typeFromState !== "users" ? ( <Card key={object.id} object={object} />
+          ) : (<CardUser key={object.id} object={object} />))}
       </div>
     )}
   </div>
