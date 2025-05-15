@@ -26,4 +26,8 @@ export default class User {
   setName(name) {
     this.name = name; // Establece el nombre del usuario
   }
+
+  setUserName(userName) {
+    this.userName = userName; // Establece el nombre de usuario
+  }
 }

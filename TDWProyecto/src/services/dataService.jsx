@@ -114,6 +114,20 @@ export const addRemRelationAPI = async (objectsType, id, relationType, relationI
     console.error('Error al realizar la solicitud:', error);
   }
 }
+/**Comprobar si existe el nombre del objeto */
+export const checkAPIObjectName = async (objectsType, name) => {
+  try{
+    const response = await fetch(ROUTES.OBJECT_NAME_CHECK(objectsType, name)) // Realiza la solicitud a la API con el nombre de objeto
+      .then(
+        (result) => {return result},
+        (error) => { console.log('Error en la solicitud:', error); return error; });
+    if(response.ok)return true; 
+    else return false; // El objeto no existe
+  }catch (error) {
+    console.error('Error al realizar la solicitud:', error);
+    return false;
+  }
+}
 
 /** USUARIOS */
 /**Coger todos los usuarios */
@@ -150,10 +164,13 @@ export const deleteAPIUser = async (id, token) => {
   }
 }
 /**Actualizar un usuario */
-export const updateAPIUser = async (userObject, password, role, token) => {
+export const updateAPIUser = async (userObject, password, role, token, userScope) => {
   try{    
-    const payload = {email: userObject.email, 
-      role: role, birthDate: userObject.birthDate,name:userObject.name, ...(password && { password }) }; //Solo actualiza la contraseña si se proporciona
+    let payload;
+    userScope === 'writer' ? 
+      payload = {username: userObject.userName, email: userObject.email, role: role, birthDate: userObject.birthDate,name:userObject.name, ...(password && { password }) } : //Solo actualiza la contraseña si se proporciona
+      payload = {email: userObject.email, role: role, birthDate: userObject.birthDate,name:userObject.name, ...(password && { password }) }; // Solo actualiza la contraseña si se proporciona
+    console.log("Payload", payload)
     const response = await fetch(ROUTES.UPDATE_USER(userObject.id), {
         method: 'PUT', body: JSON.stringify(payload), // Convierte el objeto a JSON
         headers: {'Content-Type': 'application/json',
@@ -166,6 +183,7 @@ export const updateAPIUser = async (userObject, password, role, token) => {
       .then(
         (result) => {return result},
         (error) => { console.log('Error en la solicitud:', error); return error; });
+        console.log("Respuesta de la API", response)
     return response; // Devuelve el resultado de la solicitud
   }catch (error) {
     console.error('Error al realizar la solicitud:', error);

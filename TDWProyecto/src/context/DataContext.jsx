@@ -486,6 +486,13 @@ export const DataProvider = ({ children }) => {
       showMessage(`Error al ${accion} la relación.`, "error"); // Muestra un mensaje de error al usuario
     }
   }
+  /**Comprobar si el nombre de un objeto ya existe */
+  const checkName = async (type, name) => {
+    checkTokenExpiration(); // Verifica si el token ha expirado
+    const response = await dataService.checkNameAPI(getPlural(type), name, user.token); // Llama al servicio para comprobar el nombre
+    return response; // Devuelve la respuesta de la API
+  }
+
     
 
  /**USUARIOS */
@@ -546,7 +553,7 @@ export const DataProvider = ({ children }) => {
   /**Actualizar un usuario */
   const updateUser = async (userObject, password, role) => {
       checkTokenExpiration(); // Verifica si el token ha expirado
-      const response = await dataService.updateAPIUser(userObject, password, role, user.token); // Llama al servicio de autenticación
+      const response = await dataService.updateAPIUser(userObject, password, role, user.token, user.scope); // Llama al servicio de autenticación
       if(response.data.user) {
         VAGUE_MODE ? addUpdateUser(response.data.user) : await getUsers(); // Actualiza la lista de usuarios
         showMessage('Usuario actualizado correctamente', 'success'); // Muestra un mensaje de éxito al usuario
@@ -647,7 +654,7 @@ export const DataProvider = ({ children }) => {
   return (
     <DataContext.Provider value={{ 
           persons, entities, products, associations, users,
-          isLoading, searchName, setSearchName,
+          isLoading, searchName, setSearchName, checkName,
           getEntities, getProducts, getPersons, getAssociations,
           getPersonById, getEntityById, getProductById, getAssociationById,
           createObject, deleteObject, updateObject, addRemRelation,

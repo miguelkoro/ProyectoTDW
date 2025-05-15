@@ -12,7 +12,7 @@ const UserEdit = () => {
     const location = useLocation();
     const isEdit= location.pathname.includes("edit"); // Verifica si la ruta incluye "edit"
     const isProfile = location.pathname.includes("profile"); // Verifica si la ruta incluye "profile"
-    const {updateUser, getUserById} = useContext(DataContext); // Accede al método getObjectById del contexto
+    const {updateUser, getUserById, checkUserName} = useContext(DataContext); // Accede al método getObjectById del contexto
     const {user} = useAuth(); // Obtiene el usuario autenticado del contexto
     const { id } = useParams();
 
@@ -22,8 +22,9 @@ const UserEdit = () => {
     const [passwordError, setPasswordError] = useState(false); // Estado para el error de contraseña
     const [confirmPasswordError, setConfirmPasswordError] = useState(false); // Estado para el error de confirmación de contraseña
     const [emailError, setEmailError] = useState(false); // Estado para el error de email
+    const [nameError, setNameError] = useState(false); // Estado para el error de nombre
     //const [nameError, setNameError] = useState(false); // Estado para el error de nombre
-    //const [userNameError, setUserNameError] = useState("");  
+    const [userNameError, setUserNameError] = useState("");  
 
     const [userObject, setUserObject] = useState({}); // Estado para el objeto de usuario
 
@@ -44,7 +45,7 @@ const UserEdit = () => {
         try {
           cleanInputs(); // Limpia los inputs al cargar el componente
           if (!user) return; // Si no hay usuario, no hace nada
-
+         
           let userId;
           if (isEdit) userId = id; // Si es edición usa el ID del objeto de usuario
           if(isProfile) userId = user.id; 
@@ -61,6 +62,7 @@ const UserEdit = () => {
 
     const fetchUser = async (id) => {
       try{
+        setNameError(false); // Limpia el error de nombre
         const fetchedUser = await getUserById(id); // Obtiene el usuario por ID     
         //console.log("Fetched user:", fetchedUser); // Muestra el usuario obtenido en la consola 
         if(fetchedUser){
@@ -90,6 +92,7 @@ const UserEdit = () => {
       setScope(''); // Limpia el rol del usuario
       setBirthDate(''); // Limpia la fecha de nacimiento del usuario
       setName(''); // Limpia el nombre del usuario
+      setNameError(false); // Limpia el error de nombre
     }
 
     const checkPassword = () => {
@@ -127,21 +130,48 @@ const UserEdit = () => {
       }
     };
 
+  const checkNameLength = () => {
+    if (username.length < 3) { // Verifica si el nombre tiene menos de 3 caracteres
+      setNameError(true); // Establece el error si el nombre es demasiado corto     
+      setUserNameError("El nombre debe tener al menos 3 caracteres")
+      return false;
+    } else {
+      setNameError(false); // Restablece el error si el nombre es válido
+      return true;
+    }
+  };
+
+  const checkName = async () => {   
+    if (!checkNameLength()) return false; // Verifica primero la longitud del nombre  
+    if (username === userObject.userName) {setNameError(false); return true}; // Si el nombre de usuario no ha cambiado, no verifica
+    if (await checkUserName(username)) {
+      setNameError(true); // Establece el error si el nombre ya existe
+      setUserNameError("El nombre de usuario ya está en uso")
+      setUsername(userObject.userName); // Restaura el nombre de usuario anterior
+      return false;
+    } else {
+      setNameError(false); // Restablece el error si el nombre es válido
+      return true;
+    }
+  };
+
 
     /** Guarda los cambios del usuario */  
     const handleSave = async () => {
       let passwordsValid; //Si la password esta vacia, no modifica la contraseña
       password === '' ? passwordsValid = true : passwordsValid = checkPassword(); // Verifica las contraseñas
       const emailValid = checkEmail(); // Verifica el formato del email
-      //const nameValid = await checkName(); // Espera a que se resuelva la verificación del nombre
+      const nameValid = await checkName(); // Espera a que se resuelva la verificación del nombre
       
-      if (!passwordsValid || !emailValid || !confirmPasswordCheck()) {return;} // Si hay errores, no guarda los datos
+      if (!passwordsValid || !emailValid || !confirmPasswordCheck() || !nameValid) {return;} // Si hay errores, no guarda los datos
       let userObj = new User({ id: userObject.id,  
         email: email, scope: scope, token: userObject.token, expiresIn: ''}); 
       userObj.setEtag(userObject.etag); // Establece el ETag del usuario
       userObj.setEmail(email); // Establece el email del usuario
       userObj.setBirthDate(birthDate); // Establece la fecha de nacimiento del usuario
       userObj.setName(name); // Establece el nombre del usuario
+      
+      (user.scope === "writer" && !isProfile) && userObj.setUserName(username); // Establece el nombre de usuario
     
       await updateUser(userObj, password, userObj.scope); // Llama a la función de actualización del usuario
       await fetchUser(userObject.id); // Vuelve a obtener el usuario actualizado (Por el ETAG)
@@ -177,7 +207,11 @@ const UserEdit = () => {
           <div className="object-detail-row">
             <strong>UserName:</strong>
             <div className="input-container">
-              <span style={{fontSize:"1.3rem"}}>{username}</span>
+              {user.scope === "writer" && !isProfile ? <><input type="text" placeholder="Nombre de Usuario" value={username}
+                onChange={(e) => setUsername(e.target.value)} className={nameError ? 'input-error' : ''}
+                onBlur={checkNameLength}/>
+              {nameError &&<span className="error-input-text">{userNameError}</span>}</>:
+              <span style={{fontSize:"1.3rem"}}>{username}</span>}
             </div>
           </div>
           <div className="object-detail-row">
