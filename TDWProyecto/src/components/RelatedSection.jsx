@@ -68,7 +68,7 @@ const RelatedSection = (props) => {
       {(user?.scope === 'writer' && props.isEdit) && (
         <div className="related-add">
           <div className='select-option-container'>
-            <select value={selectedId} onChange={(e) => setSelectedId(e.target.value)} className="related-select" >
+            <select value={selectedId} onChange={(e) => {setSelectedId(e.target.value); setSelectError(false);}} className="related-select" >
               <option value="">Seleccionar {props.type === 'persons' ? 'persona' : 'entidad'}</option>
               {options.map((option) => (
                 <option key={option.id} value={option.id}>{option.name || `ID: ${option.id}`} </option>

@@ -1,4 +1,3 @@
-import React, { useContext, useState } from 'react';
 import '../styles/index.scss'; // Archivo CSS para estilos
 import { useAuth } from '../context/AuthContext'; // Importa el contexto de autenticación
 import { useLocation } from 'react-router-dom'; // Importa useLocation para obtener la ubicación actual
@@ -8,7 +7,6 @@ const RowRelated = (props) => {
     //console.log("Objetos relacionados:", objects); // Verifica los objetos relacionados
     const { user } = useAuth(); // Obtén el usuario autenticado del contexto
     const location = useLocation(); // Obtén la ubicación actual
-    const isView = location.state?.view || false;
     const navigate = useNavigate(); // Hook para redirigir
 
     const handleDeleteClick = (e) => {
@@ -22,7 +20,6 @@ const RowRelated = (props) => {
     };
 
     const handleClick = () => {
-      console.log("Objeto clickeado:", props.object); // Verifica el objeto clickeado
       !props.isEdit &&
         navigate(`/view/${props.object.type}/${props.object.id}`, { state: { view: true } }); // Redirige al ObjectView con el objeto como estado
       //console.log("Datos del objeto:", object);

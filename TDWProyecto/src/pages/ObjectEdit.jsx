@@ -136,8 +136,7 @@ const ObjectEdit = () => {
     await fetchObject(); // Llama a la función para obtener los objetos relacionados
   }
 
-  const removeRelation = async (childId, childType) => {
-    console.log("removeRelation: ", type, id, childId, childType); // Verifica los IDs de los objetos relacionados
+  const removeRelation = async (childId, childType) => {   
     await addRemRelation(type,id, childType, childId,'rem');
     await fetchObject(); // Llama a la función para obtener los objetos relacionados
   }
@@ -146,13 +145,13 @@ const ObjectEdit = () => {
   const newTitle = () => {
     switch (type) {
       case 'person':
-        return 'Nueva Persona'; 
+        return isNew ? 'Nueva Persona' : 'Editar Persona'; // Cambia el título según el tipo de objeto
       case 'entity':
-        return 'Nueva Entidad'; 
+        return isNew ? 'Nueva Entidad' : 'Editar Entidad';
       case 'product':
-        return 'Nuevo Producto';
+        return isNew ? 'Nuevo Producto' : 'Editar Producto';
       case 'association':
-        return 'Nueva Asociación';
+        return isNew ? 'Nueva Asociación' : 'Editar Asociación';
       default:
         return 'Objeto';
     }
@@ -184,7 +183,7 @@ const ObjectEdit = () => {
     <div className="object-panel">
       {/* Fila principal: Título centrado y ID a la derecha */}
       <div className="object-header">
-        <h1 className="object-title">{isNew ? `${newTitle()}` : `Editar ${type || 'Objeto:'}: ${object?.name}`}</h1>
+        <h1 className="object-title">{newTitle()}</h1>
         <span className="object-id">ID: {isNew ? '?' : id}</span>
       </div>
       <hr className="object-divider" />

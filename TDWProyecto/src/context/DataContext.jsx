@@ -471,7 +471,6 @@ export const DataProvider = ({ children }) => {
   const addRemRelation = async (objectsType, idObject, typeRelation, idRelation, action) => {
     checkTokenExpiration(); // Verifica si el token ha expirado
     const response = await dataService.addRemRelationAPI(getPlural(objectsType),idObject, typeRelation, idRelation, action, user.token); // Llama al servicio para añadir o eliminar la relación
-    console.log("addRemRelation", response); // Verifica la respuesta del servicio
     let accion = action === 'add' ? 'añadida' : 'eliminada'; // Determina la acción realizada
     if(response.ok) {
        showMessage(`Relación ${accion} correctamente`, 'success'); // Muestra un mensaje de éxito al usuario    

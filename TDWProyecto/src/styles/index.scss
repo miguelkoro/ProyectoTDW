@@ -109,8 +109,7 @@ button:hover {
   display: inline-block; /* Asegura que las propiedades de tamaño funcionen */
   overflow: hidden; /* Oculta el contenido que desborda */
   text-overflow: ellipsis; /* Muestra puntos suspensivos si el texto es demasiado largo */
-  white-space: nowrap;
-  
+  white-space: nowrap;  
 }
 .object-detail-row span a:hover {
   text-decoration: underline; /* Subraya el enlace al pasar el cursor */
@@ -754,6 +753,14 @@ input {
     opacity: 1;
     transform: translateY(0);
   }
+}
+.user-email{
+  color: #51affc; /* Cambia el color del enlace */
+  text-decoration: none; /* Elimina el subrayado */
+  max-width: 10rem; 
+}
+.user-email:hover {
+  text-decoration: underline; /* Subraya el enlace al pasar el cursor */
 }
 
 /** ELIMINAR */

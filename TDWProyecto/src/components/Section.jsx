@@ -47,10 +47,11 @@ const Section = (props) => {
         {isLoading ? (
           <img src={loadingGif} style={{ maxWidth: '5rem', margin: '0 auto' }} alt="Cargando..." className="loading-image"/>
         ) : showNoData && props.objects  && props.objects.length ===0 ? (
-          <div style={{ margin: '0 auto' }}>
-            <p style={{ color: 'white' }}>No hay datos disponibles.</p>
+          <div style={{ margin: '0 auto', display: "flex", flexDirection: "column", alignItems:"center" }}>
+            <p style={{fontSize:"1.2rem"}}> No hay datos disponibles.</p>
             <img src="./assets/images/SinDatos.jpg"  style={{ maxWidth: '10rem', borderRadius: '1rem' }}
               alt="No hay datos disponibles" className="empty-image" />
+            <p style={{ fontSize:"0.8rem" }}>Yo los había ponido aquí</p>
           </div>
         ) : (
           props.objects.map((object) =>

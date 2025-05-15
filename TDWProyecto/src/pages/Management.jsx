@@ -114,10 +114,11 @@ const Management = (props) => {
       </div>
     ) : showNoData && objects  && objects.length ===0 ? (
       <div className="centered-container" style={{display:"flex", justifyContent: "center", }}>
-        <div>
-          <p style={{ color: 'white' }}>No hay datos disponibles.</p>
-          <img src="./assets/images/SinDatos.jpg" style={{ maxWidth: '10rem', borderRadius: '1rem' }}
+        <div style={{ margin: '0 auto', display: "flex", flexDirection: "column", alignItems:"center" }}>
+          <p style={{fontSize:"1.4rem"}}> No hay datos disponibles.</p>
+          <img src="./assets/images/SinDatos.jpg"  style={{ maxWidth: '14rem', borderRadius: '1rem' }}
             alt="No hay datos disponibles" className="empty-image" />
+          <p style={{ fontSize:"1rem" }}>Yo los había ponido aquí</p>
         </div>
       </div>
     ) : (

@@ -79,7 +79,9 @@ const UserView = () => {
         </div>
         <div className="object-detail-row">
           <strong>Email:</strong>
-          <span>{userObject.email}</span>
+          <span>
+            <a className="user-email" href={`mailto:${userObject.email}`}>{userObject.email}</a>
+          </span>
         </div>
         <div className="object-detail-row">
           <strong>Fecha de nacimiento:</strong>
