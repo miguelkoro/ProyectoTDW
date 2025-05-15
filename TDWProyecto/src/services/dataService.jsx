@@ -122,7 +122,10 @@ export const fetchAPIUsers = async (token,name = '', order = '', ordering = '') 
     const queryParams = fetchParams(name, order, ordering); 
     const response = await fetch(`${ROUTES.USERS}?${queryParams}`,{ // Realiza la solicitud a la API con los parámetros de consulta
         headers: {'Authorization': `Bearer ${token}`}})
-      .then(res => res.json())
+      .then(async (res) => {
+        const data = await res.json()
+        const status = res.status; // Obtiene el estado de la respuesta
+        return ({ data, status });}) // Devuelve el estado y los datos
       .then(
         (result) => {return result},
         (error) => { console.log('Error en la solicitud:', error); return error; });
@@ -137,6 +140,7 @@ export const deleteAPIUser = async (id, token) => {
     const response = await fetch(ROUTES.DELETE_USER(id), {
         method: 'DELETE',
         headers: {'Authorization': `Bearer ${token}`,}})
+      
       .then(
         (result) => {return result},
         (error) => { console.log('Error en la solicitud:', error); return error; });
@@ -155,7 +159,10 @@ export const updateAPIUser = async (userObject, password, role, token) => {
         headers: {'Content-Type': 'application/json',
                   'If-Match': userObject.etag, 
                   'Authorization': `Bearer ${token}`}})
-      .then(res => res.json())
+      .then(async (res) => {
+          const data = await res.json()
+          const status = res.status; // Obtiene el estado de la respuesta
+          return ({ data, status });}) // Devuelve el estado y los datos
       .then(
         (result) => {return result},
         (error) => { console.log('Error en la solicitud:', error); return error; });
@@ -173,7 +180,10 @@ export const createAPIUser = async (userName, email, password, birthDate, name) 
       method: 'POST', 
       headers: {'Content-Type': 'application/json'}, 
       body: JSON.stringify(payload),})
-    .then(res => res.json())
+    .then(async(res) => {
+      const data = await res.json();
+      const status = res.status; // Obtiene el estado de la respuesta
+      return ({ status, data });})
     .then(
       (result) => {return result},
       (error) => { console.log('Error en la solicitud:', error); return error; });
@@ -190,8 +200,9 @@ export const getAPIUserById = async (id, token) => {
                 'Authorization': `Bearer ${token}`} // Agrega el token en la cabecera de autorización
       }).then(async (res) => { 
           const etag = res.headers.get('ETag'); // Obtiene el ETag de la respuesta 
+          const status = res.status; // Obtiene el estado de la respuesta
           const data = await res.json();
-          return ({ data, etag });}) // Convierte la respuesta en JSON y devuelve el ETag
+          return ({ data, etag, status });}) // Convierte la respuesta en JSON y devuelve el ETag
         .then(
           (result) => {return result},
           (error) => { console.log('Error en la solicitud:', error); return error; });

@@ -26,6 +26,7 @@ export const DataProvider = ({ children }) => {
   const {user, checkTokenExpiration, showMessage} = useAuth(); // Obtiene el usuario autenticado del contexto
 
   const VAGUE_MODE = true; 
+  const SHOW_NO_DATA_MESSAGE = false;
 
 
  /* const afertUserLogin = async () => {
@@ -51,7 +52,7 @@ export const DataProvider = ({ children }) => {
         });  
         setProducts(productCollection); // Guarda los productos en el estado
       }else if(response.status === 404) {
-        showMessage("Error al cargar los productos. No se han encontrado productos.", "error"); // Muestra un mensaje de error al usuario
+        SHOW_NO_DATA_MESSAGE && showMessage("Error al cargar los productos. No se han encontrado productos.", "error"); // Muestra un mensaje de error al usuario
         setProducts([]); // Limpia la lista de productos
       }else{
         console.error("Error al cargar los productos:", response.status); // Maneja el error si la creación del usuario falla
@@ -76,7 +77,7 @@ export const DataProvider = ({ children }) => {
         });  
         setPersons(personCollection); // Guarda los productos en el estado
       }else if(response.status === 404) {
-        showMessage("Error al cargar las personas. No se han encontrado personas.", "error"); // Muestra un mensaje de error al usuario
+        SHOW_NO_DATA_MESSAGE && showMessage("Error al cargar las personas. No se han encontrado personas.", "error"); // Muestra un mensaje de error al usuario
         setPersons([]); // Limpia la lista de personas
       }else{
         console.error("Error al cargar las personas:", response.status); // Maneja el error si la creación del usuario falla
@@ -101,7 +102,7 @@ export const DataProvider = ({ children }) => {
         });  
         setEntities(entityCollection); // Guarda los productos en el estado
       }else if(response.status === 404) {
-        showMessage("Error al cargar las entidades. No se han encontrado entidades.", "error"); // Muestra un mensaje de error al usuario
+        SHOW_NO_DATA_MESSAGE && showMessage("Error al cargar las entidades. No se han encontrado entidades.", "error"); // Muestra un mensaje de error al usuario
         setEntities([]); // Limpia la lista de entidades
       }else{
         console.error("Error al cargar las entidades:", response.status); // Maneja el error si la creación del usuario falla
@@ -126,7 +127,7 @@ export const DataProvider = ({ children }) => {
         });  
         setAssociations(associationCollection); // Guarda los productos en el estado
       }else if(response.status === 404) {
-        showMessage("Error al cargar las asociaciones. No se han encontrado asociaciones.", "error"); // Muestra un mensaje de error al usuario
+        SHOW_NO_DATA_MESSAGE && showMessage("Error al cargar las asociaciones. No se han encontrado asociaciones.", "error"); // Muestra un mensaje de error al usuario
         setAssociations([]); // Limpia la lista de asociaciones
       }else{
         console.error("Error al cargar las asociaciones:", response.status); // Maneja el error si la creación del usuario falla
@@ -470,7 +471,7 @@ export const DataProvider = ({ children }) => {
   const addRemRelation = async (objectsType, idObject, typeRelation, idRelation, action) => {
     checkTokenExpiration(); // Verifica si el token ha expirado
     const response = await dataService.addRemRelationAPI(getPlural(objectsType),idObject, typeRelation, idRelation, action, user.token); // Llama al servicio para añadir o eliminar la relación
-    //console.log("addRemRelation", response); // Verifica la respuesta del servicio
+    console.log("addRemRelation", response); // Verifica la respuesta del servicio
     let accion = action === 'add' ? 'añadida' : 'eliminada'; // Determina la acción realizada
     if(response.ok) {
        showMessage(`Relación ${accion} correctamente`, 'success'); // Muestra un mensaje de éxito al usuario    
@@ -495,8 +496,8 @@ export const DataProvider = ({ children }) => {
       checkTokenExpiration(); // Verifica si el token ha expirado
       setIsLoading(true); // Indica que los datos están siendo cargados
       const response = await dataService.fetchAPIUsers(user?.token,name, order, ordering );     
-      if (response.users) {
-          const userCollection = response.users.map((userData) => {
+      if (response.status === 200) {
+          const userCollection = response.data.users.map((userData) => {
             const newUser= new User({
               id: userData.user.id,
               userName: userData.user.username,
@@ -508,14 +509,14 @@ export const DataProvider = ({ children }) => {
             return newUser; // Devuelve el nuevo objeto User
           }); 
         setUsers(userCollection); // Guarda los productos en el estado        
-      }else if(response.code === 401) {
+      }else if(response.status === 401) {
         showMessage("Error al cargar los usuarios. No tienes permiso para realizar esta acción.", "error"); // Muestra un mensaje de error al usuario
         setUsers([]); // Limpia la lista de usuarios
-      }else if(response.code === 404) {
+      }else if(response.status === 404) {
         showMessage("Error al cargar los usuarios. No se han encontrado usuarios.", "error"); // Muestra un mensaje de error al usuario
         setUsers([]); // Limpia la lista de usuarios
       }else{
-        console.error("Error al cargar los usuarios:", response.code); // Maneja el error si la creación del usuario falla
+        console.error("Error al cargar los usuarios:", response.status); // Maneja el error si la creación del usuario falla
         showMessage("Error al cargar los usuarios.", "error"); // Muestra un mensaje de error al usuario
         setUsers([]); // Limpia la lista de usuarios
       }
@@ -547,19 +548,19 @@ export const DataProvider = ({ children }) => {
   const updateUser = async (userObject, password, role) => {
       checkTokenExpiration(); // Verifica si el token ha expirado
       const response = await dataService.updateAPIUser(userObject, password, role, user.token); // Llama al servicio de autenticación
-      if(response.user) {
-        VAGUE_MODE ? addUpdateUser(response.user) : await getUsers(); // Actualiza la lista de usuarios
+      if(response.data.user) {
+        VAGUE_MODE ? addUpdateUser(response.data.user) : await getUsers(); // Actualiza la lista de usuarios
         showMessage('Usuario actualizado correctamente', 'success'); // Muestra un mensaje de éxito al usuario
-      }else if(response.code === 400) {
+      }else if(response.status === 400) {
         showMessage("Error al actualizar el usuario. El usuario o correo ya existen.", "error"); // Muestra un mensaje de error al usuario
-      }else if(response.code === 404) {
+      }else if(response.status === 404) {
         showMessage("Error al actualizar el usuario. El usuario no existe.", "error"); // Muestra un mensaje de error al usuario
-      }else if(response.code === 401) {
+      }else if(response.status === 401) {
         showMessage("Error al actualizar el usuario. No tienes permiso para realizar esta acción.", "error"); // Muestra un mensaje de error al usuario
-      }else if(response.code === 428) {
+      }else if(response.status === 428) {
         showMessage("Error al actualizar el usuario. Fallo en el eTag", "error"); // Muestra un mensaje de error al usuario
       }else{
-        console.error("Error al actualizar el usuario:", response.code); // Maneja el error si la creación del usuario falla
+        console.error("Error al actualizar el usuario:", response.status); // Maneja el error si la creación del usuario falla
         showMessage("Error al actualizar el usuario.", "error"); // Muestra un mensaje de error al usuario
       }      
       return response; // Devuelve el resultado de la solicitud   
@@ -585,15 +586,15 @@ export const DataProvider = ({ children }) => {
   /**Registro de nuevo usuario */
   const register = async (userName, email, password, birthDate, name) => {
     const response = await dataService.createAPIUser(userName, email, password, birthDate, name); // Llama al servicio de autenticación
-    if (response.user) { // Verifica si la respuesta es exitosa
+    if (response.status === 201) { // Verifica si la respuesta es exitosa
       showMessage("Usuario creado correctamente.", "success"); // Muestra un mensaje de éxito al usuario
       navigate("/login"); // Redirige al usuario a la página de inicio de sesión
-    } else if(response.code === 400) {
+    } else if(response.status === 400) {
       showMessage("Error al crear el usuario. El usuario o correo ya existen.", "error"); // Muestra un mensaje de error al usuario
-    }else if(response.code === 422) {
+    }else if(response.status === 422) {
       showMessage("Error al crear el usuario. Faltan campos", "error"); // Muestra un mensaje de error al usuario
     }else{
-      console.error("Error al crear el usuario:", response.code); // Maneja el error si la creación del usuario falla
+      console.error("Error al crear el usuario:", response.status); // Maneja el error si la creación del usuario falla
       showMessage("Error al crear el usuario.", "error"); // Muestra un mensaje de error al usuario
     }
   }
@@ -601,7 +602,7 @@ export const DataProvider = ({ children }) => {
   const getUserById = async (id) => {
     checkTokenExpiration(); // Verifica si el token ha expirado
     const response = await dataService.getAPIUserById(id, user.token);
-    if (response.data.user) {   
+    if (response.status === 200) { // Verifica si la respuesta es exitosa
       const userObject = new User({id: response.data.user.id, userName: response.data.user.username, 
         scope: response.data.user.role, token:'', expiresIn:''});
       userObject.setEtag(response.etag); // Guarda el ETag del usuario
@@ -610,9 +611,13 @@ export const DataProvider = ({ children }) => {
       userObject.setName(response.data.user.name); // Guarda el nombre del usuario
       addUser(userObject); // Añade el usuario al estado
       return userObject; // Devuelve el objeto User 
-    }else if(response.data.code === 404) {
+    }else if(response.status === 404) {
       showMessage("Error, Usuario no encontrado", "error"); // Muestra un mensaje de error al usuario
       await getUsers(); // Actualiza la lista de usuarios
+      return null; // Devuelve null si no se encuentra el usuario
+    }else if (response.status === 401) {
+      showMessage("Error al obtener el usuario. No tienes permiso para realizar esta acción.", "error"); // Muestra un mensaje de error al usuario
+      //await getUsers(); // Actualiza la lista de usuarios
       return null; // Devuelve null si no se encuentra el usuario
     }else{
       console.error("Error al obtener el usuario por ID:", response); // Maneja el error si la creación del usuario falla
