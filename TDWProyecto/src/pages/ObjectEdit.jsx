@@ -13,7 +13,7 @@ const ObjectEdit = () => {
   const { type, id } = useParams();
   const [object, setObject] = useState(null); // Estado para el objeto
   const { getProductById, getPersonById, getEntityById, getAssociationById,
-          createObject, updateObject, addRemRelation, persons, entities,
+          createObject, updateObject, addRemRelation, persons, entities, checkObjectName
           } = useContext(DataContext); // Accede al método getObjectById del contexto
 
   const [relatedPersons, setRelatedPersons] = useState([]);
@@ -22,6 +22,7 @@ const ObjectEdit = () => {
   const [isLoading, setIsLoading] = useState(true); // Estado de carga
   const [error, setError] = useState(false); // Estado para manejar errores
   const [nameError, setNameError] = useState(false); // Estado para el error de nombre
+  const [nameErrorText, setNameErrorText] = useState(''); // Estado para el texto del error de nombre
 
   const isNew= location.pathname.includes("new"); // Verifica si es un nuevo objeto
 
@@ -99,18 +100,42 @@ const ObjectEdit = () => {
       if (object) { fetchRelatedObjects(); }
     }, [object]); // Dependencia para ejecutar cuando el objeto cambie
   
-  const checkName = () => {
+  /*const checkName = () => {
     if (!name) {      
       setNameError(true); // Cambia el estado para mostrar el error en el campo
       return false; // Si el nombre está vacío, no se puede crear el objeto
     }else return true;
-  }
+  }*/
 
-  const saveNewObject = () => {   
-    if (!checkName()) {
-      return; // Si el nombre no es válido, no se puede crear el objeto
+  const checkNameLength = () => {
+    if (name.length < 3 || !name) { // Verifica si el nombre tiene menos de 3 caracteres
+      setNameError(true); // Establece el error si el nombre es demasiado corto     
+      setNameErrorText("El nombre debe tener al menos 3 caracteres")
+      return false;
+    } else {
+      setNameError(false); // Restablece el error si el nombre es válido
+      return true;
     }
-    setNameError(false); // Restablece el estado si el nombre es válido
+  };
+
+  const checkName = async () => {   
+    if (!checkNameLength()) return false; // Verifica primero la longitud del nombre  
+    if (!isNew && name === object.name) {setNameError(false); return true}; // Si el nombre de usuario no ha cambiado, no verifica
+    if (await checkObjectName(type, name)) {
+      setNameError(true); // Establece el error si el nombre ya existe
+      setNameErrorText("El nombre ya está en uso")
+      !isNew && setName(object.name)  // Restaura el nombre de usuario anterior si es un update
+      return false;
+    } else {
+      setNameError(false); // Restablece el error si el nombre es válido
+      return true;
+    }
+  };
+
+  const saveNewObject = async () => {   
+    let nameErrorTemp = await checkName(); // Verifica si el nombre es válido
+    if (!nameErrorTemp) { return;  }
+    //setNameError(false); // Restablece el estado si el nombre es válido
     let birthDateTemp = birthDate ; // Si la fecha de nacimiento está vacía, asigna una fecha por defecto
     let deathDateTemp = deathDate ; // Si la fecha de muerte está vacía, asigna una fecha por defecto
     let imageUrlTemp = imageUrl === '' ? "https://static.thenounproject.com/png/559530-200.png" : imageUrl; // Si la URL de la imagen está vacía, asigna una URL por defecto
@@ -121,8 +146,10 @@ const ObjectEdit = () => {
   }
 
   const update = async () => {
-    if (!checkName()) {return; }
-    setNameError(false); // Restablece el estado si el nombre es válido
+    let nameErrorTemp = await checkName(); // Verifica si el nombre es válido
+    if (!nameErrorTemp) {return; }
+
+    //setNameError(false); // Restablece el estado si el nombre es válido
     let imageUrlTemp = imageUrl === '' ? "https://static.thenounproject.com/png/559530-200.png" : imageUrl;
     let objeto=new Objeto({id:object.id, name, birthDate, deathDate, imageUrlTemp, wikiUrl}); // Crear un nuevo objeto con los datos actualizados
     objeto.setEtag(object.etag); // Establecer el etag del objeto original
@@ -201,8 +228,11 @@ const ObjectEdit = () => {
         <div className="object-details-column">
           <div className="object-detail-row">
             <strong>Nombre:</strong>
-            <input  type="text" value={name} onChange={(e) => setName(e.target.value)}
-              placeholder="Introduce el nombre"  className={nameError ? 'input-error' : ''} />
+            <div className='input-container'>
+              <input  type="text" value={name} onChange={(e) => setName(e.target.value)}
+                placeholder="Introduce el nombre"  className={nameError ? 'input-error' : ''} />
+              {nameError && <span className="error-input-text" style={{marginLeft:"-2rem"}}>{nameErrorText}</span>}
+            </div>
           </div>
           <div className="object-detail-row">
             <strong>{type === "person" ? "Nacimiento" : "Creacion"}:</strong>

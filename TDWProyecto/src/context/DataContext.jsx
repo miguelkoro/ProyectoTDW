@@ -487,9 +487,10 @@ export const DataProvider = ({ children }) => {
     }
   }
   /**Comprobar si el nombre de un objeto ya existe */
-  const checkName = async (type, name) => {
+  const checkObjectName = async (type, name) => {
+    console.log("checkObjectName", type, name);
     checkTokenExpiration(); // Verifica si el token ha expirado
-    const response = await dataService.checkNameAPI(getPlural(type), name, user.token); // Llama al servicio para comprobar el nombre
+    const response = await dataService.checkAPIObjectName(getPlural(type), type, name); // Llama al servicio para comprobar el nombre
     return response; // Devuelve la respuesta de la API
   }
 
@@ -654,7 +655,7 @@ export const DataProvider = ({ children }) => {
   return (
     <DataContext.Provider value={{ 
           persons, entities, products, associations, users,
-          isLoading, searchName, setSearchName, checkName,
+          isLoading, searchName, setSearchName, checkObjectName,
           getEntities, getProducts, getPersons, getAssociations,
           getPersonById, getEntityById, getProductById, getAssociationById,
           createObject, deleteObject, updateObject, addRemRelation,

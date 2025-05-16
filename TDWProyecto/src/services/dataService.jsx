@@ -115,9 +115,9 @@ export const addRemRelationAPI = async (objectsType, id, relationType, relationI
   }
 }
 /**Comprobar si existe el nombre del objeto */
-export const checkAPIObjectName = async (objectsType, name) => {
+export const checkAPIObjectName = async (objectsType, type, name) => {
   try{
-    const response = await fetch(ROUTES.OBJECT_NAME_CHECK(objectsType, name)) // Realiza la solicitud a la API con el nombre de objeto
+    const response = await fetch(ROUTES.OBJECT_NAME_CHECK(objectsType, type, name)) // Realiza la solicitud a la API con el nombre de objeto
       .then(
         (result) => {return result},
         (error) => { console.log('Error en la solicitud:', error); return error; });

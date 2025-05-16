@@ -17,5 +17,5 @@ export const ROUTES = {
   UPDATE_OBJECT: (type, id) => `${API_URL}${BASE_PATH}${type}/${id}`,
   DELETE_OBJECT: (type, id) => `${API_URL}${BASE_PATH}${type}/${id}`,
   ADD_REMOVE_RELATION: (type, id, relationType, action, relationId) => `${API_URL}${BASE_PATH}${type}/${id}/${relationType}/${action}/${relationId}`,
-  OBJECT_NAME_CHECK: (type, name) => `${API_URL}${BASE_PATH}${type}/productname/${name}`,
+  OBJECT_NAME_CHECK: (type, singleType, name) => `${API_URL}${BASE_PATH}${type}/${singleType}name/${name}`,
 };
