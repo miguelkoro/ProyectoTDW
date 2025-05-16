@@ -23,19 +23,19 @@ export const DataProvider = ({ children }) => {
   const [searchName, setSearchName] = useState(''); // Estado para el nombre de búsqueda
 
   const [isLoading, setIsLoading] = useState(true);
-  const {user, checkTokenExpiration, showMessage} = useAuth(); // Obtiene el usuario autenticado del contexto
+  const {user, checkTokenExpiration, showMessage, loadData} = useAuth(); // Obtiene el usuario autenticado del contexto
 
   const VAGUE_MODE = true; 
   const SHOW_NO_DATA_MESSAGE = false;
 
 
- /* const afertUserLogin = async () => {
+  const loadAllData = async () => {
     await getAssociations(); // Llama a la función para obtener asociaciones
     await getProducts(); // Llama a la función para obtener productos
     await getPersons(); // Llama a la función para obtener personas
     await getEntities(); // Llama a la función para obtener entidades
     if(user?.scope==="writer") await getUsers(); // Llama a la función para obtener usuarios
-  }*/
+  }
 
 
 
@@ -488,7 +488,7 @@ export const DataProvider = ({ children }) => {
   }
   /**Comprobar si el nombre de un objeto ya existe */
   const checkObjectName = async (type, name) => {
-    console.log("checkObjectName", type, name);
+    //console.log("checkObjectName", type, name);
     checkTokenExpiration(); // Verifica si el token ha expirado
     const response = await dataService.checkAPIObjectName(getPlural(type), type, name); // Llama al servicio para comprobar el nombre
     return response; // Devuelve la respuesta de la API
@@ -658,7 +658,7 @@ export const DataProvider = ({ children }) => {
           isLoading, searchName, setSearchName, checkObjectName,
           getEntities, getProducts, getPersons, getAssociations,
           getPersonById, getEntityById, getProductById, getAssociationById,
-          createObject, deleteObject, updateObject, addRemRelation,
+          createObject, deleteObject, updateObject, addRemRelation, loadAllData,
           getUsers, deleteUser, updateUser, register, getUserById, checkUserName}}>
       {children}
     </DataContext.Provider>

@@ -25,6 +25,8 @@ export const AuthProvider = ({ children }) => {
   const [messageType, setMessageType] = useState("");
   const timeoutIdRef = useRef(null);
 
+  const [loadData, setLoadData] = useState(false); // Estado de carga de datos
+
   /** Funcion para mostrar un mensaje de error o fallo en el navbar */
 const showMessage = (text, type) => {
   if (timeoutIdRef.current) { clearTimeout(timeoutIdRef.current);  timeoutIdRef.current = null;  }
@@ -38,6 +40,7 @@ const showMessage = (text, type) => {
 
   /** Funcion para coger el usuario del localstorage */
   const getLocalUser = () => {
+    setIsLoading(true); // Inicia la carga
     try {
       const storedUser = localStorage.getItem("user");
       if (storedUser) {
@@ -53,6 +56,7 @@ const showMessage = (text, type) => {
  
   /** Funcion para iniciar sesion y recibir un nuevo token */
   const login = async (userName, password) => {
+    setIsLoading(true); // Inicia la carga
     try {
       const response = await authService.login(userName, password);      
       if (response.status===200) { // Verifica si la respuesta contiene el token        
@@ -102,7 +106,7 @@ const showMessage = (text, type) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, getLocalUser, isLoading,
+    <AuthContext.Provider value={{ user, login, logout, getLocalUser, isLoading, loadData,
       showMessage, message, messageType,
       checkTokenExpiration, userLogin}}>
       {children}
