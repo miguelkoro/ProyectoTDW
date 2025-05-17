@@ -151,7 +151,7 @@ const ObjectEdit = () => {
 
     //setNameError(false); // Restablece el estado si el nombre es válido
     let imageUrlTemp = imageUrl === '' ? "https://static.thenounproject.com/png/559530-200.png" : imageUrl;
-    let objeto=new Objeto({id:object.id, name, birthDate, deathDate, imageUrlTemp, wikiUrl}); // Crear un nuevo objeto con los datos actualizados
+    let objeto=new Objeto({id:object.id, name, birthDate, deathDate, imageUrl:imageUrlTemp, wikiUrl}); // Crear un nuevo objeto con los datos actualizados
     objeto.setEtag(object.etag); // Establecer el etag del objeto original
     objeto.setType(type); // Establecer el tipo del objeto
     await updateObject(objeto); // Guardar el objeto usando el contexto
