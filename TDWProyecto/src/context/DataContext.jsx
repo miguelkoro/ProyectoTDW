@@ -23,6 +23,7 @@ export const DataProvider = ({ children }) => {
   const [searchName, setSearchName] = useState(''); // Estado para el nombre de búsqueda
 
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingUsers, setIsLoadingUsers] = useState(true); // Estado de carga de usuarios
   const {user, checkTokenExpiration, showMessage, loadData} = useAuth(); // Obtiene el usuario autenticado del contexto
 
   const VAGUE_MODE = true; 
@@ -501,7 +502,7 @@ export const DataProvider = ({ children }) => {
   const getUsers = async (name='', order='', ordering='') => {
     try{
       checkTokenExpiration(); // Verifica si el token ha expirado
-      setIsLoading(true); // Indica que los datos están siendo cargados
+      setIsLoadingUsers(true); // Indica que los datos están siendo cargados
       const response = await dataService.fetchAPIUsers(user?.token,name, order, ordering );     
       if (response.status === 200) {
           const userCollection = response.data.users.map((userData) => {
@@ -530,7 +531,7 @@ export const DataProvider = ({ children }) => {
     } catch (error) {
       console.error('Error al cargar productos:', error);
     } finally {
-      setIsLoading(false); // Indica que los datos han terminado de cargarse
+      setIsLoadingUsers(false); // Indica que los datos han terminado de cargarse
     }
   }
   /**Eliminar un usuario */

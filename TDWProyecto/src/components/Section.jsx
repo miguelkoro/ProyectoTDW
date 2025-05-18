@@ -19,10 +19,10 @@ const Section = (props) => {
 
   useEffect(() => {
     if (!isLoading) {
-      const timer = setTimeout(() => { setShowNoData(true);}, 500); // Retraso de 300 ms
+      const timer = setTimeout(() => { setShowNoData(true);}, 100); // Retraso de 300 ms
       return () => clearTimeout(timer); // Limpia el temporizador si el componente se desmonta o `isLoading` cambia
     } else {setShowNoData(false); }
-  }, [props.objects]); // Observa los cambios en `isLoading` y los objetos relacionados
+  }, [props.objects, isLoading]); // Observa los cambios en `isLoading` y los objetos relacionados
 
 
   const titleClick = () => {
@@ -46,7 +46,7 @@ const Section = (props) => {
       <div className="card-wrapper">
         {isLoading ? (
           <img src={loadingGif} style={{ maxWidth: '5rem', margin: '0 auto' }} alt="Cargando..." className="loading-image"/>
-        ) : showNoData && props.objects  && props.objects.length ===0 ? (
+        ) : showNoData  && props.objects.length ===0 ? (
           <div style={{ margin: '0 auto', display: "flex", flexDirection: "column", alignItems:"center" }}>
             <p style={{fontSize:"1.2rem"}}> No hay datos disponibles.</p>
             <img src="./assets/images/SinDatos.jpg"  style={{ maxWidth: '10rem', borderRadius: '1rem' }}

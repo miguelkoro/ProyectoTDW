@@ -47,7 +47,7 @@ const Management = (props) => {
     if (!isLoading) {
       const timer = setTimeout(() => {
         setShowNoData(true); // Activa el estado después del retraso
-      }, 300); // Retraso de 300 ms
+      }, 100); // Retraso de 300 ms
 
       return () => clearTimeout(timer); // Limpia el temporizador si el componente se desmonta o `isLoading` cambia
     } else {
@@ -55,7 +55,7 @@ const Management = (props) => {
     }
     console.log("isLoading", isLoading); // Muestra el estado de carga en la consola
 
-  }, [objects]);
+  }, [objects, isLoading]);
 
   // Observa los cambios en las variables del contexto y actualiza el estado `objects`
   useEffect(() => {
