@@ -127,7 +127,7 @@ const Register = () => {
           <div className="input-container">
             <input type="email" placeholder="Correo Electrónico" value={email}
               onChange={(e) => setEmail(e.target.value)} className={emailError ? 'input-error' : ''}
-              onBlur={checkEmail} onKeyDown={handleKeyDown} />
+              onBlur={checkEmail} onKeyDown={handleKeyDown} /><span style={{color: "red"}}>*</span>
             {emailError && <span className="error-input-text">El email no tiene un formato válido</span>}
           </div>
           <div className="input-container">
@@ -137,18 +137,21 @@ const Register = () => {
           <div className="input-container">
             <input type="password" placeholder="Contraseña" value={password}
               onChange={(e) => setPassword(e.target.value)} className={passwordError ? 'input-error' : ''}
-              onBlur={checkPassword} />
+              onBlur={checkPassword} /><span style={{color: "red" }}>*</span>
             {passwordError &&<span className="error-input-text">La contraseña debe tener entre 6 y 12 caracteres</span>}
           </div>
           <div className="input-container">
             <input type="password" placeholder="Confirmar Contraseña" value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)} className={confirmPasswordError ? 'input-error' : ''}
-              onBlur={confirmPasswordCheck} />
+              onBlur={confirmPasswordCheck} /><span style={{color: "red"}}>*</span>
             {confirmPasswordError &&<span className="error-input-text">Las contraseñas deben coincidir</span>}
-          </div>
+          </div>  
+          <span style={{fontSize: "0.9rem"}}>Fecha de nacimiento:</span>        
           <input type="date" placeholder="Fecha de Nacimiento" value={birthDate}
             onChange={(e) => setBirthDate(e.target.value)} />
+            
           <button type="submit">Registrarse</button> 
+          <div className="input-container"><span style={{color: "red", fontSize: "0.8rem"}}>* El campo es obligatorio</span></div>
         </>} 
       </form>
       <p className="login-redirect"> ¿Ya tienes cuenta? <Link to="/login">Inicia sesión</Link> </p>

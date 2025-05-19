@@ -34,7 +34,7 @@ function App() {
         //checkTokenExpiration(); // Llama a la función para verificar la expiración del token
         //console.log("useEffect normal", user); // Muestra el usuario en la consola
         loadAllData(); // Llama a la función para cargar todos los datos
-        console.log("carga de todos los datos", user); // Muestra el usuario en la consola
+        //console.log("carga de todos los datos", user); // Muestra el usuario en la consola
       }, []);
 
       useEffect(() => {
