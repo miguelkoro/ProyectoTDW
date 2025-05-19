@@ -414,7 +414,8 @@ export const DataProvider = ({ children }) => {
       await setDeleteObject(type, id); // Actualiza la lista de objetos eliminados
     }else if(result.status === 401) {
       showMessage("Error al eliminar el objeto. No tienes permiso para realizar esta acción.", "error"); // Muestra un mensaje de error al usuario
-      await updateObjects(type); // Actualiza la lista de objetos eliminados
+     //0 await updateObjects(type); // Actualiza la lista de objetos eliminados
+     navigate('/'); // Redirige a la página de inicio
     }else if(result.status === 404) {
       showMessage("Error al eliminar el objeto. El objeto no existe o no tienes acceso.", "error"); // Muestra un mensaje de error al usuario
       await updateObjects(type); // Actualiza la lista de objetos eliminados
@@ -490,7 +491,7 @@ export const DataProvider = ({ children }) => {
   /**Comprobar si el nombre de un objeto ya existe */
   const checkObjectName = async (type, name) => {
     //console.log("checkObjectName", type, name);
-    checkTokenExpiration(); // Verifica si el token ha expirado
+    //checkTokenExpiration(); // Verifica si el token ha expirado
     const response = await dataService.checkAPIObjectName(getPlural(type), type, name); // Llama al servicio para comprobar el nombre
     return response; // Devuelve la respuesta de la API
   }
