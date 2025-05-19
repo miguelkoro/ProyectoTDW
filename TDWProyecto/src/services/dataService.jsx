@@ -193,7 +193,7 @@ export const updateAPIUser = async (userObject, password, role, token, userScope
 export const createAPIUser = async (userName, email, password, birthDate, name) => {
   try{
     const payload = {username: userName, email: email, password: password,  birthDate: birthDate, name:name};
-    console.log("Payload", payload)
+    //console.log("Payload", payload)
     const response = await fetch(ROUTES.CREATE_USER, {
       method: 'POST', 
       headers: {'Content-Type': 'application/json'}, 
