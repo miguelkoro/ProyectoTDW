@@ -653,7 +653,7 @@ input {
   display: flex;
   padding-left: 3rem;
   gap: 0.5rem; /* Espaciado entre el input y el botón */
-  flex: 1.6; /* Ocupa el espacio disponible */
+  flex: 1.2; /* Ocupa el espacio disponible */
   align-items: center;
 }
 .search-input {
@@ -690,6 +690,25 @@ input {
 .search-row {
   display: flex; /* Activa Flexbox */
   padding-bottom: 1rem;
+}
+.search-button-filter{
+  border-radius: 0.5rem;
+  background-color: #4caf50; /* Color azul */
+}
+.search-button-filter:hover {
+  background-color: #256127; /* Color rojo más oscuro al pasar el cursor */
+  transform: scale(1.1); /* Aumenta ligeramente el tamaño al pasar el ratón */
+  transition: transform
+}
+.search-button-clean{
+  border-radius: 0.5rem;
+  //background-color: #292929; /* Color rojo */
+  
+}
+.search-button-clean:hover {
+  //background-color: #181818; /* Color rojo más oscuro al pasar el cursor */
+  transform: scale(1.1); /* Aumenta ligeramente el tamaño al pasar el ratón */
+  transition: transform
 }
 .date-input {
   max-width: 10rem; /* Limita el ancho de los inputs de fecha */

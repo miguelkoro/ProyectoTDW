@@ -23,7 +23,6 @@ const NavBar = () => {
 
   const handleSearch = () => {
     // Lógica para manejar la búsqueda
-    console.log("Realizando búsqueda...");
     setSearchName(searchTerm); // Actualiza el término de búsqueda en el contexto
     setSearchTerm(""); // Limpia el campo de búsqueda
     navigate(`/search/`); 
