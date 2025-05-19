@@ -537,7 +537,6 @@ export const DataProvider = ({ children }) => {
   }
   /**Eliminar un usuario */
   const deleteUser = async (id) => {
-      setIsLoading(true); // Indica que los datos están siendo cargados
       checkTokenExpiration(); // Verifica si el token ha expirado
       const response = await dataService.deleteAPIUser(id, user.token); // Llama al servicio de autenticación
       if (response.ok) {
