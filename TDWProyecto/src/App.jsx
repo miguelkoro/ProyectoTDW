@@ -57,11 +57,11 @@ function App() {
             <Route path="/edit/user/:id" element={<ProtectedRoute><UserEdit/></ProtectedRoute>} />
             <Route path="/new/:type" element={<ProtectedRoute><ObjectEdit/></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><UserEdit/></ProtectedRoute>} />
-            <Route path="/users" element={<Management/>} />
-            <Route path="/associations" element={<Management/>} />
-            <Route path="/products" element={<Management/>} />
-            <Route path="/persons" element={<Management/>} />
-            <Route path="/entities" element={<Management/>} />
+            <Route path="/users" element={<Management type={"users"}/>} />
+            <Route path="/associations" element={<Management type={"associations"}/>} />
+            <Route path="/products" element={<Management type={"products"}/>} />
+            <Route path="/persons" element={<Management type={"persons"}/>} />
+            <Route path="/entities" element={<Management type={"entities"}/>} />
             <Route path="/search/" element={<Search/>} />
 
             <Route path="*" element={<Home />} />

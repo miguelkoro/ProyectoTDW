@@ -11,13 +11,16 @@ import loadingGif from '../assets/images/Loading.gif';
 const Management = (props) => {
   const { user } = useAuth(); // Obtén el usuario autenticado del contexto
   const navigate = useNavigate(); // Hook para redirigir
-  const typeFromState =  location.state?.type || location.pathname.split('/')[2];
+  const typeFromState = props.type;
   const [objects, setObjects] = useState([]); 
   const [title, setTitle] = useState(''); // Estado para el título
   const [type, setType] = useState(''); // Estado para el tipo
   const [showNoData, setShowNoData] = useState(false); 
   const { persons, entities, products, associations, users, isLoading,
     getPersons, getEntities, getProducts, getAssociations, getUsers} = useContext(DataContext); 
+
+
+  
 
   // Llama a las funciones de obtención al montar el componente
   /*useEffect(() => {
@@ -47,7 +50,7 @@ const Management = (props) => {
     if (!isLoading) {
       const timer = setTimeout(() => {
         setShowNoData(true); // Activa el estado después del retraso
-      }, 100); // Retraso de 300 ms
+      }, 300); // Retraso de 300 ms
 
       return () => clearTimeout(timer); // Limpia el temporizador si el componente se desmonta o `isLoading` cambia
     } else {
@@ -59,7 +62,7 @@ const Management = (props) => {
 
   // Observa los cambios en las variables del contexto y actualiza el estado `objects`
   useEffect(() => {
-    switch (typeFromState) {
+    switch (props.type) {
       case 'persons':
         setObjects(persons || []); // Actualiza el estado con las personas
         setTitle('🪠 PERSONAS'); // Establece el título para personas
@@ -103,7 +106,7 @@ const Management = (props) => {
   <div className="section-container-management">
     <div className="section-header">
       <h1 className="section-title-management">{title}</h1>
-      {(user?.scope === "writer" && typeFromState !== "users") && (
+      {(user?.scope === "writer" && props.type !== "users") && (
         <button className="new-button" onClick={handleNewClick}> Nuevo </button>
       )}
     </div>
@@ -123,7 +126,7 @@ const Management = (props) => {
       </div>
     ) : (
       <div className="card-management-wrapper">
-        {objects.map((object) => typeFromState !== "users" ? ( <Card key={object.id} object={object} />
+        {objects.map((object) => props.type !== "users" ? ( <Card key={object.id} object={object} />
           ) : (<CardUser key={object.id} object={object} />))}
       </div>
     )}
