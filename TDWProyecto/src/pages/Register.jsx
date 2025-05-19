@@ -95,7 +95,7 @@ const Register = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if ( !checkEmail() || !confirmPasswordCheck || !checkPassword()) return; // Verifica los campos antes de enviar el formulario
+    if ( !checkEmail() || !confirmPasswordCheck() || !checkPassword()) return; // Verifica los campos antes de enviar el formulario
     //console.log("Registro de usuario:", userName, email, password, birthDate); // Muestra los datos en la consola
     register(userName, email, password, birthDate, name); // Llama a la función de registro
   };
